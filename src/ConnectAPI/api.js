@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import Api from "../API/index";
 
 const ApiContext = React.createContext({});
@@ -6,12 +6,20 @@ const ApiContext = React.createContext({});
 const API = new Api();
 
 export function ApiProvider({ children }) {
-    const GetEntityGroup = (entityGroupName) => {
-        return API.entityGroup(entityGroupName);
-    };
-
+    
     var contextValue = {
-        GetEntityGroup,
+        Api: API,
+        Ingredients: API.Ingredients,
+        Users: API.Users,
+        Roles: API.Roles,
+        Recipes: API.Recipes,
+        Kitchens: API.Kitchens,
+        RequirementsLists: API.RequirementsLists,
+        UnitTypes: API.UnitTypes,
+        IngredientCategories: API.IngredientCategories,
+        RecipeCategories: API.RecipeCategories,
+        GroceryLists: API.GroceryLists,
+        Custom: API.Custom,
     };
 
     console.log("Loading API...");

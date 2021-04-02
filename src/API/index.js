@@ -1,44 +1,16 @@
-const axios = require('axios').default;
 import { Role, User, GroceryList, UnitType, IngredientCategory, Ingredient,
     RequirementsListIngredient, KitchenIngredient, RecipeCategory, Recipe } from "./models";
+
+const axios = require('axios').default;
 
 const protocol = "https://", serverIp = "localhost",
     port = 5001, apiPage = "/api",
     api_url = protocol + serverIp + ":" + port + apiPage;
 
-export default class Api {
-    constructor() {
-        EntityGroups.push(new IngredientEntityGroup(),
-                        new UserEntityGroup(),
-                        new RoleEntityGroup(),
-                        new RecipeEntityGroup(),
-                        new KitchenEntityGroup(),
-                        new RequirementsListEntityGroup(),
-                        new UnitTypeEntityGroup(),
-                        new IngredientCategoryEntityGroup(),
-                        new RecipeCategoryEntityGroup(),
-                        new GroceryListEntityGroup(),
-        );
-    };
-
-    entityGroupExists(name = '') {
-        return EntityGroups.map(eg => eg.Name).includes(name);
-    };
-
-    entityGroup(entityGroupName) {
-        if (!this.entityGroupExists(entityGroupName)) {
-            return {
-                error: `An entity group with the name '${entityGroupName}' does not exist.`,
-            };
-        }
-        return EntityGroups.filter(eg => eg.Name === entityGroupName)[0];
-    };
-};
-
 class EntityGroup {
     constructor(groupName = '', api_path = '') {
         this.Name = groupName;
-        this.ApiUrl = api_url + "/" + api_path;
+        this.ApiUrl = api_url + (api_path.length > 0 ? "/" + api_path : '');
     };
 
     ApiUrl = '';
@@ -133,31 +105,27 @@ class EntityGroup {
     async PerformCustom(type = 'get', url, obj = {}) {
         try
         {
-            if (type == 'get')
-            {
-                var response = await axios.get(url);
+            var response = {};
 
-                return response;
-            }
-            else if (type == 'post')
+            if (type === 'get')
             {
-                var response = await axios.post(url, obj);
-
-                return response;
+                response = await axios.get(url);
             }
-            else if (type == 'put')
+            else if (type === 'post')
             {
-                var response = await axios.put(url, obj);
-
-                return response;
+                response = await axios.post(url, obj);
             }
-            else if (type == 'delete')
+            else if (type === 'put')
             {
-                var response = await axios.delete(url, obj);
-
-                return response;
+                response = await axios.put(url, obj);
             }
-            else return 'Invalid request type!';
+            else if (type === 'delete')
+            {
+                response = await axios.delete(url, obj);
+            }
+            else response = 'Invalid request type!';
+
+            return response;
         }
         catch (e)
         {
@@ -165,6 +133,24 @@ class EntityGroup {
             return "Error";
         }
     };
+};
+
+class CustomEntityGroup extends EntityGroup {
+    constructor() {
+        super("Custom", "");
+    };
+
+    async Encrypt(text, salt) {
+        var res = await super.PerformCustom('post', this.ApiUrl + '/Encrypt', { Text: text, Salt: salt });
+
+        return res.data.result;
+    };
+
+    async GetSalt() {
+        var res = await super.PerformCustom('get', this.ApiUrl + '/Encrypt/getsalt');
+
+        return res.data.result;
+    }
 };
 
 class IngredientEntityGroup extends EntityGroup {
@@ -175,7 +161,7 @@ class IngredientEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        fixedData = data.map((item) => {
+        const fixedData = data.map((item) => {
             return new Ingredient(item.id, item.name, item.categories, item.UnitTypes);
         });
 
@@ -185,7 +171,7 @@ class IngredientEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new Ingredient(item.id, item.name, item.categories, item.UnitTypes);
+        const fixedData = new Ingredient(item.id, item.name, item.categories, item.UnitTypes);
 
         return fixedData;
     };
@@ -193,7 +179,7 @@ class IngredientEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        fixedData = new Ingredient(item.id, item.name, item.categories, item.UnitTypes);
+        const fixedData = new Ingredient(item.id, item.name, item.categories, item.UnitTypes);
 
         return fixedData;
     };
@@ -207,8 +193,8 @@ class UserEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        fixedData = data.map((item) => {
-            return new User(item.id, item.name, item.email, item.password, item.salt, item.dateOfBirth, item.roles, item.kitchen);
+        const fixedData = data.map((item) => {
+            return new User(item.id, item.name, item.email, item.passwordHashed, item.salt, item.dateOfBirth, item.roles, item.kitchen);
         });
 
         return fixedData;
@@ -217,7 +203,7 @@ class UserEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new User(item.id, item.name, item.email, item.password, item.salt, item.dateOfBirth, item.roles, item.kitchen);
+        const fixedData = new User(item.id, item.name, item.email, item.passwordHashed, item.salt, item.dateOfBirth, item.roles, item.kitchen);
 
         return fixedData;
     };
@@ -225,7 +211,7 @@ class UserEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        fixedData = new User(item.id, item.name, item.email, item.password, item.salt, item.dateOfBirth, item.roles, item.kitchen);
+        const fixedData = new User(item.id, item.name, item.email, item.passwordHashed, item.salt, item.dateOfBirth, item.roles, item.kitchen);
 
         return fixedData;
     };
@@ -233,7 +219,7 @@ class UserEntityGroup extends EntityGroup {
     async GetRolesByUserId(id) {
         var data = await super.PerformCustom('get', this.ApiUrl + '/getroles/' + id);
 
-        fixedData = data.map((item) => {
+        const fixedData = data.map((item) => {
             return new Role(item.id, item.name, item.users);
         });
 
@@ -249,7 +235,7 @@ class RoleEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        fixedData = data.map((item) => {
+        const fixedData = data.map((item) => {
             return new Role(item.id, item.name, item.users);
         });
 
@@ -259,7 +245,7 @@ class RoleEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new Role(item.id, item.name, item.users);
+        const fixedData = new Role(item.id, item.name, item.users);
 
         return fixedData;
     };
@@ -267,7 +253,7 @@ class RoleEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        fixedData = new Role(item.id, item.name, item.users);
+        const fixedData = new Role(item.id, item.name, item.users);
 
         return fixedData;
     };
@@ -281,7 +267,7 @@ class RecipeEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        fixedData = data.map((item) => {
+        const fixedData = data.map((item) => {
             return new Recipe(item.id, item.name, item.categories, item.requirementsList, item.user);
         });
 
@@ -291,7 +277,7 @@ class RecipeEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new Recipe(item.id, item.name, item.categories, item.requirementsList, item.user);
+        const fixedData = new Recipe(item.id, item.name, item.categories, item.requirementsList, item.user);
 
         return fixedData;
     };
@@ -299,7 +285,7 @@ class RecipeEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        fixedData = new Recipe(item.id, item.name, item.categories, item.requirementsList, item.user);
+        const fixedData = new Recipe(item.id, item.name, item.categories, item.requirementsList, item.user);
 
         return fixedData;
     };
@@ -313,7 +299,7 @@ class KitchenEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        fixedData = data.map((item) => {
+        const fixedData = data.map((item) => {
             return new KitchenIngredient(item.id, item.ingredient, item.units, item.unitType, item.user);
         });
 
@@ -323,25 +309,25 @@ class KitchenEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new KitchenIngredient(item.id, item.ingredient, item.units, item.unitType, item.user);
+        const fixedData = new KitchenIngredient(item.id, item.ingredient, item.units, item.unitType, item.user);
 
         return fixedData;
     };
 
     async GetKitchenByUserId(id) {
-        var data = await super.PerformCustom('get', this.ApiUrl + '/byuserid/' + id);
+        var res = await super.PerformCustom('get', this.ApiUrl + '/byuserid/' + id);
 
-        fixedData = data.map((item) => {
-            return new KitchenIngredient(item.id, item.ingredient, item.units, item.unitType, item.user);
-        });
+        const fixedData = res.data;//.ingredients.map((item) => {
+        //    return new KitchenIngredient(item.countId, item.ingredient, item.units, item.unitType, item.user);
+        //});
 
         return fixedData;
     };
 
     async GetKitchenByUserName(name) {
-        var data = await super.PerformCustom('get', this.ApiUrl + '/byusername/' + name);
+        var res = await super.PerformCustom('get', this.ApiUrl + '/byusername/' + name);
 
-        fixedData = data.map((item) => {
+        const fixedData = res.data.map((item) => {
             return new KitchenIngredient(item.id, item.ingredient, item.units, item.unitType, item.user);
         });
 
@@ -355,9 +341,9 @@ class RequirementsListEntityGroup extends EntityGroup {
     };
 
     async GetAll() {
-        var data = await super.GetAll();
+        var res = await super.GetAll();
 
-        fixedData = data.map((item) => {
+        const fixedData = res.data.map((item) => {
             return new RequirementsListIngredient(item.id, item.ingredient, item.units, item.unitType, item.recipe);
         });
 
@@ -367,15 +353,15 @@ class RequirementsListEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new RequirementsListIngredient(item.id, item.ingredient, item.units, item.unitType, item.recipe);
+        const fixedData = new RequirementsListIngredient(item.id, item.ingredient, item.units, item.unitType, item.recipe);
 
         return fixedData;
     };
 
     async GetRequirementsListByRecipeId(id) {
-        var data = await super.PerformCustom('get', this.ApiUrl + '/byrecipeid/' + id);
+        var res = await super.PerformCustom('get', this.ApiUrl + '/byrecipeid/' + id);
 
-        fixedData = data.map((item) => {
+        const fixedData = res.data.map((item) => {
             return new RequirementsListIngredient(item.id, item.ingredient, item.units, item.unitType, item.recipe);
         });
 
@@ -383,9 +369,9 @@ class RequirementsListEntityGroup extends EntityGroup {
     };
 
     async GetRequirementsListByRecipeName(name) {
-        var data = await super.PerformCustom('get', this.ApiUrl + '/byrecipename/' + name);
+        var res = await super.PerformCustom('get', this.ApiUrl + '/byrecipename/' + name);
 
-        fixedData = data.map((item) => {
+        const fixedData = res.data.map((item) => {
             return new RequirementsListIngredient(item.id, item.ingredient, item.units, item.unitType, item.recipe);
         });
 
@@ -401,7 +387,7 @@ class UnitTypeEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        fixedData = data.map((item) => {
+        const fixedData = data.map((item) => {
             return new UnitType(item.id, item.name, item.allowDecimals, item.ingredients);
         });
 
@@ -411,7 +397,7 @@ class UnitTypeEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new UnitType(item.id, item.name, item.allowDecimals, item.ingredients);
+        const fixedData = new UnitType(item.id, item.name, item.allowDecimals, item.ingredients);
 
         return fixedData;
     };
@@ -419,7 +405,7 @@ class UnitTypeEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        fixedData = new UnitType(item.id, item.name, item.allowDecimals, item.ingredients);
+        const fixedData = new UnitType(item.id, item.name, item.allowDecimals, item.ingredients);
 
         return fixedData;
     };
@@ -433,7 +419,7 @@ class IngredientCategoryEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        fixedData = data.map((item) => {
+        const fixedData = data.map((item) => {
             return new IngredientCategory(item.id, item.name, item.ingredients);
         });
 
@@ -443,7 +429,7 @@ class IngredientCategoryEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new IngredientCategory(item.id, item.name, item.ingredients);
+        const fixedData = new IngredientCategory(item.id, item.name, item.ingredients);
 
         return fixedData;
     };
@@ -451,7 +437,7 @@ class IngredientCategoryEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        fixedData = new IngredientCategory(item.id, item.name, item.ingredients);
+        const fixedData = new IngredientCategory(item.id, item.name, item.ingredients);
 
         return fixedData;
     };
@@ -465,7 +451,7 @@ class RecipeCategoryEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        fixedData = data.map((item) => {
+        const fixedData = data.map((item) => {
             return new RecipeCategory(item.id, item.name, item.recipes);
         });
 
@@ -475,7 +461,7 @@ class RecipeCategoryEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new RecipeCategory(item.id, item.name, item.recipes);
+        const fixedData = new RecipeCategory(item.id, item.name, item.recipes);
 
         return fixedData;
     };
@@ -483,7 +469,7 @@ class RecipeCategoryEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        fixedData = new RecipeCategory(item.id, item.name, item.recipes);
+        const fixedData = new RecipeCategory(item.id, item.name, item.recipes);
 
         return fixedData;
     };
@@ -497,7 +483,7 @@ class GroceryListEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        fixedData = data.map((item) => {
+        const fixedData = data.map((item) => {
             return new GroceryList(item.id, item.name, item.value, item.user);
         });
 
@@ -505,9 +491,9 @@ class GroceryListEntityGroup extends EntityGroup {
     };
 
     async GetAllByUserId(id) {
-        var data = await super.PerformCustom('get', this.ApiUrl + '/byuserid/' + id);
+        var res = await super.PerformCustom('get', this.ApiUrl + '/byuserid/' + id);
 
-        fixedData = data.map((item) => {
+        const fixedData = res.data.map((item) => {
             return new GroceryList(item.id, item.name, item.value, item.user);
         });
 
@@ -517,7 +503,7 @@ class GroceryListEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        fixedData = new GroceryList(item.id, item.name, item.value, item.user);
+        const fixedData = new GroceryList(item.id, item.name, item.value, item.user);
 
         return fixedData;
     };
@@ -525,11 +511,36 @@ class GroceryListEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        fixedData = new GroceryList(item.id, item.name, item.value, item.user);
+        const fixedData = new GroceryList(item.id, item.name, item.value, item.user);
 
         return fixedData;
     };
 };
 
-const EntityGroups = [new EntityGroup()];
-EntityGroups.pop();
+export default class Api {
+    constructor() {
+        this.Ingredients = new IngredientEntityGroup();
+        this.Users = new UserEntityGroup();
+        this.Roles = new RoleEntityGroup();
+        this.Recipes = new RecipeEntityGroup();
+        this.Kitchens = new KitchenEntityGroup();
+        this.RequirementsLists = new RequirementsListEntityGroup();
+        this.UnitTypes = new UnitTypeEntityGroup();
+        this.IngredientCategories = new IngredientCategoryEntityGroup();
+        this.RecipeCategories = new RecipeCategoryEntityGroup();
+        this.GroceryLists = new GroceryListEntityGroup();
+        this.Custom = new CustomEntityGroup();
+    };
+
+    Ingredients = IngredientEntityGroup;
+    Users = UserEntityGroup;
+    Roles = RoleEntityGroup;
+    Recipes = RecipeEntityGroup;
+    Kitchens = KitchenEntityGroup;
+    RequirementsLists = RequirementsListEntityGroup;
+    UnitTypes = UnitTypeEntityGroup;
+    IngredientCategories = IngredientCategoryEntityGroup;
+    RecipeCategories = RecipeCategoryEntityGroup;
+    GroceryLists = GroceryListEntityGroup;
+    Custom = CustomEntityGroup;
+};

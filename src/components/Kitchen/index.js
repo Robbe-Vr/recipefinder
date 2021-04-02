@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-function KitchenHomePage({ setTitle, userId, GetEntityGroup }) {
+function KitchenHomePage({ setTitle, userId, Api }) {
     useEffect(() => {
         setTitle && setTitle("Kitchen");
     });
@@ -39,22 +39,20 @@ function KitchenHomePage({ setTitle, userId, GetEntityGroup }) {
             }
         ],
     });
-    kitchen.ingredients.pop();
+    kitchen.ingredients?.pop();
 
     const classes = useStyles();
-
-    const kitchenEntityGroup = GetEntityGroup("Kitchens");
 
     useEffect(() => {
         if (!kitchen.ingredients || kitchen.ingredients.length > 0 || userId === kitchen.user) { return; }
 
         console.log("Retreiving " + userId + "s kitchen.");
-        kitchenEntityGroup.GetById(userId).then((kitchen) => {
+        Api.Kitchens.GetKitchenByUserId(userId).then((kitchen) => {
             if (kitchen === "Error") { return; }
         
             setKitchen(kitchen);
         });
-    }, [kitchen, kitchenEntityGroup, userId]);
+    }, [kitchen, Api.Kitchens, userId]);
 
     return (
         <div className={classes.form}>

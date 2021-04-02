@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 
 }));
 
-function Onboarding({ setTitle, GetEntityGroup, }) {
+function Onboarding({ setTitle, Api }) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -41,12 +41,12 @@ function Onboarding({ setTitle, GetEntityGroup, }) {
                 </Route>
                 <Route path="/signin/register">
                     <div className={classes.form}>
-                        <Register setTitle={setTitle} onSuccess={handleConnectionSuccess} GetEntityGroup={GetEntityGroup} />
+                        <Register setTitle={setTitle} onSuccess={handleConnectionSuccess} Api={Api} />
                     </div>
                 </Route>
                 <Route path="/signin/login">
                     <div className={classes.form}>
-                        <LogIn setTitle={setTitle} onSuccess={handleConnectionSuccess} GetEntityGroup={GetEntityGroup} />
+                        <LogIn setTitle={setTitle} onSuccess={handleConnectionSuccess} Api={Api} />
                     </div>
                 </Route>
                 <Route>

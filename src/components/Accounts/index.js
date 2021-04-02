@@ -4,7 +4,6 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { useAccount, useAPI } from "../../ConnectAPI/index";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function AccountsPage({ setTitle, GetEntityGroup }) {
+export default function AccountsPage({ setTitle, Api }) {
     useEffect(() => {
         setTitle && setTitle("Accounts");
     });
@@ -45,17 +44,15 @@ export default function AccountsPage({ setTitle, GetEntityGroup }) {
         }
     ]);
 
-    const userEntityGroup = GetEntityGroup("Users");
-
     useEffect(() => {
         console.log("Retreiving users.");
-        userEntityGroup.GetAll().then((users) => {
+        Api.Users.GetAll().then((users) => {
             if (users === "Error") { return; }
         
             console.log("Retreived User: ", users[0]);
             setUsers(users);
         });
-    }, [userEntityGroup]);
+    }, [Api.Users]);
 
     return (
         <div className={classes.paper}>

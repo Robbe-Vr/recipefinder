@@ -10,12 +10,12 @@ export class Role {
     name = '';
 };
 
-export class  User {
-    constructor(id, name, email, password, salt, dateOfBirth, roles) {
+export class User {
+    constructor(id, name, email, passwordHashed, salt, dateOfBirth, roles) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.passwordHashed = passwordHashed;
         this.salt = salt;
         this.dateOfBirth = dateOfBirth;
         this.roles = roles;
@@ -24,7 +24,7 @@ export class  User {
     id = '';
     name = '';
     email = '';
-    password = '';
+    passwordHashed = '';
     salt = '';
     dateOfBirth = Date;
     roles = [Role];
@@ -66,6 +66,16 @@ export class IngredientCategory {
     name = '';
 };
 
+export class RecipeCategory {
+    constructor(id, name) {
+        this.id = id;
+        this.name = name;
+    };
+
+    id = '';
+    name = '';
+};
+
 export class Ingredient {
     constructor(id, name, categories, unitTypes) {
         this.id = id;
@@ -93,33 +103,7 @@ export class RequirementsListIngredient {
     ingredient = Ingredient;
     units = 0;
     unitType = UnitType;
-    recipe = Recipe;
-};
-
-export class KitchenIngredient {
-    constructor(id, ingredient, units, unitType, user) {
-        this.id = id;
-        this.ingredient = ingredient;
-        this.units = units;
-        this.unitType = unitType;
-        this.user = user;
-    };
-
-    id = '';
-    ingredient = Ingredient;
-    units = 0;
-    unitType = UnitType;
-    user = User;
-};
-
-export class RecipeCategory {
-    constructor(id, name) {
-        this.id = id;
-        this.name = name;
-    };
-
-    id = '';
-    name = '';
+    recipeId = '';
 };
 
 export class Recipe {
@@ -135,5 +119,21 @@ export class Recipe {
     name = '';
     categories = [RecipeCategory];
     requirementsList = [RequirementsListIngredient];
+    user = User;
+};
+
+export class KitchenIngredient {
+    constructor(id, ingredient, units, unitType, user) {
+        this.id = id;
+        this.ingredient = ingredient;
+        this.units = units;
+        this.unitType = unitType;
+        this.user = user;
+    };
+
+    id = '';
+    ingredient = Ingredient;
+    units = 0;
+    unitType = UnitType;
     user = User;
 };

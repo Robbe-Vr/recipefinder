@@ -82,12 +82,13 @@ function AppShell() {
     const { id, registered, roles } = useAccount();
     const [title, setTitle] = useState("");
     const [open, setOpen] = useState(true);
+
     const classes = useStyles();
 
-    const { GetEntityGroup } = useAPI();
+    const { Api } = useAPI();
 
     if (!registered) {
-        return <Onboarding setTitle={setTitle} GetEntityGroup={GetEntityGroup} />;
+        return <Onboarding setTitle={setTitle} Api={Api} />;
     }
 
     return (
@@ -122,9 +123,9 @@ function AppShell() {
                 onOpen={setOpen}
                 setTitle={setTitle}
                 isRegistered={registered}
-                isAdmin={roles.filter(r => r.name === 'admin') != undefined}
+                isAdmin={roles.filter(r => r.name === 'admin') !== undefined}
             />
-            <MainContent setTitle={setTitle} drawerOpen={open} isRegistered={registered} userId={id ?? "unknown"} GetEntityGroup={GetEntityGroup} />
+            <MainContent setTitle={setTitle} drawerOpen={open} isRegistered={registered} userId={id ?? "unknown"} Api={Api} />
         </>
     );
 };

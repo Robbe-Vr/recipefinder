@@ -1,19 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useAPI } from "./api";
 
-import sha256 from "crypto-js/sha256";
-
-const axios = require('axios').default;
-
 const ACCOUNT_LS = "recipefinder_account";
 
 const AccountContext = React.createContext({});
 
 export function AttemptLogIn({ children }) {
 
-    const { GetEntityGroup } = useAPI();
-
-    const signInApi = GetEntityGroup("Users");
+    const { Users } = useAPI();
 
     const [account, setAccount] = useState(null);
     const [loaded, setLoaded] = useState(false);
@@ -24,13 +18,15 @@ export function AttemptLogIn({ children }) {
                 console.log("Currently saved account is invalid!");
                 return false;
             }
-            const user = await signInApi.GetById(account.id);
+            const user = await Users.GetById(account.id);
     
             if (!user || !user.passwordHashed) {
                 console.log("Could not get user by currently saved user's Id!");
                 return false;
             }
             
+            console.log(user);
+
             return user.passwordHashed === account.passwordHashed;
         };
 
@@ -64,13 +60,15 @@ export function AttemptLogIn({ children }) {
 
         console.log("Attempting Log In...");
         checkLogin();
-    }, [account, signInApi, loaded]);
+    }, [account, Users, loaded]);
 
     const updateAccount = (patch) => {
         const newAccount = {
             ...account,
             ...patch,
         };
+
+        console.log("new account: ", newAccount);
 
         localStorage.setItem(ACCOUNT_LS, JSON.stringify(newAccount));
         setAccount(newAccount);
@@ -118,12 +116,10 @@ export function AttemptLogIn({ children }) {
     );
 };
 
-export async function GetUserIdByName(name, GetEntityGroup) {
+export async function GetUserIdByName(name, UsersApi) {
     if (!name && name.length < 1) { return; }
 
-    const usersDB = GetEntityGroup('Users');
-
-    const user = await usersDB.GetByName(name);
+    const user = await UsersApi.GetByName(name);
 
     if (user) {
         return user.id;
@@ -140,14 +136,12 @@ export function CurrentAccount() {
     } else return { error: "Not signed in!" };
 };
 
-export async function LogIn(id, password, updateByLogIn, GetEntityGroup) {
+export async function LogIn(id, password, updateByLogIn, api) {
     if (!id || !password || id.length < 1 || password.length < 1) { return; }
 
-    const usersDB = GetEntityGroup('Users');
+    const user = await api.Users.GetById(id);
 
-    const user = await usersDB.GetById(id);
-
-    if (user !== null && user.passwordHashed === await encryptSHA256(password, user.salt)) {
+    if (user !== null && user.passwordHashed === await encryptSHA256(api.Custom, password, user.salt)) {
         updateByLogIn(user);
         return true;
     }
@@ -155,25 +149,21 @@ export async function LogIn(id, password, updateByLogIn, GetEntityGroup) {
     return false;
 };
 
-export async function CreateAccount(username, email, password, updateByLogIn, GetEntityGroup) {
-    const usersDB = GetEntityGroup('Users');
+export async function CreateAccount(username, email, password, updateByLogIn, api) {
 
-    const newUser = createUserObject(username, email, password);
+    const newUser = createUserObject(api.Custom, username, email, password);
 
-    await usersDB.create(newUser);
+    await api.Users.create(newUser);
 
     updateByLogIn(newUser);
 
     return true;
 };
 
-async function encryptSHA256(value = '', salt = '') {
+async function encryptSHA256(CustomApi, value = '', salt = '') {
     try
     {
-        const data = { Text: value, Salt: salt };
-        var response = await axios.post("https://localhost:5001/api/Encrypt", JSON.stringify(data), { headers: { "Content-Type": "application/json", "Content-Encoding": "gzip, deflate, br", }, });
-
-        return response?.data?.result;
+        return await CustomApi.Encrypt(value, salt);
     }
     catch (e)
     {
@@ -181,12 +171,10 @@ async function encryptSHA256(value = '', salt = '') {
     }
 };
 
-async function generateSalt() {
+async function generateSalt(CustomApi) {
     try
     {
-        var response = await axios.get("https://localhost:5001/api/Encrypt/getsalt");
-
-        return response?.data?.result;
+        return await CustomApi.GetSalt();
     }
     catch (e)
     {
@@ -194,13 +182,13 @@ async function generateSalt() {
     }
 };
 
-async function createUserObject(username, email, password) {
-    const salt = await generateSalt();
+async function createUserObject(CustomApi, username, email, password) {
+    const salt = await generateSalt(CustomApi);
 
     return {
         name: username,
         email: email,
-        password: encryptSHA256(password, salt),
+        password: encryptSHA256(CustomApi, password, salt),
         salt: salt,
         roles: ['defaultUser'],
     };

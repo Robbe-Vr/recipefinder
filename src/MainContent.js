@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function MainContent({ setTitle, drawerOpen, isRegistered, userId, GetEntityGroup }) {
+function MainContent({ setTitle, drawerOpen, isRegistered, userId, Api }) {
     const classes = useStyles();
     
     return (
@@ -56,13 +56,13 @@ function MainContent({ setTitle, drawerOpen, isRegistered, userId, GetEntityGrou
             >
                 <Switch>
                     <Route path="/home/index">
-                        <HomePage setTitle={setTitle} userId={userId} GetEntityGroup={GetEntityGroup} />
+                        <HomePage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/accounts/index">
-                        <AccountsPage setTitle={setTitle} GetEntityGroup={GetEntityGroup} />
+                        <AccountsPage setTitle={setTitle} Api={Api} />
                     </Route>
                     <Route path="/kitchen/index">
-                        <KitchenHomePage setTitle={setTitle} userId={userId} GetEntityGroup={GetEntityGroup} />
+                        <KitchenHomePage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     {
                         isRegistered ? (

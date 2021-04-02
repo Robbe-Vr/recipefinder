@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function LogInPage({ setTitle, isAdmin, onSuccess, GetEntityGroup }) {
+export default function LogInPage({ setTitle, isAdmin, onSuccess, Api }) {
     useEffect(() => {
         setTitle && setTitle("Log In");
     });
@@ -40,14 +40,14 @@ export default function LogInPage({ setTitle, isAdmin, onSuccess, GetEntityGroup
         var newErrorMsgs = [''];
         newErrorMsgs.pop();
 
-        var userId = await GetUserIdByName(username, GetEntityGroup);
+        var userId = await GetUserIdByName(username, Api.Users);
 
         if (!userId) {
             newErrorMsgs.push("Either username or password are misspelled!");
             return false;
         }
 
-        let success = await LogIn(userId, password, updateByLogIn, GetEntityGroup);
+        let success = await LogIn(userId, password, updateByLogIn, Api);
         
         if (success) {
             onSuccess();

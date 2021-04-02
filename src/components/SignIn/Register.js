@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function RegisterPage({ setTitle, onSuccess, GetEntityGroup }) {
+export default function RegisterPage({ setTitle, onSuccess, Api }) {
     useEffect(() => {
         setTitle && setTitle("Register");
     });
@@ -56,7 +56,7 @@ export default function RegisterPage({ setTitle, onSuccess, GetEntityGroup }) {
         if (newErrors.length > 0) {
             setErrorMsgs(newErrors);
         } else {
-            await CreateAccount(username, email, password, updateByLogIn, GetEntityGroup);
+            await CreateAccount(username, email, password, updateByLogIn, Api);
             onSuccess();
         }
     };
