@@ -18,7 +18,7 @@ import { AppDrawer, drawerWidth } from "./components/Drawer/AppDrawer";
 import { MainContent } from "./MainContent";
 import { Onboarding } from "./components/Onboarding/Onboarding";
 
-import { AttemptLogIn, useAccount, ApiProvider, useAPI } from "./ConnectAPI/index";
+import { AttemptLogIn, useAccount, ApiProvider, useAPI } from "./API/index";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
+    },
+    logoutButton: {
+        color: "white",
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -87,6 +90,8 @@ function AppShell() {
 
     const { Api } = useAPI();
 
+    const { logOut } = useAccount();
+
     if (!registered) {
         return <Onboarding setTitle={setTitle} Api={Api} />;
     }
@@ -113,8 +118,11 @@ function AppShell() {
                     <Typography variant="h6" noWrap className={classes.title}>
                         {title}
                     </Typography>
-                    <Button>
-
+                    <Button
+                        className={classes.logoutButton}
+                        onClick={() => { logOut(); window.location.href = "/signin/login" }}
+                    >
+                        log Out
                     </Button>
                 </Toolbar>
             </AppBar>

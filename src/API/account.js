@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useAPI } from "./api";
+import { useAPI } from "../API/api-context";
 
 const ACCOUNT_LS = "recipefinder_account";
 
@@ -90,6 +90,7 @@ export function AttemptLogIn({ children }) {
 
     const logOut = () => {
         localStorage.removeItem(ACCOUNT_LS);
+        setAccount({});
     };
 
     if (account?.id) {
@@ -151,9 +152,11 @@ export async function LogIn(id, password, updateByLogIn, api) {
 
 export async function CreateAccount(username, email, password, updateByLogIn, api) {
 
-    const newUser = createUserObject(api.Custom, username, email, password);
+    const newUser = await createUserObject(api.Custom, username, email, password);
 
-    await api.Users.create(newUser);
+    var res = await api.Users.Create(newUser);
+
+    if (res === 'Error') { return false; }
 
     updateByLogIn(newUser);
 
@@ -182,15 +185,32 @@ async function generateSalt(CustomApi) {
     }
 };
 
-async function createUserObject(CustomApi, username, email, password) {
+async function createUserObject(CustomApi, username = '', email = '', password) {
     const salt = await generateSalt(CustomApi);
 
     return {
-        name: username,
-        email: email,
-        password: encryptSHA256(CustomApi, password, salt),
-        salt: salt,
-        roles: ['defaultUser'],
+        CountId: 0,
+        Id: '',
+        Name: username,
+        Email: email,
+        EmailConfirmed: false,
+        EmailConfirmationToken: '',
+        PasswordHashed: await encryptSHA256(CustomApi, password, salt),
+        Salt: salt,
+        PhoneNumber: "00 000 0000",
+        PhoneNumberConfirmed: false,
+        DOB: new Date(),
+        CreationDate: new Date(),
+        NAME_NORMALIZED: username.toUpperCase(),
+        EMAIL_NORMALIZED: email.toUpperCase(),
+        SecurityStamp: '',
+        ConcurrencyStamp: '',
+        LockoutEnabled: false,
+        lockoutEnd: null,
+        AccessFailedCount: 0,
+        Kitchen: null,
+        Roles: [(await CustomApi.PerformCustom('get', CustomApi.ApiUrl + "/Roles/byname/Default")).data],
+        Deleted: false,
     };
 };
 

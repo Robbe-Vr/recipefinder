@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { UserInputComponent } from "./UserInputComponent";
+import { UserInputComponent } from "../Global/UserInputComponent";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { useAccount, LogIn, GetUserIdByName } from "../../ConnectAPI/index";
+import { useAccount, LogIn, GetUserIdByName } from "../../API/index";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -21,6 +22,10 @@ const useStyles = makeStyles((theme) => ({
     errorTxt: { textAlign: "center", color: "#ff0000" },
     form: {
 
+    },
+    btn: {
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 }));
 
@@ -66,7 +71,7 @@ export default function LogInPage({ setTitle, isAdmin, onSuccess, Api }) {
                 Log In
             </Typography>
             <div className={classes.form}>
-            {
+                {
                     errorMsgs.length > 0 ? (
                         <div className={classes.errorTxt}>
                             <ul>
@@ -83,13 +88,27 @@ export default function LogInPage({ setTitle, isAdmin, onSuccess, Api }) {
                 <UserInputComponent name="UserName" onChange={(value) => { setUserName(value); }} />
                 <UserInputComponent name="Password" type="password" onChange={(value) => { setPassword(value); }} />
 
-                <Button
-                    color="primary"
-                    variant="outlined"
-                    onClick={async () => { await AttemptLogIn(userName, password); }}
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
                 >
-                    Log In
-                </Button>
+                    <Button
+                    className={classes.btn}
+                        color="primary"
+                        variant="outlined"
+                        onClick={async () => { await AttemptLogIn(userName, password); }}
+                    >
+                        Log In
+                    </Button>
+                </Grid>
+
+                <Typography
+                    variant="subtitle2"
+                >
+                    Or if you don't have an account yet, <a href="/signin/register">register here</a>
+                </Typography>
             </div>
         </div>
     );

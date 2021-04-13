@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { useAccount } from "../ConnectAPI/index";
+import { useAccount } from "../API/index";
 import { makeStyles } from "@material-ui/core/styles";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
