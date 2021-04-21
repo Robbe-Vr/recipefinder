@@ -5,7 +5,10 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import { HomePage } from "./components/Home/Index";
 import { KitchenHomePage } from "./components/Kitchen/index";
+import { AddIngredients } from "./components/Kitchen/AddIngredients";
 import AccountsPage from "./components/Accounts/index";
+import EditAccountPage from "./components/Accounts/update";
+import AccountDetailsPage from "./components/Accounts/details";
 import { drawerWidth } from "./components/Drawer/AppDrawer";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,9 +39,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function MainContent({ setTitle, drawerOpen, isRegistered, userId, Api }) {
+function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api }) {
     const classes = useStyles();
-    
+
     return (
         <main
             className={clsx(classes.content, {
@@ -56,13 +59,22 @@ function MainContent({ setTitle, drawerOpen, isRegistered, userId, Api }) {
             >
                 <Switch>
                     <Route path="/home/index">
-                        <HomePage setTitle={setTitle} userId={userId} Api={Api} />
+                        <HomePage setTitle={setTitle} name={name} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/accounts/index">
                         <AccountsPage setTitle={setTitle} Api={Api} />
                     </Route>
+                    <Route path="/accounts/edit/:userId">
+                        <EditAccountPage setTitle={setTitle} Api={Api} />
+                    </Route>
+                    <Route path="/accounts/details/:userId">
+                        <AccountDetailsPage setTitle={setTitle} Api={Api} />
+                    </Route>
                     <Route path="/kitchen/index">
                         <KitchenHomePage setTitle={setTitle} userId={userId} Api={Api} />
+                    </Route>
+                    <Route path="/kitchen/add">
+                        <AddIngredients setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     {
                         isRegistered ? (

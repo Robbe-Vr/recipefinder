@@ -6,22 +6,27 @@ import { faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
-    
+    rowActionsContainer: {
+
+    }
 }));
 
-function RowActions({ kitchenIngredient: rowEntity, onDetails, onEdit, onRemove })
+function RowActions({ rowEntityId, rowEntity, onDetails, onEdit, onRemove })
 {
     const classes = useStyles();
 
     return (
-        <Grid
-            direction="row"
-            justify="center"
-            alignItems="center"
-        >
-            {onDetails ? <Button id={rowEntity.Ingredient.Id} onClick={(e) => onDetails(rowEntity.Ingredient.Id)} style={{ color: 'skyblue' }}><FontAwesomeIcon icon={faEye} /></Button> : ''}
-            {onEdit ? <Button id={rowEntity.Ingredient.Id} onClick={(e) => onEdit(rowEntity.Ingredient.Id)} style={{ color: 'gold' }}><FontAwesomeIcon icon={faPen} /></Button> : ''}
-            {onRemove ? <Button id={rowEntity.Ingredient.Id} onClick={(e) => onRemove(rowEntity.Ingredient.Id)} style={{ color: 'red' }}><FontAwesomeIcon icon={faTrash} /></Button> : ''}
+        <Grid className={classes.rowActionsContainer}>
+            <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+            >
+                {onDetails ? <Button id={rowEntityId} onClick={(e) => onDetails(rowEntityId)} style={{ color: 'skyblue' }}><FontAwesomeIcon icon={faEye} /></Button> : ''}
+                {onEdit ? <Button id={rowEntityId} onClick={(e) => onEdit(rowEntityId)} style={{ color: 'gold' }}><FontAwesomeIcon icon={faPen} /></Button> : ''}
+                {onRemove ? <Button id={rowEntityId} onClick={(e) => onRemove(rowEntityId)} style={{ color: 'red' }}><FontAwesomeIcon icon={faTrash} /></Button> : ''}
+            </Grid>
         </Grid>
     );
 };

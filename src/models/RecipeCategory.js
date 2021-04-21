@@ -1,9 +1,9 @@
 export default class RecipeCategory {
     constructor(id, name) {
-        this.id = id;
-        this.name = name;
+        this.Id = id;
+        this.Name = name;
     };
 
-    id = '';
-    name = '';
+    Id = '';
+    Name = '';
 };

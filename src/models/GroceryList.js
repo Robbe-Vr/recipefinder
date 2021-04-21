@@ -1,13 +1,17 @@
+import User from "./User"
+
 export default class GroceryList {
     constructor(id, name, value, user) {
-        this.id = id;
-        this.name = name;
-        this.value = value;
-        this.user = user;
+        this.Id = id;
+        this.Name = name;
+        this.Value = value;
+        this.UserId = user.id;
+        this.User = user;
     };
 
-    id = '';
-    name = '';
-    value = '';
-    user = User;
+    Id = '';
+    Name = '';
+    Value = '';
+    UserId = '';
+    User = User;
 };

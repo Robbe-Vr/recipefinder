@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { makeStyles } from "@material-ui/core";
 import { TablePagination, TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from "@material-ui/core";
@@ -10,10 +10,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function KitchenList({ rows, columns }) {
+function EntityList({ rows, columns }) {
     const classes = useStyles();
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
   
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
@@ -49,21 +49,7 @@ function KitchenList({ rows, columns }) {
                             const value = row[column.id];
                             return (
                                 <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === 'number' ? column.format(value) :
-                                    column.id === 'units' ?
-                                    <div>
-                                        {(() => {
-                                            var val = value;
-                                            if (row.editComponent) {
-                                                return row.editComponent;
-                                            }
-                                            if (row.removeComponent) {
-                                                return row.removeComponent;
-                                            }
-                                            return val;
-                                        })()}
-                                    </div> : value
-                                }
+                                {column.format ? (column.format(value)) ?? value : value}
                                 </TableCell>
                             );
                         })}
@@ -86,4 +72,4 @@ function KitchenList({ rows, columns }) {
     );
 };
 
-export { KitchenList };
+export { EntityList };

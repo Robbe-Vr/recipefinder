@@ -10,14 +10,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function UserSelectInputComponent({ name, label, variant = "outlined", defaultValue = '', options, onChange }) {
-    const [value, setValue] = useState(defaultValue);
+function UserMultiSelectInputComponent({ name, label, variant = "outlined", defaultValues = [''], options, onChange }) {
+    const [values, setValues] = useState(defaultValues);
 
-    if (!value && defaultValue) {
-        setValue(defaultValue);
+    if ((!values || values.length < 1) && (defaultValues && defaultValues.length > 0)) {
+        setValues(defaultValues);
     }
     
     const classes = useStyles();
+
+    const overrideOnChange = (value) => {
+        setValues(value);
+        onChange(value);
+    };
 
     return (
         <Grid
@@ -32,19 +37,19 @@ function UserSelectInputComponent({ name, label, variant = "outlined", defaultVa
             <Grid>
                 <InputLabel id={name + "-label"}>{label}</InputLabel>
                 <Select
+                    multiple={true}
                     className={classes.inputBox}
                     variant={variant}
                     id={name}
                     label={name + "-label"}
-                    value={value}
+                    value={values}
                     onChange={(e) => {
-                        setValue(e.target.value);
-                        onChange(e.target.value);
+                        overrideOnChange(e.target.value);
                     }}
                 > 
                 {
                     options.map(option =>
-                        <MenuItem id={name + "-" + option.name} value={option.value} selected={option.value === defaultValue}>{option.name}</MenuItem>
+                        <MenuItem id={name + "-" + option.name} value={option.value} selected={defaultValues.indexOf(option.value) > -1}>{option.name}</MenuItem>
                     )
                 }
                 </Select>
@@ -53,4 +58,4 @@ function UserSelectInputComponent({ name, label, variant = "outlined", defaultVa
     );
 };
 
-export { UserSelectInputComponent };
+export { UserMultiSelectInputComponent };

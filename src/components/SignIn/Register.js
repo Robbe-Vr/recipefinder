@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -34,10 +35,9 @@ export default function RegisterPage({ setTitle, onSuccess, Api }) {
         setTitle && setTitle("Register");
     });
 
-    const minimumAge = 16;
-
+    const minimumAge = 13;
     var d = new Date();
-    const defaultMinimumAgeDate = `${d.getFullYear() - minimumAge}-${(d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : ""}-${d.getDate() < 10 ? "0" + d.getDate() : ""}`;
+    const defaultMinimumAgeDate = `${d.getFullYear() - minimumAge}-${(d.getMonth() + 1) < 10 ? "0" + (d.getMonth() + 1) : (d.getMonth + 1)}-${d.getDate() < 10 ? "0" + d.getDate() : d.getDate()}`;
 
     const { updateByLogIn } = useAccount();
 
@@ -113,7 +113,7 @@ export default function RegisterPage({ setTitle, onSuccess, Api }) {
 
                 <UserInputComponent name="Email" onChange={(value) => { setEmail(value); }} />
                 <UserInputComponent name="UserName" onChange={(value) => { setUserName(value); }} />
-                <UserInputComponent name="DOB" type="date" defaultValue={defaultMinimumAgeDate} onChange={(value) => { setDOB(value); }} />
+                <UserInputComponent name="Date of Birth" type="date" defaultValue={defaultMinimumAgeDate} onChange={(value) => { setDOB(value); }} />
                 <UserInputComponent name="Password" type="password" onChange={(value) => { setPassword(value); }} />
                 <UserInputComponent name="ConfirmPassword" type="password" onChange={(value) => { setConfirmPassword(value); }} />
 
@@ -136,7 +136,7 @@ export default function RegisterPage({ setTitle, onSuccess, Api }) {
                 <Typography
                     variant="subtitle2"
                 >
-                    Or if you already have an account, <a href="/signin/login">login here</a>
+                    Already have an account? <Link to="/signin/login">login here</Link>
                 </Typography>
             </div>
         </div>

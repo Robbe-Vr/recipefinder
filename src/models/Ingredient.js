@@ -1,13 +1,16 @@
+import IngredientCategory from "./IngredientCategory"
+import UnitType from "./UnitType"
+
 export default class Ingredient {
     constructor(id, name, categories, unitTypes) {
-        this.id = id;
-        this.name = name;
-        this.categories = categories;
-        this.unitTypes = unitTypes;
+        this.Id = id;
+        this.Name = name;
+        this.Categories = categories;
+        this.UnitTypes = unitTypes;
     };
 
-    id = '';
-    name = '';
-    categories = [IngredientCategory];
-    unitTypes = [UnitType];
+    Id = '';
+    Name = '';
+    Categories = [IngredientCategory];
+    UnitTypes = [UnitType];
 };

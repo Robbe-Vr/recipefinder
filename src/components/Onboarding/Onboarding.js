@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Register from "../SignIn/Register";
 import LogIn from "../SignIn/LogIn";
 import { WelcomePage } from "./WelcomePage";
-import { HomePage } from "../Home/Index";
+import { AuthorizationCallback } from "./AuthorizationCallback";
 
 import { form as formstyles } from "./common-styles";
 
@@ -25,9 +25,25 @@ const useStyles = makeStyles(() => ({
 
 }));
 
-function Onboarding({ setTitle, Api }) {
+function Onboarding({ setTitle, Api, setTokens, setAuthorization }) {
     const classes = useStyles();
     const history = useHistory();
+
+    const [authPageAvailable, setAuthPageAvailable] = useState(false);
+
+    useEffect(() => {
+        const TestAuthPage = async () => {
+            const authPage = (await Api.Custom.PerformCustom('get', Api.AuthorizationPage))?.data;
+
+            const pageActive = authPage ? authPage.length ? authPage.length > 1 : false : false;
+
+            console.log("auth page active status: " + pageActive);
+
+            setAuthPageAvailable(pageActive);
+        }
+
+        TestAuthPage();
+    }, [Api.AuthorizationPage, Api.Custom]);
 
     const handleConnectionSuccess = () => {
         history.push("/register");
@@ -36,9 +52,6 @@ function Onboarding({ setTitle, Api }) {
     return (
         <div className={classes.root}>
             <Switch>
-                <Route path="/home/index">
-                    <HomePage />
-                </Route>
                 <Route path="/signin/register">
                     <div className={classes.form}>
                         <Register setTitle={setTitle} onSuccess={handleConnectionSuccess} Api={Api} />
@@ -49,9 +62,20 @@ function Onboarding({ setTitle, Api }) {
                         <LogIn setTitle={setTitle} onSuccess={handleConnectionSuccess} Api={Api} />
                     </div>
                 </Route>
-                <Route>
-                    <WelcomePage />
+                <Route path={Api.AuthReturnUrlPath}>
+                    <AuthorizationCallback setTokens={setTokens} />
                 </Route>
+                {authPageAvailable ?
+                    <Route component={() => { 
+                        console.log("redirecting to api authorization page.")
+                        window.location.href = Api.AuthorizationPage; 
+                        return null;
+                    }}/>
+                    : 
+                    <Route>
+                        <WelcomePage />
+                    </Route>
+                }
             </Switch>
         </div>
     );

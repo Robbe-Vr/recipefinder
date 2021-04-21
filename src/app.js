@@ -19,11 +19,17 @@ import { MainContent } from "./MainContent";
 import { Onboarding } from "./components/Onboarding/Onboarding";
 
 import { AttemptLogIn, useAccount, ApiProvider, useAPI } from "./API/index";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
         height: "100%",
+    },
+    appBar: {
+        backgroundColor: '#ffbb00',
+        color: 'black',
     },
     appBarShift: {
         width: `calc(100% - ${drawerWidth}px])`,
@@ -34,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     logoutButton: {
-        color: "white",
+        
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -82,7 +88,7 @@ export default function App() {
 };
 
 function AppShell() {
-    const { id, registered, roles } = useAccount();
+    const { id, name, registered, roles, logOut, setTokens } = useAccount();
     const [title, setTitle] = useState("");
     const [open, setOpen] = useState(true);
 
@@ -90,10 +96,8 @@ function AppShell() {
 
     const { Api } = useAPI();
 
-    const { logOut } = useAccount();
-
     if (!registered) {
-        return <Onboarding setTitle={setTitle} Api={Api} />;
+        return <Onboarding setTitle={setTitle} Api={Api} setTokens={setTokens} />;
     }
 
     return (
@@ -118,11 +122,14 @@ function AppShell() {
                     <Typography variant="h6" noWrap className={classes.title}>
                         {title}
                     </Typography>
+                    <Typography variant="subtitle2" noWrap className={classes.title}>
+                        logged in as: {name}
+                    </Typography>
                     <Button
                         className={classes.logoutButton}
                         onClick={() => { logOut(); window.location.href = "/signin/login" }}
                     >
-                        log Out
+                        <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '5px' }}/> log Out
                     </Button>
                 </Toolbar>
             </AppBar>
@@ -132,8 +139,10 @@ function AppShell() {
                 setTitle={setTitle}
                 isRegistered={registered}
                 isAdmin={roles.filter(r => r.name === 'admin') !== undefined}
+                isCreator={roles.filter(r => r.name === 'creator') !== undefined}
+                isCook={roles.filter(r => r.name === 'cook') !== undefined}
             />
-            <MainContent setTitle={setTitle} drawerOpen={open} isRegistered={registered} userId={id ?? "unknown"} Api={Api} />
+            <MainContent setTitle={setTitle} drawerOpen={open} isRegistered={registered} name={name} userId={id ?? "unknown"} Api={Api} />
         </>
     );
 };

@@ -7,28 +7,12 @@ const AccountContext = React.createContext({});
 
 export function AttemptLogIn({ children }) {
 
-    const { Users } = useAPI();
+    const { Api } = useAPI();
 
     const [account, setAccount] = useState(null);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        async function LoginWithSavedAccount(account) {
-            if (!account.id || !account.passwordHashed) {
-                console.log("Currently saved account is invalid!");
-                return false;
-            }
-            const user = await Users.GetById(account.id);
-    
-            if (!user || !user.passwordHashed) {
-                console.log("Could not get user by currently saved user's Id!");
-                return false;
-            }
-            
-            console.log(user);
-
-            return user.passwordHashed === account.passwordHashed;
-        };
 
         async function checkLogin() {
             var savedAccount = localStorage.getItem(ACCOUNT_LS);
@@ -45,22 +29,23 @@ export function AttemptLogIn({ children }) {
                 return;
             }
 
-            if (savedAccount && account && savedAccount.id === account.id) {
+            if (savedAccount && account && account.AccessToken && account.RefreshToken && savedAccount.AccessToken === account.AccessToken && savedAccount.RefreshToken === account.RefreshToken) {
                 console.log("Already logged in!");
             }
-            else if (savedAccount && await LoginWithSavedAccount(savedAccount)) {
+            else if (savedAccount && savedAccount.AccessToken && ValidateAccessToken(savedAccount.AccessToken, Api)) {
                 console.log("Log In successfull for " + savedAccount.name);
                 setAccount(savedAccount);
             }
             else {
-                console.log("Failed to Log In with currently saved account!");
+                console.log('Access token validation failed!');
             }
+
             setLoaded(true);
         };
 
         console.log("Attempting Log In...");
         checkLogin();
-    }, [account, Users, loaded]);
+    }, [account, Api, loaded]);
 
     const updateAccount = (patch) => {
         const newAccount = {
@@ -76,14 +61,14 @@ export function AttemptLogIn({ children }) {
 
     const updateRegistered = (isRegistered = false, newRoles = ["defaultUser"]) => {
         updateAccount({
-            registered: isRegistered,
-            roles: newRoles,
+            Registered: isRegistered,
+            Roles: newRoles,
         });
     };
 
     const updateByLogIn = (loggedInAccount) => {
         updateAccount({
-            registered: true,
+            Registered: true,
             ...loggedInAccount,
         });
     };
@@ -93,21 +78,38 @@ export function AttemptLogIn({ children }) {
         setAccount({});
     };
 
-    if (account?.id) {
-        console.log("Account Id exists. " + account.id);
+    const setTokens = (accessToken, refreshToken) => {
+        GetUserByAccessToken(accessToken, Api).then((user) => {
+            user.AccessToken = accessToken;
+            user.RefreshToken = refreshToken;
+            user.Registered = true;
+
+            Api.SetAuthorization({ id: user.Id, accessToken: accessToken, refreshToken: refreshToken });
+
+            updateAccount(user);
+        });
+    };
+
+    if (account?.Id) {
+        console.log("Account Id exists. " + account.Id);
     }
+
+    console.log("account state: ", account)
 
     var contextValue = {
         ourKeys: account?.keys,
         ourPub: account?.pub,
         loaded,
         registered: account ? true : false,
-        roles: account?.roles ? account.roles : [],
-        id: account?.id,
-        name: account?.name,
+        roles: account?.Roles ? account.Roles : [],
+        accessToken: account?.AccessToken,
+        refreshToken: account?.RefreshToken,
+        id: account?.Id,
+        name: account?.Name,
         updateRegistered,
         updateByLogIn,
         logOut,
+        setTokens,
     };
 
     return (
@@ -123,7 +125,7 @@ export async function GetUserIdByName(name, UsersApi) {
     const user = await UsersApi.GetByName(name);
 
     if (user) {
-        return user.id;
+        return user.Id;
     }
 
     return null;
@@ -137,12 +139,32 @@ export function CurrentAccount() {
     } else return { error: "Not signed in!" };
 };
 
-export async function LogIn(id, password, updateByLogIn, api) {
+export async function ValidateAccessToken(accessToken, Api) {
+    var validationResult = await Api.Custom.ValidateAccessToken(accessToken);
+
+    return validationResult;
+};
+
+export async function RefreshAccessToken(refreshToken, Api) {
+    var refreshResult = await Api.Custom.RefreshAccessToken(refreshToken);
+
+    return refreshResult;
+};
+
+export async function GetUserByAccessToken(accessToken, Api) {
+    var user = await Api.Custom.GetUserByAccessToken(accessToken);
+
+    console.log("user by accessToken: ", user);
+
+    return user;
+};
+
+export async function LogIn(id, password, updateByLogIn, Api) {
     if (!id || !password || id.length < 1 || password.length < 1) { return; }
 
-    const user = await api.Users.GetById(id);
+    const user = await Api.Users.GetById(id);
 
-    if (user !== null && user.passwordHashed === await encryptSHA256(api.Custom, password, user.salt)) {
+    if (user !== null && user.PasswordHashed === await encryptSHA256(Api.Custom, password, user.Salt)) {
         updateByLogIn(user);
         return true;
     }

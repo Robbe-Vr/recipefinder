@@ -3,10 +3,10 @@ import Api from "../API/api";
 
 const ApiContext = React.createContext({});
 
-const API = new Api();
-
 export function ApiProvider({ children }) {
     
+    const API = new Api();
+
     var contextValue = {
         Api: API,
         Ingredients: API.Ingredients,

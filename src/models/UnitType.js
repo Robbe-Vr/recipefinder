@@ -1,11 +1,11 @@
 export default class UnitType {
     constructor(id, name, allowDecimals) {
-        this.id = id;
-        this.name = name;
-        this.allowDecimals = allowDecimals;
+        this.Id = id ? id : this.Id;
+        this.Name = name ? name : this.Name;
+        this.AllowDecimals = allowDecimals ? allowDecimals : this.AllowDecimals;
     };
 
-    id = '';
-    name = '';
-    allowDecimals = false;
+    Id = -1;
+    Name = '';
+    AllowDecimals = false;
 };

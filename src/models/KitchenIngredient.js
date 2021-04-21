@@ -1,15 +1,23 @@
+import Ingredient from "./Ingredient"
+import UnitType from "./UnitType"
+import User from "./User"
+
 export default class KitchenIngredient {
     constructor(id, ingredient, units, unitType, user) {
-        this.id = id;
-        this.ingredient = ingredient;
-        this.units = units;
-        this.unitType = unitType;
-        this.user = user;
+        this.Id = id;
+        this.Ingredient = ingredient;
+        this.Units = units;
+        this.UnitType = unitType;
+        this.UserId = user.id;
+        this.User = user;
     };
 
-    id = '';
-    ingredient = Ingredient;
-    units = 0;
-    unitType = UnitType;
-    user = User;
+    Id = '';
+    IngredientId = '';
+    Ingredient = Ingredient;
+    Units = 0;
+    UnitTypeId = '';
+    UnitType = UnitType;
+    UserId = '';
+    User = User;
 };

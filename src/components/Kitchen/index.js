@@ -9,6 +9,8 @@ import { RowActions } from "../Global/RowActions";
 import { Grid } from "@material-ui/core";
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -30,9 +32,11 @@ function KitchenHomePage({ setTitle, userId, Api }) {
     });
     
     const [kitchen, setKitchen] = useState({
+        UserId: '',
         User: '',
         Ingredients: [
             {
+                IngredientId: '',
                 Ingredient: {
                     Id: '',
                     Name: '',
@@ -41,15 +45,16 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                     AverageWeightInKgPerUnit: 0.0,
                     UnitTypes: [
                         {
-                            Id: 1,
+                            CountId: 1,
                             Name: '',
                             AllowDecimals: false,
                         }
                     ]
                 },
                 Units: 0.00,
+                UnitTypeId: '',
                 UnitType: {
-                    Id: 1,
+                    CountId: 1,
                     Name: '',
                     AllowDecimals: false,
                 }
@@ -64,72 +69,80 @@ function KitchenHomePage({ setTitle, userId, Api }) {
     const [editingIngredients, setEditingIngredients] = useState([]);
     const [removingIngredients, setRemovingIngredients] = useState([]);
 
-    const [units, setunits] = useState([{ ingredientId: '', units: 0, unitTypeId: '' }]);
+    const [updates, setUpdates] = useState({});
+    const [unitTypeChanges, setUnitTypeChanges] = useState(0);
+    if (!updates && unitTypeChanges) {
+        setUpdates({});
+    }
 
     const classes = useStyles();
 
     useEffect(() => {
-        if (!kitchen.Ingredients || kitchen.Ingredients.length > 0 || userId === kitchen.User) { return; }
-
-        console.log("Retreiving " + userId + "s kitchen.");
         Api.Kitchens.GetKitchenByUserId(userId).then((kitchen) => {
             if (kitchen === "Error") { return; }
         
             setKitchen(kitchen);
         });
-    }, [kitchen, Api.Kitchens, userId]);
+    }, [Api.Kitchens, userId]);
 
     const ToggleEdit = (id) => {
         if (editingIngredients.indexOf(id) > -1) {
-            setEditingIngredients(editingIngredients.filter(x => x !== id));
+            setEditingIngredients(editingIngredients => editingIngredients.filter(x => x !== id));
+            setUpdates(updates => { updates[id] = undefined; return updates; });
         }
         else {
             setEditingIngredients(editingIngredients => [...editingIngredients, id]);
-            setRemovingIngredients(removingIngredients.filter(x => x !== id));
+            setRemovingIngredients(removingIngredients => removingIngredients.filter(x => x !== id));
         }
     };
 
-    const onEdit = (id) => {
-        var ingredient = kitchen.Ingredients.find(x => x.Ingredient.Id === id);
+    const onEdit = async (id) => {
+        if (!updates[id]) return;
 
-        Api.Kitchens.Update(ingredient);
+        await Api.Kitchens.Update(updates[id].CountId, updates[id]);
+
+        window.location.reload();
     };
 
     const onUnitsEdited = (id, newUnits) => {
-        var oldUnits = units.find(x => x.ingredientId === id);
+        if (!updates[id]) updates[id] = kitchen.Ingredients.find(x => x.IngredientId === id);
 
-        oldUnits.units = newUnits;
+        updates[id].Units = parseFloat(newUnits);
 
-        setunits(oldUnits);
+        setUpdates(updates => updates);
     };
 
     const onUnitTypeEdited = (id, newUnitType) => {
-        var oldUnits = units.find(x => x.ingredientId === id);
+        if (!updates[id]) updates[id] = kitchen.Ingredients.find(x => x.IngredientId === id);
 
-        oldUnits.unitTypeId = newUnitType;
+        updates[id].UnitTypeId = parseInt(newUnitType);
 
-        setunits(oldUnits);
+        setUpdates(x => updates);
+
+        setUnitTypeChanges(unitTypeChanges => unitTypeChanges + 1);
     };
 
     const ToggleRemove = (id) => {
         if (removingIngredients.indexOf(id) > -1) {
-            setRemovingIngredients(removingIngredients.filter(x => x !== id));
+            setRemovingIngredients(removingIngredients => removingIngredients.filter(x => x !== id));
         }
         else {
             setRemovingIngredients(removingIngredients => [...removingIngredients, id]);
-            setEditingIngredients(editingIngredients.filter(x => x !== id));
+            setEditingIngredients(editingIngredients => editingIngredients.filter(x => x !== id));
         }
     };
 
     const onRemove = (id) => {
         var ingredient = kitchen.Ingredients.find(x => x.Ingredient.Id === id);
 
-        Api.Kitchens.Delete(ingredient);
+        Api.Kitchens.Delete(kitchen.UserId + "/" + ingredient.IngredientId, ingredient);
+
+        window.location.reload();
     };
 
     return (
-        <div className={classes.form}>
-            <Typography className={classes.txt} variant="h1">
+        <Grid className={classes.form}>
+            <Typography className={classes.txt} variant="h3">
                 {kitchen.User?.Name}'s Kitchen!
             </Typography>
 
@@ -142,32 +155,40 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                         { id: 'units', label: 'Amount', minWidth: 100 },
                         { id: 'actions', label: 'Actions', minWidth: 200 },
                     ]}
-                    rows={kitchen.Ingredients.map(ingredient => [
-                        {
-                            id: ingredient.Ingredient.Id,
+                    rows={kitchen.Ingredients.map(ingredient => {
+                        const updatedUnitType = ingredient.Ingredient.UnitTypes.find(x => x.CountId === updates[ingredient.IngredientId]?.UnitTypeId);
+
+                        const allowDecimals = updatedUnitType ? updatedUnitType.AllowDecimals : ingredient.UnitType.AllowDecimals;
+
+                        return {
+                            id: ingredient.IngredientId,
                             image: <Thumbnail source={ingredient.Ingredient.ImageLocation} size="50px" />,
                             name: ingredient.Ingredient.Name,
                             units: ingredient.Units + " " + ingredient.UnitType.Name,
-                            actions: <RowActions kitchenIngredient={ingredient} onEdit={ToggleEdit} onRemove={ToggleRemove} />,
+                            actions: <RowActions rowEntity={ingredient} rowEntityId={ingredient.IngredientId} onEdit={ToggleEdit} onRemove={ToggleRemove} />,
                             editComponent: editingIngredients.indexOf(ingredient.Ingredient.Id) > -1 ?
                                 <div>
-                                    <UserInputComponent onChange={onUnitsEdited} name="units" defaultValue={ingredient.Units} type="number" /><br />
-                                    <UserSelectInputComponent onChange={onUnitTypeEdited} name="unitType" defaultValue={ingredient.UnitType.Id} type="number"
-                                        options={ingredient.Ingredient.UnitTypes.map(unitType => { return { name: unitType.Name, value: unitType.Id } })} />
-                                    <Button id={ingredient.Ingredient.Id} onClick={(e) => onEdit(ingredient.Ingredient.Id)}>Save</Button>
-                                    <Button id={ingredient.Ingredient.Id} onClick={(e) => ToggleEdit(ingredient.Ingredient.Id)}>Cancel</Button>
+                                    <UserInputComponent onChange={(value) => onUnitsEdited(ingredient.IngredientId, value)} name="Units" defaultValue={ingredient.Units}
+                                        type="number" inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }} />
+                                    <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(ingredient.IngredientId, value)} name="Unit Type" defaultValue={ingredient.UnitType.CountId} type="number"
+                                        options={ingredient.Ingredient.UnitTypes.map(unitType => { return { name: unitType.Name, value: unitType.CountId } })} />
+                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'forestgreen', marginRight: '5px' }} onClick={async (e) => await onEdit(ingredient.IngredientId)}>Save</Button>
+                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'gold' }} onClick={(e) => ToggleEdit(ingredient.Ingredient.Id)}>Cancel</Button>
                                 </div> : null,
                             removeComponent: removingIngredients.indexOf(ingredient.Ingredient.Id) > -1 ?
                                 <div>
                                     Are you sure you want to remove this ingredient?
-                                    <Button id={ingredient.Ingredient.Id} onClick={(e) => onRemove(ingredient.Ingredient.Id)}>Remove</Button>
-                                    <Button id={ingredient.Ingredient.Id} onClick={(e) => ToggleRemove(ingredient.Ingredient.Id)}>Cancel</Button>
+                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'red', marginRight: '5px' }} onClick={async (e) => await onRemove(ingredient.IngredientId)}>Remove</Button>
+                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'forestgreen' }} onClick={(e) => ToggleRemove(ingredient.IngredientId)}>Cancel</Button>
                                 </div> : null,
                         }
-                    ])}
+                    })}
                 />
             }
-        </div>
+            <Link to="/kitchen/add">
+                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> Add Ingredients</Button>
+            </Link>
+        </Grid>
     );
 };
 

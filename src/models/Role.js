@@ -1,9 +1,11 @@
 export default class Role {
-    constructor(id, name) {
-        this.id = id;
-        this.name = name;
+    constructor(countId, id, name) {
+        this.CountId = countId;
+        this.Id = id;
+        this.Name = name;
     };
 
-    id = '';
-    name = '';
+    CountId = -1;
+    Id = '';
+    Name = '';
 };

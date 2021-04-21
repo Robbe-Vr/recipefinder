@@ -1,15 +1,21 @@
+import RecipeCategory from "./RecipeCategory"
+import RequirementsListIngredient from "./RequirementsListIngredient"
+import User from "./User"
+
 export default class Recipe {
     constructor(id, name, categories, requirementsList, user) {
-        this.id = id;
-        this.name = name;
-        this.categories = categories;
-        this.requirementsList = requirementsList;
-        this.user = user;
+        this.Id = id;
+        this.Name = name;
+        this.Categories = categories;
+        this.RequirementsList = requirementsList;
+        this.userID = user.id;
+        this.User = user;
     };
 
-    id = '';
-    name = '';
-    categories = [RecipeCategory];
-    requirementsList = [RequirementsListIngredient];
-    user = User;
+    Id = '';
+    Name = '';
+    Categories = [RecipeCategory];
+    RequirementsList = [RequirementsListIngredient];
+    UserId = '';
+    User = User;
 };

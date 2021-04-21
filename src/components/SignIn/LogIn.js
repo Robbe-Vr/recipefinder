@@ -7,6 +7,7 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAccount, LogIn, GetUserIdByName } from "../../API/index";
 import { Grid } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -21,7 +22,8 @@ const useStyles = makeStyles((theme) => ({
     txt: { textAlign: "center" },
     errorTxt: { textAlign: "center", color: "#ff0000" },
     form: {
-
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     btn: {
         justifyContent: 'center',
@@ -107,7 +109,7 @@ export default function LogInPage({ setTitle, isAdmin, onSuccess, Api }) {
                 <Typography
                     variant="subtitle2"
                 >
-                    Or if you don't have an account yet, <a href="/signin/register">register here</a>
+                    Don't have an account yet? <Link to="/signin/register">register here</Link>
                 </Typography>
             </div>
         </div>

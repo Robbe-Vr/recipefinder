@@ -1,54 +1,67 @@
 import React, { useState } from "react";
 
-import { makeStyles } from "@material-ui/core";
+import { InputLabel, makeStyles } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     inputBox: {
-        marginBottom: theme.spacing(3),
+        
     },
 }));
 
-function UserInputComponent({ name, label, variant = "outlined", type = 'text', defaultValue, onChange }) {
+function UserInputComponent({ name, variant = "outlined", type = 'text', inputProps, defaultValue, onChange, isAsync = false }) {
     const [value, setValue] = useState(defaultValue);
+
+    if (!value && defaultValue) {
+        setValue(defaultValue);
+    }
     
     const classes = useStyles();
 
+    if (type === 'number') {
+        if (inputProps.step && inputProps.step === 1.00 && value % 1 !== 0) {
+            const correction = parseInt((parseFloat(value) + 0.50).toString()).toString();
+            setValue(correction);
+            onChange(correction);
+        }
+    }
+
     return (
-        <div class="row">
-            <Grid 
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-            >
-                <label htmlFor={name}>{name}: </label>
+        <Grid
+            container
+            xs={6}
+            direction="row"
+            justify="center"
+            alignItems="center"
+        >
+            <Grid>
+                <InputLabel Id={name + "-label"}>{name}</InputLabel>
             </Grid>
             <Grid
                 container
                 direction="row"
                 justify="center"
                 alignItems="center"
-                className={classes.inputBox}
             >
                 <TextField
+                    className={classes.inputBox}
                     variant={variant}
                     id={name}
-                    label={label}
+                    labelId={name + "-label"}
                     value={value}
                     type={type}
-                    onChange={(e) => {
+                    inputProps={inputProps}
+                    onChange={isAsync ? async (e) => {
                         setValue(e.target.value);
-                        onChange(e.target.value);
-                    }}
-                    onKeyUp={(e) => {
+                        await onChange(e.target.value);
+                    } : (e) => {
                         setValue(e.target.value);
                         onChange(e.target.value);
                     }}
                 />
             </Grid>
-        </div>
+        </Grid>
     );
 };
 

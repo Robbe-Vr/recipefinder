@@ -1,5 +1,6 @@
 import Role from "./Role"
 import User from "./User"
+import UserAction from "./UserAction"
 import GroceryList from "./GroceryList"
 import UnitType from "./UnitType"
 import IngredientCategory from "./IngredientCategory"
@@ -12,6 +13,7 @@ import KitchenIngredient from "./KitchenIngredient"
 export {
     Role,
     User,
+    UserAction,
     GroceryList,
     UnitType,
     IngredientCategory,
