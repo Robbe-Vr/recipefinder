@@ -29,7 +29,7 @@ export function AttemptLogIn({ children }) {
                 return;
             }
 
-            if (savedAccount && account && account.AccessToken && account.RefreshToken && savedAccount.AccessToken === account.AccessToken && savedAccount.RefreshToken === account.RefreshToken) {
+            if (savedAccount && account && account.AccessToken && account.RefreshToken && savedAccount.AccessToken === account.AccessToken && savedAccount.RefreshToken === account.RefreshToken && ValidateAccessToken(savedAccount.AccessToken, Api)) {
                 console.log("Already logged in!");
             }
             else if (savedAccount && savedAccount.AccessToken && ValidateAccessToken(savedAccount.AccessToken, Api)) {
