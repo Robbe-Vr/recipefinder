@@ -84,8 +84,6 @@ export function AttemptLogIn({ children }) {
             user.RefreshToken = refreshToken;
             user.Registered = true;
 
-            Api.SetAuthorization({ id: user.Id, accessToken: accessToken, refreshToken: refreshToken });
-
             updateAccount(user);
         });
     };
@@ -97,8 +95,6 @@ export function AttemptLogIn({ children }) {
     console.log("account state: ", account)
 
     var contextValue = {
-        ourKeys: account?.keys,
-        ourPub: account?.pub,
         loaded,
         registered: account ? true : false,
         roles: account?.Roles ? account.Roles : [],

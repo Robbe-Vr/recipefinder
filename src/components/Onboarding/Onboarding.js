@@ -51,32 +51,33 @@ function Onboarding({ setTitle, Api, setTokens, setAuthorization }) {
 
     return (
         <div className={classes.root}>
-            <Switch>
-                <Route path="/signin/register">
-                    <div className={classes.form}>
-                        <Register setTitle={setTitle} onSuccess={handleConnectionSuccess} Api={Api} />
-                    </div>
-                </Route>
-                <Route path="/signin/login">
-                    <div className={classes.form}>
-                        <LogIn setTitle={setTitle} onSuccess={handleConnectionSuccess} Api={Api} />
-                    </div>
-                </Route>
-                <Route path={Api.AuthReturnUrlPath}>
-                    <AuthorizationCallback setTokens={setTokens} />
-                </Route>
-                {authPageAvailable ?
-                    <Route component={() => { 
+            {authPageAvailable ?
+                <Route component={() => { 
                         console.log("redirecting to api authorization page.")
                         window.location.href = Api.AuthorizationPage; 
                         return null;
-                    }}/>
+                }}/>
                     : 
+                <Switch>
+                    <Route path="/signin/register">
+                        <div className={classes.form}>
+                            <Register setTitle={setTitle} authPageAvailable={authPageAvailable} onSuccess={handleConnectionSuccess} Api={Api} />
+                        </div>
+                    </Route>
+                    <Route path="/signin/login">
+                        <div className={classes.form}>
+                            <LogIn setTitle={setTitle} authPageAvailable={authPageAvailable} onSuccess={handleConnectionSuccess} Api={Api} />
+                        </div>
+                    </Route>
+                    <Route path={Api.AuthReturnUrlPath}>
+                        <AuthorizationCallback setTokens={setTokens} />
+                    </Route>
+                    
                     <Route>
                         <WelcomePage />
                     </Route>
-                }
-            </Switch>
+                </Switch>
+            }
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Link, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 
 function AuthorizationCallback({ setTokens }) {
@@ -31,12 +31,6 @@ function AuthorizationCallback({ setTokens }) {
             <Link to="/home/index">
                 <Button variant="outlined">Go on</Button>
             </Link>
-            {/* <Route component={() => {
-                window.location.href = "/";
-                return null;
-            }}>
-
-            </Route> */}
         </div>
     );
 };

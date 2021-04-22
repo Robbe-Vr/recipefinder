@@ -7,6 +7,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { EntityList } from "../Global/EntityList";
 import { User, UserAction } from "../../models";
 import { Card } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle, faCross } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -90,7 +92,7 @@ export default function AccountDetailsPage({ setTitle, Api }) {
                             { id: 'onTable', label:'Table', minWidth: 50 },
                             { id: 'refObject', label:'Object', minWidth: 100,
                                 format: (obj) => {
-                                    return Object.keys(obj).map((key) => { return "(" + key + "): [ " + obj[key].toString() + " ]" }).join(", ");
+                                    return Object.keys(obj).map((key) => { return "(" + key + "): [ " + obj[key]?.toString() + " ]" }).join(", ");
                                 },
                             },
                             { id: 'success', label:'Was successful?', minWidth: 50 },
@@ -102,7 +104,7 @@ export default function AccountDetailsPage({ setTitle, Api }) {
                                 endpoint: userAction.Endpoint,
                                 refObject: userAction.RefObject,
                                 onTable: userAction.ActionPerformedOnTable,
-                                success: userAction.Success,
+                                success: userAction.Success ? <FontAwesomeIcon icon={faCheckCircle} style={{ color: 'forestgreen' }} /> : <FontAwesomeIcon icon={faCross} style={{ color: 'red' }} />,
                             };
                         })}
                     /> :

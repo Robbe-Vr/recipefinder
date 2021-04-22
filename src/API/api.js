@@ -8,13 +8,21 @@ const protocol = "https://", serverIp = "192.168.2.29",
     api_url = protocol + serverIp + ":" + port + apiPage;
 
 const defaultHeaders = (data) => ({ "Host": "localhost", "Accept": "*/*", "Connection": "keep-alive", "Content-Type": "application/json", "Content-Length": data.length });
-const authorizationHeaders = { };
 
 class EntityGroup {
-    constructor(groupName = '', api_path = '') {
+    constructor(groupName = '', api_path = '', accessToken, refreshToken) {
         this.Name = groupName;
         this.ApiUrl = api_url + (api_path.length > 0 ? "/" + api_path : '');
+
+        if (accessToken) {
+            this.AuthorizationHeaders["RecipeFinder_AccessToken"] = accessToken;
+        }
+        if (refreshToken) {
+            this.AuthorizationHeaders["RecipeFinder_RefreshToken"] = refreshToken;
+        }
     };
+
+    AuthorizationHeaders = { };
 
     ApiUrl = '';
     Name = '';
@@ -22,7 +30,7 @@ class EntityGroup {
     async GetAll() {
         try
         {
-            var response = await axios.get(this.ApiUrl, { headers: authorizationHeaders });
+            var response = await axios.get(this.ApiUrl, { headers: this.AuthorizationHeaders });
 
             return response.data;
         }
@@ -36,7 +44,7 @@ class EntityGroup {
     async GetById(id = '') {
         try
         {
-            var response = await axios.get(this.ApiUrl + "/" + id, { headers: authorizationHeaders });
+            var response = await axios.get(this.ApiUrl + "/" + id, { headers: this.AuthorizationHeaders });
 
             return response.data;
         }
@@ -50,7 +58,7 @@ class EntityGroup {
     async GetByName(name = '') {
         try
         {
-            var response = await axios.get(this.ApiUrl + "/byname/" + name, { headers: authorizationHeaders });
+            var response = await axios.get(this.ApiUrl + "/byname/" + name, { headers: this.AuthorizationHeaders });
 
             return response.data;
         }
@@ -68,7 +76,7 @@ class EntityGroup {
 
             var response = await axios.post(this.ApiUrl,
                 data,
-                { headers: { ...(defaultHeaders(data)), ...authorizationHeaders } });
+                { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
 
             return response;
         }
@@ -86,7 +94,7 @@ class EntityGroup {
 
             var response = await axios.put(this.ApiUrl + "/" + id,
                 data,
-                { headers: { ...(defaultHeaders(data)), ...authorizationHeaders } });
+                { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
 
             return response;
         }
@@ -103,7 +111,7 @@ class EntityGroup {
             const data = JSON.stringify(obj, null, 4);
 
             var response = await axios.delete(this.ApiUrl + '/' + id,
-                { headers: { ...(defaultHeaders(data)), ...authorizationHeaders } });
+                { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
 
             return response;
         }
@@ -121,28 +129,28 @@ class EntityGroup {
 
             if (type === 'get')
             {
-                response = await axios.get(url, { headers: authorizationHeaders });
+                response = await axios.get(url, { headers: this.AuthorizationHeaders });
             }
             else if (type === 'post')
             {
                 const data = JSON.stringify(obj, null, 4);
 
                 response = await axios.post(url, data,
-                    { headers: { ...(defaultHeaders(data)), ...authorizationHeaders } });
+                    { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
             }
             else if (type === 'put')
             {
                 const data = JSON.stringify(obj, null, 4);
 
                 response = await axios.put(url, data,
-                    { headers: { ...(defaultHeaders(data)), ...authorizationHeaders } });
+                    { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
             }
             else if (type === 'delete')
             {
                 const data = JSON.stringify(obj, null, 4);
 
                 response = await axios.delete(url, data,
-                    { headers: { ...(defaultHeaders(data)), ...authorizationHeaders } });
+                    { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
             }
             else response = 'Invalid request type!';
 
@@ -157,8 +165,8 @@ class EntityGroup {
 };
 
 class CustomEntityGroup extends EntityGroup {
-    constructor() {
-        super("Custom", "");
+    constructor(accessToken, refreshToken) {
+        super("Custom", "", accessToken, refreshToken);
     };
 
     async Encrypt(text, salt) {
@@ -193,8 +201,8 @@ class CustomEntityGroup extends EntityGroup {
 };
 
 class IngredientEntityGroup extends EntityGroup {
-    constructor() {
-        super("Ingredients", "Ingredients");
+    constructor(accessToken, refreshToken) {
+        super("Ingredients", "Ingredients", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -225,8 +233,8 @@ class IngredientEntityGroup extends EntityGroup {
 };
 
 class UserEntityGroup extends EntityGroup {
-    constructor() {
-        super("Users", "Users");
+    constructor(accessToken, refreshToken) {
+        super("Users", "Users", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -277,8 +285,8 @@ class UserEntityGroup extends EntityGroup {
 };
 
 class RoleEntityGroup extends EntityGroup {
-    constructor() {
-        super("Roles", "Roles");
+    constructor(accessToken, refreshToken) {
+        super("Roles", "Roles", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -309,8 +317,8 @@ class RoleEntityGroup extends EntityGroup {
 };
 
 class RecipeEntityGroup extends EntityGroup {
-    constructor() {
-        super("Recipes", "Recipes");
+    constructor(accessToken, refreshToken) {
+        super("Recipes", "Recipes", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -341,8 +349,8 @@ class RecipeEntityGroup extends EntityGroup {
 };
 
 class KitchenEntityGroup extends EntityGroup {
-    constructor() {
-        super("Kitchens", "Kitchens");
+    constructor(accessToken, refreshToken) {
+        super("Kitchens", "Kitchens", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -385,8 +393,8 @@ class KitchenEntityGroup extends EntityGroup {
 };
 
 class RequirementsListEntityGroup extends EntityGroup {
-    constructor() {
-        super("RequirementsLists", "RequirementsLists");
+    constructor(accessToken, refreshToken) {
+        super("RequirementsLists", "RequirementsLists", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -429,8 +437,8 @@ class RequirementsListEntityGroup extends EntityGroup {
 };
 
 class UnitTypeEntityGroup extends EntityGroup {
-    constructor() {
-        super("UnitTypes", "UnitTypes");
+    constructor(accessToken, refreshToken) {
+        super("UnitTypes", "UnitTypes", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -461,8 +469,8 @@ class UnitTypeEntityGroup extends EntityGroup {
 };
 
 class IngredientCategoryEntityGroup extends EntityGroup {
-    constructor() {
-        super("IngredientCategories", "IngredientCategories");
+    constructor(accessToken, refreshToken) {
+        super("IngredientCategories", "IngredientCategories", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -493,8 +501,8 @@ class IngredientCategoryEntityGroup extends EntityGroup {
 };
 
 class RecipeCategoryEntityGroup extends EntityGroup {
-    constructor() {
-        super("RecipeCategories", "RecipeCategories");
+    constructor(accessToken, refreshToken) {
+        super("RecipeCategories", "RecipeCategories", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -525,8 +533,8 @@ class RecipeCategoryEntityGroup extends EntityGroup {
 };
 
 class GroceryListEntityGroup extends EntityGroup {
-    constructor() {
-        super("GroceryLists", "GroceryLists");
+    constructor(accessToken, refreshToken) {
+        super("GroceryLists", "GroceryLists", accessToken, refreshToken);
     };
 
     async GetAll() {
@@ -567,7 +575,7 @@ class GroceryListEntityGroup extends EntityGroup {
 };
 
 export default class Api {
-    constructor() {
+    constructor(accessToken, refreshToken) {
         const authReturnUrlPath = '/returnAuthorization';
 
         const authPage = "/api/authorize/login",
@@ -577,43 +585,16 @@ export default class Api {
 
         this.AuthReturnUrlPath = authReturnUrlPath;
 
-        this.Ingredients = new IngredientEntityGroup();
-        this.Users = new UserEntityGroup();
-        this.Roles = new RoleEntityGroup();
-        this.Recipes = new RecipeEntityGroup();
-        this.Kitchens = new KitchenEntityGroup();
-        this.RequirementsLists = new RequirementsListEntityGroup();
-        this.UnitTypes = new UnitTypeEntityGroup();
-        this.IngredientCategories = new IngredientCategoryEntityGroup();
-        this.RecipeCategories = new RecipeCategoryEntityGroup();
-        this.GroceryLists = new GroceryListEntityGroup();
-        this.Custom = new CustomEntityGroup();
+        this.Ingredients = new IngredientEntityGroup(accessToken, refreshToken);
+        this.Users = new UserEntityGroup(accessToken, refreshToken);
+        this.Roles = new RoleEntityGroup(accessToken, refreshToken);
+        this.Recipes = new RecipeEntityGroup(accessToken, refreshToken);
+        this.Kitchens = new KitchenEntityGroup(accessToken, refreshToken);
+        this.RequirementsLists = new RequirementsListEntityGroup(accessToken, refreshToken);
+        this.UnitTypes = new UnitTypeEntityGroup(accessToken, refreshToken);
+        this.IngredientCategories = new IngredientCategoryEntityGroup(accessToken, refreshToken);
+        this.RecipeCategories = new RecipeCategoryEntityGroup(accessToken, refreshToken);
+        this.GroceryLists = new GroceryListEntityGroup(accessToken, refreshToken);
+        this.Custom = new CustomEntityGroup(accessToken, refreshToken);
     };
-
-    SetAuthorization(userId, accessToken, refreshToken) {
-        if (userId) {
-            authorizationHeaders["RecipeFinder_User"] = userId;
-        }
-        if (accessToken) {
-            authorizationHeaders["RecipeFinder_AccessToken"] = accessToken;
-        }
-        if (refreshToken) {
-            authorizationHeaders["RecipeFinder_RefreshToken"] = refreshToken;
-        }
-    };
-
-    AuthReturnUrlPath = '';
-    AuthorizationPage = '';
-
-    Ingredients = IngredientEntityGroup;
-    Users = UserEntityGroup;
-    Roles = RoleEntityGroup;
-    Recipes = RecipeEntityGroup;
-    Kitchens = KitchenEntityGroup;
-    RequirementsLists = RequirementsListEntityGroup;
-    UnitTypes = UnitTypeEntityGroup;
-    IngredientCategories = IngredientCategoryEntityGroup;
-    RecipeCategories = RecipeCategoryEntityGroup;
-    GroceryLists = GroceryListEntityGroup;
-    Custom = CustomEntityGroup;
 };
