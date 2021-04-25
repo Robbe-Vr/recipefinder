@@ -29,10 +29,15 @@ export function AttemptLogIn({ children }) {
                 return;
             }
 
-            if (savedAccount && account && account.AccessToken && account.RefreshToken && savedAccount.AccessToken === account.AccessToken && savedAccount.RefreshToken === account.RefreshToken && ValidateAccessToken(savedAccount.AccessToken, Api)) {
-                console.log("Already logged in!");
+            if (savedAccount && account && account.AccessToken && account.RefreshToken &&
+                savedAccount.AccessToken === account.AccessToken && savedAccount.RefreshToken === account.RefreshToken &&
+                ValidateAccessToken(savedAccount.AccessToken, Api)) {
+                if (!account.id || !account.name) {
+                    
+                }
             }
-            else if (savedAccount && savedAccount.AccessToken && ValidateAccessToken(savedAccount.AccessToken, Api)) {
+            else if (savedAccount && savedAccount.AccessToken &&
+                ValidateAccessToken(savedAccount.AccessToken, Api)) {
                 console.log("Log In successfull for " + savedAccount.name);
                 setAccount(savedAccount);
             }

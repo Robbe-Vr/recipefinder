@@ -53,9 +53,9 @@ function Onboarding({ setTitle, Api, setTokens, setAuthorization }) {
         <div className={classes.root}>
             {authPageAvailable ?
                 <Route component={() => { 
-                        console.log("redirecting to api authorization page.")
-                        window.location.href = Api.AuthorizationPage; 
-                        return null;
+                    console.log("redirecting to api authorization page.")
+                    window.location.href = Api.AuthorizationPage; 
+                    return null;
                 }}/>
                     : 
                 <Switch>
@@ -70,7 +70,7 @@ function Onboarding({ setTitle, Api, setTokens, setAuthorization }) {
                         </div>
                     </Route>
                     <Route path={Api.AuthReturnUrlPath}>
-                        <AuthorizationCallback setTokens={setTokens} />
+                        <AuthorizationCallback setTokens={setTokens} Api={Api} />
                     </Route>
                     
                     <Route>

@@ -181,20 +181,26 @@ class CustomEntityGroup extends EntityGroup {
         return res.data.Result;
     };
 
+    async GetTokens(userId, code) {
+        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/token', { code, userId });
+
+        return res.data;
+    };
+
     async ValidateAccessToken(accessToken) {
-        var res = await super.PerformCustom('post', this.ApiUrl + '/Authorize/ValidateAccessToken', { accessToken });
+        var res = await super.PerformCustom('post', this.ApiUrl + '/Authorize/Validate', { accessToken });
 
         return res.data;
     };
 
     async RefreshAccessToken(refreshToken) {
-        var res = await super.PerformCustom('post', this.ApiUrl + '/Authorize/RefreshAccessToken', { refreshToken });
+        var res = await super.PerformCustom('post', this.ApiUrl + '/Authorize/Refresh', { refreshToken });
 
         return res.data;
     };
 
     async GetUserByAccessToken(accessToken) {
-        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/GetUserByAccessToken/' + accessToken);
+        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/Me', { accessToken });
 
         return new User(res.data.CountId, res.data.Id, res.data.Name, res.data.Email, res.data.PhoneNumber, res.data.PasswordHashed, res.data.Salt, res.data.DOB, res.data.CreationDate, res.data.Roles);
     };

@@ -143,11 +143,11 @@ function KitchenHomePage({ setTitle, userId, Api }) {
     return (
         <Grid className={classes.form}>
             <Typography className={classes.txt} variant="h3">
-                {kitchen.User?.Name}'s Kitchen!
+                {kitchen.User?.Name}'s Kitchen
             </Typography>
 
             {kitchen.Ingredients.length < 1 ?
-                "No ingredients in your kitchen!" :
+                "No ingredients in your kitchen." :
                 <KitchenList
                     columns={[
                         { id: 'image', label: '', minWidth: 50 },
