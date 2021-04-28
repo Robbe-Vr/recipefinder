@@ -9,6 +9,7 @@
     "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
     "crypto-js": "^4.0.0",
+    "oidc-client": "^1.11.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
@@ -17,7 +18,7 @@
   "name": "recipefinderreact",
   "version": "1.0.0",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3000&&set HTTPS=true&&react-scripts start",
     "build": "react-scripts build",
     "test": "react-script test",
     "eject": "react-scripts eject",

@@ -44,7 +44,7 @@ function UserSelectInputComponent({ name, label, variant = "outlined", defaultVa
                 > 
                 {
                     options.map(option =>
-                        <MenuItem id={name + "-" + option.name} value={option.value} selected={option.value === defaultValue}>{option.name}</MenuItem>
+                        <MenuItem key={option.id ?? options.name + '-' + option.value} value={option.value} selected={option.value === defaultValue}>{option.name}</MenuItem>
                     )
                 }
                 </Select>

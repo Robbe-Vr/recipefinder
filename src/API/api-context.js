@@ -19,7 +19,7 @@ export function ApiProvider({ children }) {
         account = {};
     }
 
-    const API = new Api(account?.AccessToken, account?.RefreshToken);
+    const API = new Api(account?.AccessToken);
 
     var contextValue = {
         Api: API,

@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 
 }));
 
-function Onboarding({ setTitle, Api, setTokens, setAuthorization }) {
+function Onboarding({ setTitle, Api, setTokens }) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -37,7 +37,7 @@ function Onboarding({ setTitle, Api, setTokens, setAuthorization }) {
 
             const pageActive = authPage ? authPage.length ? authPage.length > 1 : false : false;
 
-            console.log("auth page active status: " + pageActive);
+            console.log("auth page: " + (pageActive ? 'active' : 'inactive'));
 
             setAuthPageAvailable(pageActive);
         }

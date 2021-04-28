@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import { UserInputComponent } from "../Global/UserInputComponent";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { useAccount, LogIn, GetUserIdByName } from "../../API/index";
+import { useAccount, GetUserIdByName } from "../../API/index";
 import { Grid } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
@@ -36,7 +36,7 @@ export default function LogInPage({ setTitle, isAdmin, onSuccess, Api }) {
         setTitle && setTitle("Log In");
     });
 
-    const { updateByLogIn } = useAccount();
+    const { LogIn } = useAccount();
 
     const [errorMsgs, setErrorMsgs] = useState([]);
 
@@ -54,7 +54,7 @@ export default function LogInPage({ setTitle, isAdmin, onSuccess, Api }) {
             return false;
         }
 
-        let success = await LogIn(userId, password, updateByLogIn, Api);
+        let success = await LogIn(userId, password);
         
         if (success) {
             onSuccess();

@@ -48,7 +48,7 @@ function UserInputComponent({ name, variant = "outlined", type = 'text', inputPr
                     className={classes.inputBox}
                     variant={variant}
                     id={name}
-                    labelId={name + "-label"}
+                    label={name + "-label"}
                     value={value}
                     type={type}
                     inputProps={inputProps}

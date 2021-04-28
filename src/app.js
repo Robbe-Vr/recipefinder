@@ -18,7 +18,7 @@ import { AppDrawer, drawerWidth } from "./components/Drawer/AppDrawer";
 import { MainContent } from "./MainContent";
 import { Onboarding } from "./components/Onboarding/Onboarding";
 
-import { AttemptLogIn, useAccount, ApiProvider, useAPI } from "./API/index";
+import { Authenticate, useAccount, ApiProvider, useAPI } from "./API/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
@@ -74,7 +74,7 @@ export default function App() {
 
     return (
         <ApiProvider>
-            <AttemptLogIn>
+            <Authenticate>
                 <Loading>
                     <Router>
                         <div className={classes.root}>
@@ -82,7 +82,7 @@ export default function App() {
                         </div>
                     </Router>
                 </Loading>
-            </AttemptLogIn>
+            </Authenticate>
         </ApiProvider>
     );
 };

@@ -1,12 +1,11 @@
-import { AttemptLogIn, useAccount, LogIn, GetUserIdByName, CreateAccount } from "./account";
+import { Authenticate, useAccount, GetUserIdByName, CreateAccount } from "./account";
 import { useAPI, ApiProvider } from "../API/api-context";
 
 export {
     useAPI,
     ApiProvider,
     useAccount,
-    AttemptLogIn,
-    LogIn,
+    Authenticate,
     GetUserIdByName,
     CreateAccount,
 };

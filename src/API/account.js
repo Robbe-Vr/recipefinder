@@ -5,110 +5,151 @@ const ACCOUNT_LS = "recipefinder_account";
 
 const AccountContext = React.createContext({});
 
-export function AttemptLogIn({ children }) {
+export function Authenticate({ children }) {
 
     const { Api } = useAPI();
 
-    const [account, setAccount] = useState(null);
+    const [serverDown, setServerDown] = useState(false);
+    const [account, setAccount] = useState({});
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
 
+        async function TestServerDown() {
+            const result = await Api.Users.GetAll();
+
+            const serverDown = result && result.length && result.length > 0;
+
+            setServerDown(serverDown);
+
+            return serverDown;
+        };
+
+        if (serverDown === true) {
+            TestServerDown().then((serverDown) => {
+                if (serverDown) {
+                    setLoaded(true);
+                }
+            });
+
+            return;
+        }
+
         async function checkLogin() {
-            var savedAccount = localStorage.getItem(ACCOUNT_LS);
-            
+
+            var localAccStr = localStorage.getItem(ACCOUNT_LS);
+            var localAcc = {};
+
             try
             {
-                savedAccount = JSON.parse(savedAccount);
-                console.log(savedAccount)
+                localAcc = JSON.parse(localAccStr);
             }
             catch (e)
             {
-                logOut();
-                setLoaded(true);
-                return;
+                console.log(e);
             }
 
-            if (savedAccount && account && account.AccessToken && account.RefreshToken &&
-                savedAccount.AccessToken === account.AccessToken && savedAccount.RefreshToken === account.RefreshToken &&
-                ValidateAccessToken(savedAccount.AccessToken, Api)) {
-                if (!account.id || !account.name) {
-                    
+            if (!localAcc) {
+                console.log("No local account found.");
+
+            } else if (!localAcc.AccessToken && localAcc.AccessToken.length === 45) {
+                console.log('User not authenticated.');
+
+            } else {
+                const tokenValidation = await Api.Custom.ValidateAccessToken(localAcc.AccessToken);
+
+                if (tokenValidation.Result === "Success.") {
+                    console.log("Token validated.");
+
+                    if (account?.AccessToken !== localAcc.AccessToken) {
+                        var accWithUser = account;
+
+                        if (!(accWithUser?.Id)) {
+                            var user = await Api.Custom.GetUserByAccessToken(localAcc.AccessToken);
+
+                            accWithUser = {
+                                ...accWithUser,
+                                Id: user.Id,
+                                Name: user.Name,
+                                Email: user.Email,
+                                Roles: user.Roles,
+                            };
+                        }
+
+                        var correctedAcc = {
+                            ...accWithUser,
+                            AccessToken: localAcc.AccessToken,
+                        }
+    
+                        localStorage.setItem(ACCOUNT_LS, JSON.stringify(correctedAcc));
+
+                        setAccount(correctedAcc);
+                    }
+
+                } else {
+                    console.log("Token invalid. Refreshing...");
+
+                    const newToken = await Api.Custom.RefreshAccessToken(localAcc.Id);
+
+                    if (newToken !== "Error") {
+                        console.log("New token received.");
+
+                        var refreshedAcc = {
+                            ...account,
+                            AccessToken: newToken.access_token,
+                        }
+
+                        localStorage.setItem(ACCOUNT_LS, JSON.stringify(refreshedAcc));
+                        setAccount(refreshedAcc);
+                    }
+                    else await TestServerDown()
                 }
-            }
-            else if (savedAccount && savedAccount.AccessToken &&
-                ValidateAccessToken(savedAccount.AccessToken, Api)) {
-                console.log("Log In successfull for " + savedAccount.name);
-                setAccount(savedAccount);
-            }
-            else {
-                console.log('Access token validation failed!');
-            }
+            };
 
             setLoaded(true);
         };
 
-        console.log("Attempting Log In...");
         checkLogin();
-    }, [account, Api, loaded]);
-
-    const updateAccount = (patch) => {
-        const newAccount = {
-            ...account,
-            ...patch,
-        };
-
-        console.log("new account: ", newAccount);
-
-        localStorage.setItem(ACCOUNT_LS, JSON.stringify(newAccount));
-        setAccount(newAccount);
+    }, [account, serverDown, Api, loaded]);
+    	
+    const logIn = (name, password) => {
+        
     };
 
-    const updateRegistered = (isRegistered = false, newRoles = ["defaultUser"]) => {
-        updateAccount({
-            Registered: isRegistered,
-            Roles: newRoles,
+    const setTokens = (accessToken, userId) => {
+        if (account?.AccessToken === accessToken) {
+            return;
+        }
+
+        Api.Users.GetById(userId).then((user) => {
+            var acc = {
+                ...account,
+                Id: user.Id,
+                Name: user.Name,
+                Email: user.Email,
+                Roles: user.Roles,
+                AccessToken: accessToken,
+            };
+    
+            localStorage.setItem(ACCOUNT_LS, JSON.stringify(acc));
+            setAccount(acc);
         });
     };
-
-    const updateByLogIn = (loggedInAccount) => {
-        updateAccount({
-            Registered: true,
-            ...loggedInAccount,
-        });
-    };
-
     const logOut = () => {
+        Api.Custom.LogOut(account?.Id, account?.AccessToken);
+
         localStorage.removeItem(ACCOUNT_LS);
         setAccount({});
     };
 
-    const setTokens = (accessToken, refreshToken) => {
-        GetUserByAccessToken(accessToken, Api).then((user) => {
-            user.AccessToken = accessToken;
-            user.RefreshToken = refreshToken;
-            user.Registered = true;
-
-            updateAccount(user);
-        });
-    };
-
-    if (account?.Id) {
-        console.log("Account Id exists. " + account.Id);
-    }
-
-    console.log("account state: ", account)
-
     var contextValue = {
-        loaded,
-        registered: account ? true : false,
+        loaded: loaded,
+        registered: account?.Id && account?.AccessToken ? true : false,
         roles: account?.Roles ? account.Roles : [],
         accessToken: account?.AccessToken,
-        refreshToken: account?.RefreshToken,
         id: account?.Id,
         name: account?.Name,
-        updateRegistered,
-        updateByLogIn,
+        logIn,
         logOut,
         setTokens,
     };
@@ -120,6 +161,13 @@ export function AttemptLogIn({ children }) {
     );
 };
 
+export function useAccount() {
+    return useContext(AccountContext);
+};
+
+/*************************/
+/* Local Login Functions */
+/*************************/
 export async function GetUserIdByName(name, UsersApi) {
     if (!name && name.length < 1) { return; }
 
@@ -130,47 +178,6 @@ export async function GetUserIdByName(name, UsersApi) {
     }
 
     return null;
-};
-
-export function CurrentAccount() {
-    const CurrentAccount = localStorage.getItem(ACCOUNT_LS);
-
-    if (CurrentAccount !== null) {
-        return JSON.parse(CurrentAccount);
-    } else return { error: "Not signed in!" };
-};
-
-export async function ValidateAccessToken(accessToken, Api) {
-    var validationResult = await Api.Custom.ValidateAccessToken(accessToken);
-
-    return validationResult;
-};
-
-export async function RefreshAccessToken(refreshToken, Api) {
-    var refreshResult = await Api.Custom.RefreshAccessToken(refreshToken);
-
-    return refreshResult;
-};
-
-export async function GetUserByAccessToken(accessToken, Api) {
-    var user = await Api.Custom.GetUserByAccessToken(accessToken);
-
-    console.log("user by accessToken: ", user);
-
-    return user;
-};
-
-export async function LogIn(id, password, updateByLogIn, Api) {
-    if (!id || !password || id.length < 1 || password.length < 1) { return; }
-
-    const user = await Api.Users.GetById(id);
-
-    if (user !== null && user.PasswordHashed === await encryptSHA256(Api.Custom, password, user.Salt)) {
-        updateByLogIn(user);
-        return true;
-    }
-
-    return false;
 };
 
 export async function CreateAccount(username, email, password, updateByLogIn, api) {
@@ -232,11 +239,7 @@ async function createUserObject(CustomApi, username = '', email = '', password) 
         lockoutEnd: null,
         AccessFailedCount: 0,
         Kitchen: null,
-        Roles: [(await CustomApi.PerformCustom('get', CustomApi.ApiUrl + "/Roles/byname/Default")).data],
+        Roles: ((await CustomApi.PerformCustom('get', CustomApi.ApiUrl + "/Roles/byname/Default"))?.data) ?? [],
         Deleted: false,
     };
-};
-
-export function useAccount() {
-    return useContext(AccountContext);
 };

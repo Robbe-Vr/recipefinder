@@ -17,9 +17,6 @@ class EntityGroup {
         if (accessToken) {
             this.AuthorizationHeaders["RecipeFinder_AccessToken"] = accessToken;
         }
-        if (refreshToken) {
-            this.AuthorizationHeaders["RecipeFinder_RefreshToken"] = refreshToken;
-        }
     };
 
     AuthorizationHeaders = { };
@@ -158,8 +155,8 @@ class EntityGroup {
         }
         catch (e)
         {
-            console.log(e);
-            return "Error";
+            console.log(`Failed request to '${url}' as ${type.toUpperCase()}`, e);
+            return { info: e, error: true };
         }
     };
 };
@@ -172,35 +169,59 @@ class CustomEntityGroup extends EntityGroup {
     async Encrypt(text, salt) {
         var res = await super.PerformCustom('post', this.ApiUrl + '/Encrypt', { Text: text, Salt: salt });
 
+        if (res.error) {
+            return "Error";
+        }
+
         return res.data.Result;
     };
 
     async GetSalt() {
         var res = await super.PerformCustom('get', this.ApiUrl + '/Encrypt/getsalt');
 
+        if (res.error) {
+            return "Error";
+        }
+
         return res.data.Result;
     };
 
-    async GetTokens(userId, code) {
-        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/token', { code, userId });
+    async LogOut(userId, accessToken) {
+        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/logout?show', { accessToken, userId });
+
+        if (res.error) {
+            return "Error";
+        }
 
         return res.data;
     };
 
     async ValidateAccessToken(accessToken) {
-        var res = await super.PerformCustom('post', this.ApiUrl + '/Authorize/Validate', { accessToken });
+        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/Validate', { accessToken });
+
+        if (res.error) {
+            return "Error";
+        }
 
         return res.data;
     };
 
-    async RefreshAccessToken(refreshToken) {
-        var res = await super.PerformCustom('post', this.ApiUrl + '/Authorize/Refresh', { refreshToken });
+    async RefreshAccessToken(userId) {
+        var res = await super.PerformCustom('post', this.ApiUrl + '/Authorize/Refresh', { userId });
+
+        if (res.error) {
+            return "Error";
+        }
 
         return res.data;
     };
 
     async GetUserByAccessToken(accessToken) {
         var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/Me', { accessToken });
+
+        if (res.error) {
+            return "Error";
+        }
 
         return new User(res.data.CountId, res.data.Id, res.data.Name, res.data.Email, res.data.PhoneNumber, res.data.PasswordHashed, res.data.Salt, res.data.DOB, res.data.CreationDate, res.data.Roles);
     };
@@ -581,26 +602,26 @@ class GroceryListEntityGroup extends EntityGroup {
 };
 
 export default class Api {
-    constructor(accessToken, refreshToken) {
+    constructor(accessToken) {
         const authReturnUrlPath = '/returnAuthorization';
 
         const authPage = "/api/authorize/login",
-            params = `?ReturnUrl=http://localhost:3000` + authReturnUrlPath;
+            params = `?ReturnUrl=https://localhost:3000` + authReturnUrlPath;
 
         this.AuthorizationPage = protocol + serverIp + ":" + port + authPage + params;
 
         this.AuthReturnUrlPath = authReturnUrlPath;
 
-        this.Ingredients = new IngredientEntityGroup(accessToken, refreshToken);
-        this.Users = new UserEntityGroup(accessToken, refreshToken);
-        this.Roles = new RoleEntityGroup(accessToken, refreshToken);
-        this.Recipes = new RecipeEntityGroup(accessToken, refreshToken);
-        this.Kitchens = new KitchenEntityGroup(accessToken, refreshToken);
-        this.RequirementsLists = new RequirementsListEntityGroup(accessToken, refreshToken);
-        this.UnitTypes = new UnitTypeEntityGroup(accessToken, refreshToken);
-        this.IngredientCategories = new IngredientCategoryEntityGroup(accessToken, refreshToken);
-        this.RecipeCategories = new RecipeCategoryEntityGroup(accessToken, refreshToken);
-        this.GroceryLists = new GroceryListEntityGroup(accessToken, refreshToken);
-        this.Custom = new CustomEntityGroup(accessToken, refreshToken);
+        this.Ingredients = new IngredientEntityGroup(accessToken);
+        this.Users = new UserEntityGroup(accessToken);
+        this.Roles = new RoleEntityGroup(accessToken);
+        this.Recipes = new RecipeEntityGroup(accessToken);
+        this.Kitchens = new KitchenEntityGroup(accessToken);
+        this.RequirementsLists = new RequirementsListEntityGroup(accessToken);
+        this.UnitTypes = new UnitTypeEntityGroup(accessToken);
+        this.IngredientCategories = new IngredientCategoryEntityGroup(accessToken);
+        this.RecipeCategories = new RecipeCategoryEntityGroup(accessToken);
+        this.GroceryLists = new GroceryListEntityGroup(accessToken);
+        this.Custom = new CustomEntityGroup(accessToken);
     };
 };

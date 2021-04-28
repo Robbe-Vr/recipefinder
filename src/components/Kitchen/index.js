@@ -171,7 +171,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                                     <UserInputComponent onChange={(value) => onUnitsEdited(ingredient.IngredientId, value)} name="Units" defaultValue={ingredient.Units}
                                         type="number" inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }} />
                                     <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(ingredient.IngredientId, value)} name="Unit Type" defaultValue={ingredient.UnitType.CountId} type="number"
-                                        options={ingredient.Ingredient.UnitTypes.map(unitType => { return { name: unitType.Name, value: unitType.CountId } })} />
+                                        options={ingredient.Ingredient.UnitTypes.map(unitType => { return { id: unitType.CountId, name: unitType.Name, value: unitType.CountId } })} />
                                     <Button id={ingredient.IngredientId} style={{ backgroundColor: 'forestgreen', marginRight: '5px' }} onClick={async (e) => await onEdit(ingredient.IngredientId)}>Save</Button>
                                     <Button id={ingredient.IngredientId} style={{ backgroundColor: 'gold' }} onClick={(e) => ToggleEdit(ingredient.Ingredient.Id)}>Cancel</Button>
                                 </div> : null,
