@@ -49,6 +49,10 @@ export function Authenticate({ children }) {
                 console.log(e);
             }
 
+            if (!account || (!account.AccessToken && !account.Id)) {
+                setAccount({ ...account, ...localAcc });
+            }
+
             if (!localAcc) {
                 console.log("No local account found.");
 

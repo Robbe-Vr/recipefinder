@@ -3,10 +3,10 @@ import UnitType from "./UnitType"
 
 export default class Ingredient {
     constructor(id, name, categories, unitTypes) {
-        this.Id = id;
-        this.Name = name;
-        this.Categories = categories;
-        this.UnitTypes = unitTypes;
+        this.Id = id ?? '';
+        this.Name = name ?? '';
+        this.Categories = categories ?? [];
+        this.UnitTypes = unitTypes ?? [];
     };
 
     Id = '';

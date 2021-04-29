@@ -6,6 +6,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { HomePage } from "./components/Home/Index";
 import { KitchenHomePage } from "./components/Kitchen/index";
 import { AddIngredients } from "./components/Kitchen/AddIngredients";
+import { RecipeBookHomePage } from "./components/RecipeBook/index";
+import RecipeDetailsPage from "./components/RecipeBook/details";
 import AccountsPage from "./components/Accounts/index";
 import EditAccountPage from "./components/Accounts/update";
 import AccountDetailsPage from "./components/Accounts/details";
@@ -75,6 +77,12 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api }) 
                     </Route>
                     <Route path="/kitchen/add">
                         <AddIngredients setTitle={setTitle} userId={userId} Api={Api} />
+                    </Route>
+                    <Route path="/recipebook/index">
+                        <RecipeBookHomePage setTitle={setTitle} userId={userId} Api={Api} />
+                    </Route>
+                    <Route path="/recipebook/details/:recipeId">
+                        <RecipeDetailsPage setTitle={setTitle} Api={Api} />
                     </Route>
                     {
                         isRegistered ? (

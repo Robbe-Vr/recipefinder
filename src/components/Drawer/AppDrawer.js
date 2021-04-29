@@ -70,7 +70,7 @@ function AppDrawer({ open, onOpen, isAdmin, isCreator, isCook }) {
                     <i style={{ marginLeft: '10px' }}>Pages</i>
                     <DrawerItem icon={faHome} link="/home/index" text="Home" />
                     <DrawerItem icon={faUtensils} link="/kitchen/index" text="Your Kitchen" />
-                    <DrawerItem icon={faBookOpen} link="/kitchen/index" text="Recipe Book" />
+                    <DrawerItem icon={faBookOpen} link="/recipebook/index" text="Recipe Book" />
                     <DrawerItem icon={faListAlt} link="/kitchen/index" text="Grocery List" />
                 </div>
             </List>
@@ -80,7 +80,7 @@ function AppDrawer({ open, onOpen, isAdmin, isCreator, isCook }) {
                     isCook ? (
                         <div>
                             <i style={{ marginLeft: '10px' }}>Cook</i>
-                            <DrawerItem icon={faMortarPestle} link="/kitchen/index" text="Your Recipes" />
+                            <DrawerItem icon={faMortarPestle} link="/recipebook/index" text="Your Recipes" />
                         </div>
                     ) : (
                         <div></div>

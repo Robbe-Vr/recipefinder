@@ -11,6 +11,7 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { KitchenIngredient } from "../../models";
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -34,32 +35,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
     const [kitchen, setKitchen] = useState({
         UserId: '',
         User: '',
-        Ingredients: [
-            {
-                IngredientId: '',
-                Ingredient: {
-                    Id: '',
-                    Name: '',
-                    ImageLocation: '',
-                    AverageVolumeInLiterPerUnit: 0.0,
-                    AverageWeightInKgPerUnit: 0.0,
-                    UnitTypes: [
-                        {
-                            CountId: 1,
-                            Name: '',
-                            AllowDecimals: false,
-                        }
-                    ]
-                },
-                Units: 0.00,
-                UnitTypeId: '',
-                UnitType: {
-                    CountId: 1,
-                    Name: '',
-                    AllowDecimals: false,
-                }
-            }
-        ],
+        Ingredients: [new KitchenIngredient()],
     });
     if (kitchen.Ingredients.length === 1 && kitchen.Ingredients[0].Units === 0.00)
     {

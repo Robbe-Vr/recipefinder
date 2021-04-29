@@ -4,22 +4,22 @@ import UnitType from "./UnitType"
 
 export default class RequirementsListIngredient {
     constructor(id, ingredient, units, unitType, recipe) {
-        this.id = id;
-        this.ingredientId = ingredient.id;
-        this.ingredient = ingredient;
-        this.units = units;
-        this.unitTypeId = unitType.id;
-        this.unitType = unitType;
-        this.recipeId = recipe.id;
-        this.recipe = recipe;
+        this.Id = id ?? '';
+        this.IngredientId = ingredient?.Id ?? '';
+        this.Ingredient = ingredient ?? new Ingredient();
+        this.Units = units ?? 0.00;
+        this.UnitTypeId = unitType?.Id ?? '';
+        this.UnitType = unitType ?? new UnitType();
+        this.RecipeId = recipe?.Id ?? '';
+        this.Recipe = recipe ?? new Recipe();
     };
 
-    id = '';
-    ingredientId = '';
-    ingredient = Ingredient;
-    units = 0;
-    unitTypeId = '';
-    unitType = UnitType;
-    recipeId = '';
-    recipe = Recipe;
+    Id = '';
+    IngredientId = '';
+    Ingredient = Ingredient;
+    Units = 0;
+    UnitTypeId = '';
+    UnitType = UnitType;
+    RecipeId = '';
+    Recipe = Recipe;
 };
