@@ -78,8 +78,9 @@ export default function AccountDetailsPage({ setTitle, Api }) {
                     ` ${cd.getHours() < 10 ? "0" + cd.getHours() : cd.getHours()}:${cd.getMinutes() < 10 ? "0" + cd.getMinutes() : cd.getMinutes()}`}
                 </Typography>
                 <Typography>
-                    Roles: {userDetails.Roles.map(role => <Card variant="outlined" style={{ margin: '1rem', padding: '5px' }}>{role.Name}</Card>)}
+                    Roles:
                 </Typography>
+                {userDetails.Roles.map(role => <Card variant="outlined" style={{ margin: '2px', padding: '5px' }}>{role.Name}</Card>)}
                 <Typography>
                     Actions:
                 </Typography>

@@ -1,5 +1,4 @@
 import Ingredient from "./Ingredient"
-import Recipe from "./Recipe";
 import UnitType from "./UnitType"
 
 export default class RequirementsListIngredient {
@@ -11,15 +10,15 @@ export default class RequirementsListIngredient {
         this.UnitTypeId = unitType?.Id ?? '';
         this.UnitType = unitType ?? new UnitType();
         this.RecipeId = recipe?.Id ?? '';
-        this.Recipe = recipe ?? new Recipe();
+        this.Recipe = recipe;
     };
 
     Id = '';
     IngredientId = '';
-    Ingredient = Ingredient;
+    Ingredient = new Ingredient();
     Units = 0;
     UnitTypeId = '';
-    UnitType = UnitType;
+    UnitType = new UnitType();
     RecipeId = '';
-    Recipe = Recipe;
+    Recipe;
 };

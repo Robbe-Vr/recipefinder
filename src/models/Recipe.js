@@ -8,14 +8,14 @@ export default class Recipe {
         this.Name = name ?? '';
         this.Categories = categories ?? [];
         this.RequirementsList = requirementsList ?? [];
-        this.userId = user?.Id ?? '';
+        this.UserId = user?.Id ?? '';
         this.User = user ?? new User();
     };
 
     Id = '';
     Name = '';
-    Categories = [RecipeCategory];
-    RequirementsList = [RequirementsListIngredient];
+    Categories = [new RecipeCategory()];
+    RequirementsList = [new RequirementsListIngredient(null, null, null, null, this)];
     UserId = '';
-    User = User;
+    User = new User();
 };

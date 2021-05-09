@@ -37,7 +37,7 @@ function HomePage({ setTitle, name, userId }) {
             <Link to="/kitchen/index" style={{ width: '100%', height: '50%', margin: '.5rem', textDecoration: 'none' }}>
                 <Button style={{ backgroundColor: 'skyblue', marginBottom: '10px', width: "100%", height: "100%", fontSize: 25 }}><FontAwesomeIcon icon={faUtensils} style={{ marginRight: '5px' }}/>Your Kitchen</Button>
             </Link>
-            <Link to="/kitchen/index" style={{ width: '100%', height: '50%', margin: '.5rem', textDecoration: 'none' }}>
+            <Link to="/recipebook/index" style={{ width: '100%', height: '50%', margin: '.5rem', textDecoration: 'none' }}>
                 <Button style={{ backgroundColor: 'forestgreen', marginBottom: '10px', width: "100%", height: "100%", fontSize: 25 }}><FontAwesomeIcon icon={faBookOpen} style={{ marginRight: '5px' }}/>Recipe Book</Button>
             </Link>
         </div>

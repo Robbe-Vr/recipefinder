@@ -142,7 +142,11 @@ function AppShell() {
                 isCreator={roles.filter(r => r.name === 'creator') !== undefined}
                 isCook={roles.filter(r => r.name === 'cook') !== undefined}
             />
-            <MainContent setTitle={setTitle} drawerOpen={open} isRegistered={registered} name={name} userId={id ?? "unknown"} Api={Api} />
+            <MainContent setTitle={setTitle} drawerOpen={open} isRegistered={registered} name={name} userId={id ?? "unknown"} Api={Api}
+                isAdmin={roles.filter(r => r.name === 'admin') !== undefined}
+                isCreator={roles.filter(r => r.name === 'creator') !== undefined}
+                isCook={roles.filter(r => r.name === 'cook') !== undefined}
+            />
         </>
     );
 };

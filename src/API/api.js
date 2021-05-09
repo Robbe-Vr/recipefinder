@@ -351,9 +351,19 @@ class RecipeEntityGroup extends EntityGroup {
     async GetAll() {
         var data = await super.GetAll();
 
-        const fixedData = data.map((item) => {
+        const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
             return new Recipe(item.Id, item.Name, item.Categories, item.RequirementsList, item.User);
-        });
+        }) : [];
+
+        return fixedData;
+    };
+
+    async GetPreparableForUser(userId) {
+        var res = await super.PerformCustom('get', this.ApiUrl + '/preparable/' + userId);
+
+        const fixedData = res.data && res.data !== "Error" && res.data.map ? res.data.map((item) => {
+            return new Recipe(item.Id, item.Name, item.Categories, item.RequirementsList, item.User);
+        }) : [];
 
         return fixedData;
     };
@@ -470,7 +480,7 @@ class UnitTypeEntityGroup extends EntityGroup {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new UnitType(item.Id, item.Name, item.AllowDecimals, item.Ingredients);
+            return new UnitType(item.CountId, item.Name, item.AllowDecimals, item.Ingredients);
         }) : [];
 
         return fixedData;

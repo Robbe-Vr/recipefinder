@@ -1,6 +1,5 @@
 import Ingredient from "./Ingredient"
 import UnitType from "./UnitType"
-import User from "./User"
 
 export default class KitchenIngredient {
     constructor(id, ingredient, units, unitType, user) {
@@ -9,15 +8,15 @@ export default class KitchenIngredient {
         this.Units = units ?? 0.00;
         this.UnitType = unitType ?? new UnitType();
         this.UserId = user?.Id ?? '';
-        this.User = user ?? new User();
+        this.User = user;
     };
 
     Id = '';
     IngredientId = '';
-    Ingredient = Ingredient;
+    Ingredient = new Ingredient();
     Units = 0;
     UnitTypeId = '';
-    UnitType = UnitType;
+    UnitType = new UnitType();
     UserId = '';
-    User = User;
+    User;
 };

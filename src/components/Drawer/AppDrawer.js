@@ -9,6 +9,7 @@ import List from "@material-ui/core/List";
 import DrawerItem from "./DrawerItem";
 import Typography from "@material-ui/core/Typography";
 import { faBook, faBookOpen, faHome, faListAlt, faMortarPestle, faUsers, faUtensils } from "@fortawesome/free-solid-svg-icons";
+import CRUDPagesInfo from "../../API/CRUDPagesInfo";
 
 const drawerWidth = 240;
 
@@ -93,11 +94,13 @@ function AppDrawer({ open, onOpen, isAdmin, isCreator, isCook }) {
                     isCreator ? (
                         <div>
                             <i style={{ marginLeft: '10px' }}>Creator</i>
-                            <DrawerItem icon={faBook} link="/accounts/index" text="Ingredients" />
-                            <DrawerItem icon={faBook} link="/accounts/index" text="Ingredient Categories" />
-                            <DrawerItem icon={faBook} link="/accounts/index" text="Unit Types" />
-                            <DrawerItem icon={faBook} link="/accounts/index" text="Recipes" />
-                            <DrawerItem icon={faBook} link="/accounts/index" text="Recipe Categories" />
+                            {
+                                CRUDPagesInfo.Pages.map((CRUD, index) => {
+                                    return (
+                                        <DrawerItem icon={faBookOpen} key={`${CRUD.Name}-${index}`} link={`/${CRUD.Name}-${index}/index`} text={CRUD.DisplayName} />
+                                    );
+                                })
+                            }
                         </div>
                     ) : (
                         <div></div>

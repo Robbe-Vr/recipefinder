@@ -11,6 +11,6 @@ export default class Ingredient {
 
     Id = '';
     Name = '';
-    Categories = [IngredientCategory];
-    UnitTypes = [UnitType];
+    Categories = [new IngredientCategory()];
+    UnitTypes = [new UnitType()];
 };

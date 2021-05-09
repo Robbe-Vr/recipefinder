@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-function RecipeBookHomePage({ setTitle, userId, Api }) {
+function CustomRecipeBookPage({ setTitle, userId, Api }) {
     useEffect(() => {
         setTitle && setTitle("RecipeBook");
     });
@@ -43,15 +43,27 @@ function RecipeBookHomePage({ setTitle, userId, Api }) {
     const classes = useStyles();
 
     useEffect(() => {
-        Api.Recipes.GetPreparableForUser(userId).then((recipes) => {
+        Api.Recipes.GetAllByCook(userId).then((recipes) => {
             if (recipes === "Error") { return; }
         
             setRecipes(recipes);
         });
-    }, [Api.Recipes, userId]);
+    }, [Api.Recipes]);
 
     const onDetails = (recipeId) => {
         history.push('/recipebook/details/' + recipeId);
+    };
+
+    const onEdit = (recipeId) => {
+        history.push('/recipebook/custom/edit/' + recipeId);
+    };
+
+    const ToggleRemove = (recipeId) => {
+        
+    };
+
+    const onRemove = (recipeId) => {
+        
     };
 
     return (
@@ -74,7 +86,7 @@ function RecipeBookHomePage({ setTitle, userId, Api }) {
                             id: recipe.Id,
                             image: <Thumbnail source={recipe.ImageLocation} size="50px" />,
                             name: recipe.Name,
-                            actions: <RowActions rowEntity={recipe} rowEntityId={recipe.Id} onDetails={onDetails} />,
+                            actions: <RowActions rowEntity={recipe} rowEntityId={recipe.Id} onDetails={onDetails} onEdit={onEdit} onRemove={ToggleRemove} />,
                         };
                     })}
                 />
@@ -83,4 +95,4 @@ function RecipeBookHomePage({ setTitle, userId, Api }) {
     );
 };
 
-export { RecipeBookHomePage };
+export { CustomRecipeBookPage };

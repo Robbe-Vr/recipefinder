@@ -13,5 +13,5 @@ export default class GroceryList {
     Name = '';
     Value = '';
     UserId = '';
-    User = User;
+    User = new User();
 };

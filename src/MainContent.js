@@ -8,10 +8,17 @@ import { KitchenHomePage } from "./components/Kitchen/index";
 import { AddIngredients } from "./components/Kitchen/AddIngredients";
 import { RecipeBookHomePage } from "./components/RecipeBook/index";
 import RecipeDetailsPage from "./components/RecipeBook/details";
+import RecipeEditPage from "./components/RecipeBook/edit";
 import AccountsPage from "./components/Accounts/index";
 import EditAccountPage from "./components/Accounts/update";
 import AccountDetailsPage from "./components/Accounts/details";
 import { drawerWidth } from "./components/Drawer/AppDrawer";
+import { CustomRecipeBookPage } from "./components/RecipeBook/custom";
+import { CRUDPage } from "./components/CRUD/CRUDPage";
+import CRUDPagesInfo from "./API/CRUDPagesInfo";
+import CRUDDetailsPage from "./components/CRUD/details";
+import CRUDEditPage from "./components/CRUD/edit";
+import CRUDCreatePage from "./components/CRUD/create";
 
 const useStyles = makeStyles((theme) => ({
     drawerHeader: {
@@ -41,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api }) {
+function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, isAdmin, isCreator, isCook }) {
     const classes = useStyles();
 
     return (
@@ -63,15 +70,6 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api }) 
                     <Route path="/home/index">
                         <HomePage setTitle={setTitle} name={name} userId={userId} Api={Api} />
                     </Route>
-                    <Route path="/accounts/index">
-                        <AccountsPage setTitle={setTitle} Api={Api} />
-                    </Route>
-                    <Route path="/accounts/edit/:userId">
-                        <EditAccountPage setTitle={setTitle} Api={Api} />
-                    </Route>
-                    <Route path="/accounts/details/:userId">
-                        <AccountDetailsPage setTitle={setTitle} Api={Api} />
-                    </Route>
                     <Route path="/kitchen/index">
                         <KitchenHomePage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
@@ -92,6 +90,55 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api }) 
                         )
                     }
                 </Switch>
+                {
+                    isCook ?
+                    <Switch>
+                        <Route path="/recipebook/custom">
+                            <CustomRecipeBookPage setTitle={setTitle} userId={userId} Api={Api} />
+                        </Route>
+                        <Route path="/recipebook/custom/edit/:recipeId">
+                            <RecipeEditPage setTitle={setTitle} userId={userId} Api={Api} />
+                        </Route>
+                    </Switch>
+                    : null
+                }
+                {
+                    isCreator ?
+                    CRUDPagesInfo.Pages.map((CRUD, index) => {
+                        return (
+                            <Switch key={`${CRUD.Name}-${index}`}>
+                                <Route path={`/${CRUD.Name}/index`}>
+                                    <CRUDPage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} Api={Api} />
+                                </Route>
+                                <Route path={`/${CRUD.Name}/details/:id`}>
+                                    <CRUDDetailsPage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} Api={Api} />
+                                </Route>
+                                <Route path={`/${CRUD.Name}/edit/:id`}>
+                                    <CRUDEditPage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} NotEditableProps={CRUD.notEditableProperties} Api={Api} />
+                                </Route>
+                                <Route path={`/${CRUD.Name}/create`}>
+                                    <CRUDCreatePage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} Api={Api} />
+                                </Route>
+                             </Switch>
+                        );
+                    })
+                    : null
+                }
+                {
+                    isAdmin ?
+                    <Switch>
+                         <Route path="/accounts/index">
+                             <AccountsPage setTitle={setTitle} Api={Api} />
+                        </Route>
+                        <Route path="/accounts/edit/:userId">
+                            <EditAccountPage setTitle={setTitle} Api={Api} />
+                        </Route>
+                        <Route path="/accounts/details/:userId">
+                            <AccountDetailsPage setTitle={setTitle} Api={Api} />
+                        </Route>
+                    </Switch>
+                    : null
+                }
             </div>
         </main>
     );
