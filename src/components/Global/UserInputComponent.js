@@ -35,9 +35,6 @@ function UserInputComponent({ name, variant = "outlined", type = 'text', inputPr
             justify="center"
             alignItems="center"
         >
-            <Grid>
-                <InputLabel Id={name + "-label"}>{name}</InputLabel>
-            </Grid>
             <Grid
                 container
                 direction="row"
@@ -48,7 +45,7 @@ function UserInputComponent({ name, variant = "outlined", type = 'text', inputPr
                     className={classes.inputBox}
                     variant={variant}
                     id={name}
-                    label={name + "-label"}
+                    label={name}
                     value={value}
                     type={type}
                     inputProps={inputProps}

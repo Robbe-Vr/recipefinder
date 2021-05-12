@@ -10,15 +10,9 @@ export default class RequirementsListIngredient {
         this.UnitTypeId = unitType?.Id ?? '';
         this.UnitType = unitType ?? new UnitType();
         this.RecipeId = recipe?.Id ?? '';
-        this.Recipe = recipe;
+        this.Recipe = recipe ?? null;
     };
 
-    Id = '';
-    IngredientId = '';
     Ingredient = new Ingredient();
-    Units = 0;
-    UnitTypeId = '';
     UnitType = new UnitType();
-    RecipeId = '';
-    Recipe;
 };

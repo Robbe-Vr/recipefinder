@@ -5,13 +5,13 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { Thumbnail } from "../Global/Thumbnail";
 import { RowActions } from "../Global/RowActions";
-import { Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
+import { Card, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCross, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { EntityList } from "../Global/EntityList";
-import { Ingredient, IngredientCategory, Recipe, RecipeCategory, UnitType } from "../../models";
+import { Ingredient, IngredientCategory, Recipe, RecipeCategory, RequirementsListIngredient, UnitType, User } from "../../models";
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -34,22 +34,74 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
     
     const history = useHistory();
 
-    const [removeItem, setRemoveItem] = useState({ item: {}, dialogOpened: false });
-
-    const [items, setItems] = useState([]);
-    if (items.length === 1 && items[0].Id === '') {
-        items.pop();
-    }
+    const [entityListData, setEntityListData] = useState({ columns: [], rows: [] });
 
     const classes = useStyles();
 
+    const entityGroup = Api[TableName];
+
     useEffect(() => {
-        Api[TableName].GetAll().then((tableContents) => {
-            if (tableContents === "Error") { return; }
+        entityGroup.GetAll().then((items) => {
+            if (items === "Error") { return; }
         
-            setItems(tableContents);
+            const columns = [];
+            const rows = [];
+
+            if (items.length > 0) {
+                var keys = Object.keys(items[0]);
+
+                keys.forEach(key => {
+                    columns.push({
+                        id: key,
+                        label: key,
+                        align: 'center',
+                        minWidth: 50,
+                    });
+                });
+                columns.push({
+                    id: 'actions',
+                    label: 'Actions',
+                    align: 'center',
+                    minWidth: 100,
+                });
+
+                items.forEach((item) => {
+                    var obj = {};
+
+                    keys.forEach((key) => {
+                        var value;
+
+                        if (Array.isArray(item[key])) {
+                            value = item[key].map(el => (el instanceof IngredientCategory || el instanceof RecipeCategory) ? <Card key={el.Name + "-" + el.CountId} style={{ margin: '2px', padding: '3px' }}>{el.Name}</Card> :
+                                                         el instanceof UnitType ? <Card key={el.Name + "-" + el.CountId} style={{ margin: '2px', padding: '3px' }}>{el.Name} ({el.AllowDecimals ? "decimals" : "integers"})</Card> :
+                                                         el instanceof RequirementsListIngredient ? <Card key={el.Ingredient.Id} style={{ margin: '2px', padding: '3px' }}>{el.Ingredient.Name} ({el.Units} {el.UnitType.Name})</Card> : <Card key={el} style={{ margin: '2px', padding: '3px' }}>{el}</Card>);
+                        }
+                        else if (item[key]instanceof Object ||
+                                 item[key] instanceof Ingredient ||
+                                 item[key] instanceof IngredientCategory ||
+                                 item[key] instanceof UnitType ||
+                                 item[key] instanceof Recipe ||
+                                 item[key] instanceof RecipeCategory ||
+                                 item[key] instanceof User) {
+                            value = item[key].Name;
+                        }
+                        else if (key === "ImageLocation") {
+                            value = <Thumbnail source={item[key]} size="50px" />
+                        }
+                        else value = item[key];
+
+                        obj[key] = value;
+                    });
+
+                    obj.actions = <RowActions rowEntity={item} rowEntityId={item.Id ?? item.CountId} onDetails={onDetails} onEdit={onEdit} onRemove={ToggleRemove} />
+
+                    rows.push(obj);
+                });
+            }
+
+            setEntityListData({ columns: columns, rows: rows });
         });
-    }, [Api[TableName]]);
+    }, [entityGroup]);
 
     const onDetails = (id) => {
         history.push(`/${TableName}/details/${id}`);
@@ -59,47 +111,20 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
         history.push(`/${TableName}/edit/${id}`);
     };
 
-    const ToggleRemove = (id) => {
+    const [removeItem, setRemoveItem] = useState({ item: {}, dialogOpened: false });
 
+    const ToggleRemove = (id) => {
+        const item = entityListData.rows.find(x => x.Id === id || x.CountId === id);
+        if (item) {
+            setRemoveItem({ item: item, dialogOpened: true });
+        } else {
+            console.log(`No item found with id '${id}' in current rows.`);
+        }
     };
 
     const onRemove = (id) => {
-        
+        entityGroup.Delete(id);
     };
-
-    const columns = [];
-    const rows = [];
-
-    if (items.length > 0) {
-        var keys = Object.keys(items[0]);
-
-        keys.forEach(key => {
-            columns.push({
-                id: key,
-                label: key,
-                align: 'center',
-                minWidth: 50,
-            });
-        });
-        columns.push({
-            id: 'actions',
-            label: 'Actions',
-            align: 'center',
-            minWidth: 100,
-        });
-
-        items.forEach((item) => {
-            var obj = {};
-
-            keys.forEach((key) => {
-                obj[key] = item[key];
-            });
-
-            obj.actions = <RowActions rowEntity={item} rowEntityId={item.Id} onDetails={onDetails} onEdit={onEdit} onRemove={onRemove} />
-
-            rows.push(obj);
-        });
-    }
 
     return (
         <Grid className={classes.form}>
@@ -107,19 +132,19 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
                 <DialogTitle>Remove item {removeItem.item.Name}</DialogTitle>
                 <DialogContent>
                     Are you sure you want to remove this item: {removeItem.item.Name}<br />
-                    <Button onClick={() => onRemove(removeItem.item.Id)} style={{ backgroundColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faCross} style={{ marginRight: '5px' }}/> Remove</Button>
-                    <Button onClick={() => ToggleRemove(removeItem.item.Id)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem' }}>Cancel</Button>
+                    <Button onClick={() => onRemove(removeItem.item.Id ?? removeItem.item.CountId)} style={{ backgroundColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faCross} style={{ marginRight: '5px' }}/> Remove</Button>
+                    <Button onClick={() => ToggleRemove(removeItem.item.Id ?? removeItem.item.CountId)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem' }}>Cancel</Button>
                 </DialogContent>
             </Dialog>
             <Typography className={classes.txt} variant="h3">
                 {DisplayName} CRUD
             </Typography>
 
-            {items.length < 1 ?
+            {entityListData.rows.length < 1 ?
                 "No items found in this table." :
                 <EntityList
-                    columns={columns}
-                    rows={rows}
+                    columns={entityListData.columns}
+                    rows={entityListData.rows}
                 />
             }
             <Link to={`/${TableName}/create`}>

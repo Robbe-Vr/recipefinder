@@ -8,10 +8,6 @@ export default class GroceryList {
         this.UserId = user?.Id ?? '';
         this.User = user ?? new User();
     };
-
-    Id = '';
-    Name = '';
-    Value = '';
-    UserId = '';
+    
     User = new User();
 };

@@ -49,7 +49,7 @@ function EntityList({ rows, columns }) {
                             const value = row[column.id];
                             return (
                                 <TableCell key={column.id} align={column.align}>
-                                {column.format ? (column.format(value)) ?? value : value}
+                                    {column.format ? (column.format(value)) ?? value : value}
                                 </TableCell>
                             );
                         })}

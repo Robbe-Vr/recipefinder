@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 
 }));
 
-function Onboarding({ setTitle, Api, setTokens }) {
+function Onboarding({ setTitle, Api }) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -70,7 +70,7 @@ function Onboarding({ setTitle, Api, setTokens }) {
                         </div>
                     </Route>
                     <Route path={Api.AuthReturnUrlPath}>
-                        <AuthorizationCallback setTokens={setTokens} Api={Api} />
+                        <AuthorizationCallback Api={Api} />
                     </Route>
                     
                     <Route>

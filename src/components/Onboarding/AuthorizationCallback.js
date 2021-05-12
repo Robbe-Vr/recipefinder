@@ -3,7 +3,7 @@ import React, { } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Button, Typography } from "@material-ui/core";
 
-function AuthorizationCallback({ setTokens, Api }) {
+function AuthorizationCallback({ Api }) {
     const history = useHistory();
 
     function getParam(key) {
@@ -25,45 +25,28 @@ function AuthorizationCallback({ setTokens, Api }) {
         return value;
     }
 
-    var error;
-    if ((error = getParam("Error")))
+    if (getParam("Error"))
     {
-        console.log(error);
-        history.push('/');
+        return (
+            <div>
+                <Typography
+                    variant="h1"
+                >
+                    Error occurred during authorization!
+                </Typography>
+            </div>
+        );
     }
-    else
-    {
-        var accessToken;
-        var userId;
-        if ((accessToken = getParam('Token')) && (userId = getParam('UserId'))) {
-            setTokens(accessToken, userId);
-
-            history.push('/');
-        }
-        else
-        {
-            return (
-                <div>
-                    <Typography
-                        variant="h1"
-                    >
-                        Error occurred during authorization!
-                    </Typography>
-                </div>
-            );
-        }
+    else {
+        history.push('/home/index');
     }
     
     return (
         <div>
-            {
-                <div>
-                    Login completed!
-                    <Link to="/home/index">
-                        <Button variant="outlined">Go on</Button>
-                    </Link>
-                </div>
-            }
+            Login completed!
+            <Link to="/home/index">
+                <Button variant="outlined">Go on</Button>
+            </Link>
         </div>
     );
 };

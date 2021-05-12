@@ -1,9 +1,6 @@
 export default class IngredientCategory {
-    constructor(id, name) {
-        this.Id = id ?? '';
+    constructor(countId, name) {
+        this.CountId = countId ?? -1;
         this.Name = name ?? '';
     };
-
-    Id = '';
-    Name = '';
 };

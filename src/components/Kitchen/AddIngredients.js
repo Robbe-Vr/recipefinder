@@ -9,6 +9,8 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackward, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Ingredient, IngredientCategory } from "../../models";
+import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
 
 const useStyles = makeStyles((theme) => ({
     ingredientSelectContainer: {
@@ -79,6 +81,22 @@ function AddIngredients({ setTitle, userId, Api }) {
         setSaveIngredient(saveIngredient);
     };
 
+    const [categories, setCategories] = useState([new IngredientCategory()]);
+    if (categories.length === 1 && categories[0].CountId === -1)
+    {
+        categories.pop();
+    }
+
+    useEffect(() => {
+        Api.IngredientCategories.GetAll().then((categories) => {
+            if (categories === "Error") { return; }
+        
+            setCategories(categories);
+        });
+    }, [Api.IngredientCategories]);
+
+    const [filterOptions, setFilterOptions] = useState({ name: '', categories: [] });
+
     const SaveIngredient = () => {
         if (saveIngredient.IngredientId && saveIngredient.UserId &&
             saveIngredient.Units && saveIngredient.UnitTypeId) {
@@ -88,6 +106,19 @@ function AddIngredients({ setTitle, userId, Api }) {
     };
 
     const allowDecimals = ingredients.find(x => x.Id === selectedIngredient.Id)?.UnitTypes.find(x => x.CountId === saveIngredient.UnitTypeId)?.AllowDecimals;
+
+    const filter = (ingredient = new Ingredient()) => {
+        return (
+            (filterOptions.name?.length > 0 ? ingredient.Name.toLowerCase().indexOf(filterOptions.name.toLowerCase()) > -1 : true) &&
+            (filterOptions.categories?.length > 0 ?
+                ingredient.Categories.filter(c => {
+                    return filterOptions.categories.filter(x => {
+                        return x === c.CountId;
+                    }).length > 0;
+                }).length > 0
+            : true)
+        );
+    };
 
     return (
         <Grid
@@ -125,26 +156,42 @@ function AddIngredients({ setTitle, userId, Api }) {
                 style={{ borderLeft: "solid", paddingLeft: "10px" }}
                 xs={6}
             >
-                <Typography variant="h3">Select an ingredient</Typography>
-                <EntityList
-                    columns={[
-                        { id: 'image', label: '', minWidth: 50 },
-                        { id: 'name', label: 'Name', minWidth: 100 },
-                        { id: 'unitTypes', label: 'Available Types', minWidth: 125 },
-                        { id: 'categories', label: 'Categories', minWidth: 125 },
-                        { id: 'select', label: 'Choose', minWidth: 100 },
-                    ]}
-                    rows={ingredients.map(ingredient => {
-                        return {
-                            id: ingredient.Id,
-                            image: <Thumbnail source={ingredient.ImageLocation} size="50px" />,
-                            name: ingredient.Name,
-                            unitTypes: ingredient.UnitTypes.map((unitType, index) => { if (index > 0) return ", " + unitType.Name; else return unitType.Name; }),
-                            categories: ingredient.Categories.map((category, index) => { if (index > 0) return ", " + category.Name; else return category.Name; }),
-                            select: <Button onClick={() => selectIngredient(ingredient)} style={{ color: 'forestgreen' }}>Select</Button>
-                        };
-                    })}
-                />
+                <Grid style={{ borderBottom: 'solid' }}>
+                    <UserInputComponent
+                        defaultValue={filterOptions.name}
+                        name="search by name"
+                        onChange={(value) => setFilterOptions(filterOptions => { return { ...filterOptions, ...{ name: value } }; })}
+                    />
+
+                    <UserMultiSelectInputComponent
+                        name="select categories"
+                        defaultValue={filterOptions.categories}
+                        options={categories.map(category => { return { name: category.Name, value: category.CountId }; })}
+                        onChange={(values) => setFilterOptions(filterOptions => { return { ...filterOptions, ...{ categories: values } }; })}
+                    />
+                </Grid>
+                <Grid>
+                    <Typography variant="h3">Select an ingredient</Typography>
+                    <EntityList
+                        columns={[
+                            { id: 'image', label: '', minWidth: 50 },
+                            { id: 'name', label: 'Name', minWidth: 100 },
+                            { id: 'unitTypes', label: 'Available Types', minWidth: 125 },
+                            { id: 'categories', label: 'Categories', minWidth: 125 },
+                            { id: 'select', label: 'Choose', minWidth: 100 },
+                        ]}
+                        rows={ingredients.filter(i => filter(i)).map(ingredient => {
+                            return {
+                                id: ingredient.Id,
+                                image: <Thumbnail source={ingredient.ImageLocation} size="50px" />,
+                                name: ingredient.Name,
+                                unitTypes: ingredient.UnitTypes.map((unitType, index) => { if (index > 0) return ", " + unitType.Name; else return unitType.Name; }),
+                                categories: ingredient.Categories.map((category, index) => { if (index > 0) return ", " + category.Name; else return category.Name; }),
+                                select: <Button onClick={() => selectIngredient(ingredient)} style={{ color: 'forestgreen' }}>Select</Button>
+                            };
+                        })}
+                    />
+                </Grid>
             </Grid>
             <Link to="/kitchen/index">
                 <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Kitchen</Button>

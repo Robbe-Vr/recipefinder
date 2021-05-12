@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { EntityList } from "../Global/EntityList";
 import { RowActions } from "../Global/RowActions";
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Card, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
 
@@ -98,7 +98,7 @@ export default function AccountsPage({ setTitle, Api }) {
                     columns={[
                         { id: 'name', label:'Name', minWidth: 50 },
                         { id: 'email', label:'Email', minWidth: 50 },
-                        { id: 'roles', label:'Roles', minWidth: 100 },
+                        { id: 'roles', label:'Roles', minWidth: 150 },
                         { id: 'actions', label: 'Actions', minWidth: 100 },
                     ]}
                     rows={users.map(user => {
@@ -106,7 +106,7 @@ export default function AccountsPage({ setTitle, Api }) {
                             id: user.Id,
                             name: user.Name,
                             email: user.Email,
-                            roles: user.Roles.map((role, index) => { if (index > 0) return ", " + role.Name; else return role.Name; }),
+                            roles: user.Roles.map(role => { return (<Card key={role.Id} style={{ margin: '2px', padding: '3px' }}>{role.name}</Card>); }),
                             actions: <RowActions rowEntityId={user.Id} rowEntity={user} onDetails={onDetails} onEdit={onEdit} onRemove={ToggleRemove} />
                         }
                     })}

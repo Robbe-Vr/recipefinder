@@ -3,7 +3,8 @@ import RequirementsListIngredient from "./RequirementsListIngredient"
 import User from "./User"
 
 export default class Recipe {
-    constructor(id, name, categories, requirementsList, user) {
+    constructor(countId, id, name, categories, requirementsList, user) {
+        this.CountId = countId ?? -1;
         this.Id = id ?? '';
         this.Name = name ?? '';
         this.Categories = categories ?? [];
@@ -12,10 +13,7 @@ export default class Recipe {
         this.User = user ?? new User();
     };
 
-    Id = '';
-    Name = '';
     Categories = [new RecipeCategory()];
-    RequirementsList = [new RequirementsListIngredient(null, null, null, null, this)];
-    UserId = '';
+    RequirementsList = [new RequirementsListIngredient()];
     User = new User();
 };

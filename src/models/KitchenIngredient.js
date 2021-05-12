@@ -11,12 +11,6 @@ export default class KitchenIngredient {
         this.User = user;
     };
 
-    Id = '';
-    IngredientId = '';
     Ingredient = new Ingredient();
-    Units = 0;
-    UnitTypeId = '';
     UnitType = new UnitType();
-    UserId = '';
-    User;
 };

@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
+import { useHistory } from "react-router";
 import { useAPI } from "../API/api-context";
 
 const ACCOUNT_LS = "recipefinder_account";
@@ -8,34 +10,75 @@ const AccountContext = React.createContext({});
 export function Authenticate({ children }) {
 
     const { Api } = useAPI();
+    const history = useHistory();
 
-    const [serverDown, setServerDown] = useState(false);
     const [account, setAccount] = useState({});
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
 
-        async function TestServerDown() {
-            const result = await Api.Users.GetAll();
-
-            const serverDown = result && result.length && result.length > 0;
-
-            setServerDown(serverDown);
-
-            return serverDown;
-        };
-
-        if (serverDown === true) {
-            TestServerDown().then((serverDown) => {
-                if (serverDown) {
-                    setLoaded(true);
-                }
-            });
-
-            return;
-        }
-
         async function checkLogin() {
+
+            function getTokens() {
+                function getParam(key) {
+                    const segments = window.location.search.substr(1).split('&');
+            
+                    var value;
+            
+                    segments.forEach((segment) => {
+                        var keyToValue = segment.split('=');
+            
+                        var param = { key: keyToValue[0], value: keyToValue[1] };
+            
+                        if (param.key === key) {
+                            value = param.value;
+                            return;
+                        }
+                    });
+            
+                    return value;
+                }
+            
+                var error;
+                if ((error = getParam("Error")))
+                {
+                    console.log(error);
+                }
+                else
+                {
+                    var accessToken;
+                    var userId;
+                    if ((accessToken = getParam('Token')) && (userId = getParam('UserId'))) {
+                        setTokens(accessToken, userId);
+                    }
+                }
+            };
+        
+            function setTokens(accessToken, userId) {
+                if (account?.AccessToken === accessToken && account?.Id) {
+                    return;
+                }
+        
+                Api.Custom.GetUserByAccessToken({ [Api.AccessTokenHeaderName]: accessToken }).then((user) => {
+                    var acc = {
+                        ...account,
+                        Id: user.Id,
+                        Name: user.Name,
+                        Email: user.Email,
+                        Roles: user.Roles,
+                        AccessToken: accessToken,
+                    };
+            
+                    localStorage.setItem(ACCOUNT_LS, JSON.stringify(acc));
+                    setAccount(acc);
+                    setLoaded(true);
+                })
+                .catch((error) => {
+                    console.log(error);
+        
+                    setLoaded(true);
+                });
+            };
 
             var localAccStr = localStorage.getItem(ACCOUNT_LS);
             var localAcc = {};
@@ -49,18 +92,20 @@ export function Authenticate({ children }) {
                 console.log(e);
             }
 
-            if (!account || (!account.AccessToken && !account.Id)) {
-                setAccount({ ...account, ...localAcc });
+            if (window.location.pathname === '/returnAuthorization' && !(localAcc?.AccessToken && localAcc?.Id)) {
+                getTokens();
+
+                return;
             }
 
             if (!localAcc) {
                 console.log("No local account found.");
 
-            } else if (!localAcc.AccessToken && localAcc.AccessToken.length === 45) {
+            } else if (!localAcc.AccessToken || localAcc.AccessToken.length !== 45) {
                 console.log('User not authenticated.');
 
             } else {
-                const tokenValidation = await Api.Custom.ValidateAccessToken(localAcc.AccessToken);
+                const tokenValidation = await Api.Custom.ValidateAccessToken({ [Api.AccessTokenHeaderName]: localAcc.AccessToken });
 
                 if (tokenValidation.Result === "Success.") {
                     console.log("Token validated.");
@@ -69,7 +114,7 @@ export function Authenticate({ children }) {
                         var accWithUser = account;
 
                         if (!(accWithUser?.Id)) {
-                            var user = await Api.Custom.GetUserByAccessToken(localAcc.AccessToken);
+                            var user = await Api.Custom.GetUserByAccessToken({ [Api.AccessTokenHeaderName]: localAcc.AccessToken });
 
                             accWithUser = {
                                 ...accWithUser,
@@ -91,9 +136,17 @@ export function Authenticate({ children }) {
                     }
 
                 } else {
+                    if (window.location.pathname === '/returnAuthorization') {
+                        localStorage.removeItem(ACCOUNT_LS);
+
+                        getTokens();
+
+                        return;
+                    }
+
                     console.log("Token invalid. Refreshing...");
 
-                    const newToken = await Api.Custom.RefreshAccessToken(localAcc.Id);
+                    const newToken = await Api.Custom.RefreshAccessToken({ [Api.AccessTokenHeaderName]: localAcc.AccessToken });
 
                     if (newToken !== "Error") {
                         console.log("New token received.");
@@ -106,7 +159,10 @@ export function Authenticate({ children }) {
                         localStorage.setItem(ACCOUNT_LS, JSON.stringify(refreshedAcc));
                         setAccount(refreshedAcc);
                     }
-                    else await TestServerDown()
+                    else {
+                        localStorage.removeItem(ACCOUNT_LS);
+                        setAccount({});
+                    }
                 }
             };
 
@@ -114,33 +170,14 @@ export function Authenticate({ children }) {
         };
 
         checkLogin();
-    }, [account, serverDown, Api, loaded]);
+    }, [account, Api, loaded]);
     	
     const logIn = (name, password) => {
         
     };
 
-    const setTokens = (accessToken, userId) => {
-        if (account?.AccessToken === accessToken) {
-            return;
-        }
-
-        Api.Users.GetById(userId).then((user) => {
-            var acc = {
-                ...account,
-                Id: user.Id,
-                Name: user.Name,
-                Email: user.Email,
-                Roles: user.Roles,
-                AccessToken: accessToken,
-            };
-    
-            localStorage.setItem(ACCOUNT_LS, JSON.stringify(acc));
-            setAccount(acc);
-        });
-    };
     const logOut = () => {
-        Api.Custom.LogOut(account?.Id, account?.AccessToken);
+        Api.Custom.LogOut({ [Api.AccessTokenHeaderName]: account?.AccessToken });
 
         localStorage.removeItem(ACCOUNT_LS);
         setAccount({});
@@ -155,7 +192,6 @@ export function Authenticate({ children }) {
         name: account?.Name,
         logIn,
         logOut,
-        setTokens,
     };
 
     return (

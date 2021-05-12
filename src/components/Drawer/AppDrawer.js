@@ -75,51 +75,51 @@ function AppDrawer({ open, onOpen, isAdmin, isCreator, isCook }) {
                     <DrawerItem icon={faListAlt} link="/kitchen/index" text="Grocery List" />
                 </div>
             </List>
-            <Divider />
-            <List>
-                {
-                    isCook ? (
-                        <div>
+            {
+                isCook ? (
+                    <div>
+                        <Divider />
+                        <List>
                             <i style={{ marginLeft: '10px' }}>Cook</i>
-                            <DrawerItem icon={faMortarPestle} link="/recipebook/index" text="Your Recipes" />
-                        </div>
-                    ) : (
-                        <div></div>
-                    )
-                }
-            </List>
-            <Divider />
-            <List>
-                {
-                    isCreator ? (
-                        <div>
-                            <i style={{ marginLeft: '10px' }}>Creator</i>
+                            <DrawerItem icon={faMortarPestle} link="/recipebook/custom" text="Your Recipes" />
+                        </List>
+                    </div>
+                ) : (
+                    <div></div>
+                )
+            }
+            {
+                isCreator ? (
+                    <div>
+                        <Divider />
+                        <List>
+                        <i style={{ marginLeft: '10px' }}>Creator</i>
                             {
                                 CRUDPagesInfo.Pages.map((CRUD, index) => {
                                     return (
-                                        <DrawerItem icon={faBookOpen} key={`${CRUD.Name}-${index}`} link={`/${CRUD.Name}-${index}/index`} text={CRUD.DisplayName} />
+                                        <DrawerItem icon={faBookOpen} key={`${CRUD.Name}-${index}`} link={`/${CRUD.Name}/index`} text={CRUD.DisplayName} />
                                     );
                                 })
                             }
-                        </div>
-                    ) : (
-                        <div></div>
-                    )
-                }
-            </List>
-            <Divider />
-            <List>
-                {
-                    isAdmin ? (
-                        <div>
-                            <i style={{ marginLeft: '10px' }}>Admin</i>
-                            <DrawerItem icon={faUsers} link="/accounts/index" text="Accounts" />
-                        </div>
-                    ) : (
-                        <div></div>
-                    )
-                }
-            </List>
+                        </List>
+                    </div>
+                ) : (
+                    <div></div>
+                )
+            }
+            {
+                isAdmin ? (
+                <div>
+                    <Divider />
+                    <List>
+                        <i style={{ marginLeft: '10px' }}>Admin</i>
+                        <DrawerItem icon={faUsers} link="/accounts/index" text="Accounts" />
+                    </List>
+                </div>
+                ) : (
+                    <div></div>
+                )
+            }
         </Drawer>
     );
 };

@@ -1,11 +1,7 @@
 export default class UnitType {
     constructor(countId, name, allowDecimals) {
-        this.CountId = countId ? countId : this.CountId;
-        this.Name = name ? name : this.Name;
-        this.AllowDecimals = allowDecimals ? allowDecimals : this.AllowDecimals;
+        this.CountId = countId ?? -1;
+        this.Name = name ?? '';
+        this.AllowDecimals = allowDecimals ?? false;
     };
-
-    CountId = -1;
-    Name = '';
-    AllowDecimals = false;
 };

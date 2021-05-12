@@ -37,9 +37,9 @@ function KitchenHomePage({ setTitle, userId, Api }) {
         User: '',
         Ingredients: [new KitchenIngredient()],
     });
-    if (kitchen.Ingredients.length === 1 && kitchen.Ingredients[0].Units === 0.00)
+    if (kitchen?.Ingredients.length === 1 && kitchen.Ingredients[0].Units === 0.00)
     {
-        kitchen.Ingredients?.pop();
+        kitchen.Ingredients.pop();
     }
 
     const [editingIngredients, setEditingIngredients] = useState([]);
@@ -119,10 +119,10 @@ function KitchenHomePage({ setTitle, userId, Api }) {
     return (
         <Grid className={classes.form}>
             <Typography className={classes.txt} variant="h3">
-                {kitchen.User?.Name}'s Kitchen
+                {kitchen?.User.Name}'s Kitchen
             </Typography>
 
-            {kitchen.Ingredients.length < 1 ?
+            {!kitchen || kitchen.Ingredients.length < 1 ?
                 "No ingredients in your kitchen." :
                 <KitchenList
                     columns={[
@@ -131,7 +131,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                         { id: 'units', label: 'Amount', minWidth: 100 },
                         { id: 'actions', label: 'Actions', minWidth: 200 },
                     ]}
-                    rows={kitchen.Ingredients.map(ingredient => {
+                    rows={kitchen?.Ingredients.map(ingredient => {
                         const updatedUnitType = ingredient.Ingredient.UnitTypes.find(x => x.CountId === updates[ingredient.IngredientId]?.UnitTypeId);
 
                         const allowDecimals = updatedUnitType ? updatedUnitType.AllowDecimals : ingredient.UnitType.AllowDecimals;
@@ -158,7 +158,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                                     <Button id={ingredient.IngredientId} style={{ backgroundColor: 'forestgreen' }} onClick={(e) => ToggleRemove(ingredient.IngredientId)}>Cancel</Button>
                                 </div> : null,
                         }
-                    })}
+                    }) ?? []}
                 />
             }
             <Link to="/kitchen/add">

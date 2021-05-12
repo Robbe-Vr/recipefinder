@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function UserSelectInputComponent({ name, label, variant = "outlined", defaultValue = '', options, onChange }) {
+function UserSelectInputComponent({ name, variant = "outlined", defaultValue = '', options, onChange }) {
     const [value, setValue] = useState(defaultValue);
 
     if (!value && defaultValue) {
@@ -27,15 +27,11 @@ function UserSelectInputComponent({ name, label, variant = "outlined", defaultVa
             alignItems="center"
         >
             <Grid>
-                <InputLabel id={name}>{name}: </InputLabel>
-            </Grid>
-            <Grid>
-                <InputLabel id={name + "-label"}>{label}</InputLabel>
                 <Select
                     className={classes.inputBox}
                     variant={variant}
                     id={name}
-                    label={name + "-label"}
+                    label={name}
                     value={value}
                     onChange={(e) => {
                         setValue(e.target.value);

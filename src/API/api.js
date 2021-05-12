@@ -7,19 +7,58 @@ const protocol = "https://", serverIp = "localhost",//"192.168.2.29",
     port = 5001, apiPage = "/api",
     api_url = protocol + serverIp + ":" + port + apiPage;
 
-const defaultHeaders = (data) => ({ "Host": "localhost", "Accept": "*/*", "Connection": "keep-alive", "Content-Type": "application/json", "Content-Length": data.length });
+const defaultHeaders = (data) => ({ "Accept": "*/*", "Content-Type": "application/json" });
+
+const AccessTokenHeaderName = "RecipeFinder_AccessToken";
+
+var accessToken;
+const AuthorizationHeaders = () => {
+    if (!accessToken) {
+        accessToken = getAccessToken();
+    }
+
+    return ({ [AccessTokenHeaderName]: accessToken });
+};
+
+function HandlerError(error) {
+    if (error.response) {
+        console.log(`${error.response.status} - `, error.response.data.Message ?? error.response.data);
+    } else if (error.request) {
+        console.log(`Request failed: `, error.request);
+    } else {
+        console.log(`Axios request execution fail: ${error.message}`, error);
+    }
+
+    return "Error";
+};
+
+function getAccessToken() {
+    const ACCOUNT_LS = "recipefinder_account";
+
+    var account = localStorage.getItem(ACCOUNT_LS);
+
+    try
+    {
+        account = JSON.parse(account);
+    }
+    catch (e)
+    {
+        console.log(e);
+        account = {};
+    }
+
+    return account?.AccessToken;
+};
 
 class EntityGroup {
-    constructor(groupName = '', api_path = '', accessToken) {
+    constructor(groupName = '', api_path = '') {
         this.Name = groupName;
         this.ApiUrl = api_url + (api_path.length > 0 ? "/" + api_path : '');
 
-        if (accessToken) {
-            this.AuthorizationHeaders["RecipeFinder_AccessToken"] = accessToken;
+        if (!accessToken) {
+            getAccessToken();
         }
     };
-
-    AuthorizationHeaders = { };
 
     ApiUrl = '';
     Name = '';
@@ -27,42 +66,39 @@ class EntityGroup {
     async GetAll() {
         try
         {
-            var response = await axios.get(this.ApiUrl, { headers: this.AuthorizationHeaders });
+            var response = await axios.get(this.ApiUrl, { headers: AuthorizationHeaders() });
 
             return response.data;
         }
         catch (e)
         {
-            console.log(e);
-            return "Error";
+            return HandlerError(e);
         }
     };
 
     async GetById(id = '') {
         try
         {
-            var response = await axios.get(this.ApiUrl + "/" + id, { headers: this.AuthorizationHeaders });
+            var response = await axios.get(this.ApiUrl + "/" + id, { headers: AuthorizationHeaders() });
 
             return response.data;
         }
         catch (e)
         {
-            console.log(e);
-            return "Error";
+            return HandlerError(e);
         }
     };
 
     async GetByName(name = '') {
         try
         {
-            var response = await axios.get(this.ApiUrl + "/byname/" + name, { headers: this.AuthorizationHeaders });
+            var response = await axios.get(this.ApiUrl + "/byname/" + name, { headers: AuthorizationHeaders() });
 
             return response.data;
         }
         catch (e)
         {
-            console.log(e);
-            return "Error";
+            return HandlerError(e);
         }
     };
 
@@ -73,14 +109,13 @@ class EntityGroup {
 
             var response = await axios.post(this.ApiUrl,
                 data,
-                { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
+                { headers: { ...(defaultHeaders(data)), ...AuthorizationHeaders() } });
 
             return response;
         }
         catch (e)
         {
-            console.log(e);
-            return "Error";
+            return HandlerError(e);
         }
     };
 
@@ -91,14 +126,13 @@ class EntityGroup {
 
             var response = await axios.put(this.ApiUrl + "/" + id,
                 data,
-                { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
+                { headers: { ...(defaultHeaders(data)), ...AuthorizationHeaders() } });
 
             return response;
         }
         catch (e)
         {
-            console.log(e);
-            return "Error";
+            return HandlerError(e);
         }
     };
 
@@ -108,46 +142,53 @@ class EntityGroup {
             const data = JSON.stringify(obj, null, 4);
 
             var response = await axios.delete(this.ApiUrl + '/' + id,
-                { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
+                { headers: { ...(defaultHeaders(data)), ...AuthorizationHeaders() } });
 
             return response;
         }
         catch (e)
         {
-            console.log(e);
-            return "Error";
+            return HandlerError(e);
         }
     };
 
-    async PerformCustom(type = 'get', url, obj = {}) {
+    async PerformCustom(type = 'get', url, obj = {}, headers = {}) {
         try
         {
             var response = {};
 
+            headers = { ...headers, ...AuthorizationHeaders() };
+
             if (type === 'get')
             {
-                response = await axios.get(url, { headers: this.AuthorizationHeaders });
+                response = await axios.get(url, { headers: headers });
             }
             else if (type === 'post')
             {
                 const data = JSON.stringify(obj, null, 4);
 
+                headers = { ...headers, ...defaultHeaders(data) };
+
                 response = await axios.post(url, data,
-                    { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
+                    { headers: headers });
             }
             else if (type === 'put')
             {
                 const data = JSON.stringify(obj, null, 4);
 
+                headers = { ...headers, ...defaultHeaders(data) };
+
                 response = await axios.put(url, data,
-                    { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
+                    { headers: headers });
             }
             else if (type === 'delete')
             {
                 const data = JSON.stringify(obj, null, 4);
 
+                headers = { ...headers, ...defaultHeaders(data) };
+
                 response = await axios.delete(url, data,
-                    { headers: { ...(defaultHeaders(data)), ...this.AuthorizationHeaders } });
+                    { headers: headers });
             }
             else response = 'Invalid request type!';
 
@@ -156,14 +197,17 @@ class EntityGroup {
         catch (e)
         {
             console.log(`Failed request to '${url}' as ${type.toUpperCase()}`, e);
-            return { info: e, error: true };
+
+            HandlerError(e);
+
+            return { info: e, error: true, data: "Error" };
         }
     };
 };
 
 class CustomEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("Custom", "", accessToken, refreshToken);
+    constructor() {
+        super("Custom", "");
     };
 
     async Encrypt(text, salt) {
@@ -186,8 +230,8 @@ class CustomEntityGroup extends EntityGroup {
         return res.data.Result;
     };
 
-    async LogOut(userId, accessToken) {
-        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/logout?show', { accessToken, userId });
+    async LogOut(headers) {
+        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/logout?show', null, headers);
 
         if (res.error) {
             return "Error";
@@ -196,8 +240,8 @@ class CustomEntityGroup extends EntityGroup {
         return res.data;
     };
 
-    async ValidateAccessToken(accessToken) {
-        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/Validate', { accessToken });
+    async ValidateAccessToken(headers) {
+        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/Validate', null, headers);
 
         if (res.error) {
             return "Error";
@@ -206,8 +250,8 @@ class CustomEntityGroup extends EntityGroup {
         return res.data;
     };
 
-    async RefreshAccessToken(userId) {
-        var res = await super.PerformCustom('post', this.ApiUrl + '/Authorize/Refresh', { userId });
+    async RefreshAccessToken(headers) {
+        var res = await super.PerformCustom('post', this.ApiUrl + '/Authorize/Refresh', null, headers);
 
         if (res.error) {
             return "Error";
@@ -216,27 +260,32 @@ class CustomEntityGroup extends EntityGroup {
         return res.data;
     };
 
-    async GetUserByAccessToken(accessToken) {
-        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/Me', { accessToken });
+    async GetUserByAccessToken(headers) {
+        var res = await super.PerformCustom('get', this.ApiUrl + '/Authorize/Me', null, headers);
 
         if (res.error) {
             return "Error";
         }
 
-        return new User(res.data.CountId, res.data.Id, res.data.Name, res.data.Email, res.data.PhoneNumber, res.data.PasswordHashed, res.data.Salt, res.data.DOB, res.data.CreationDate, res.data.Roles);
+        const item = res.data;
+
+        return new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate,
+            item.Roles ? item.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []);
     };
 };
 
 class IngredientEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("Ingredients", "Ingredients", accessToken, refreshToken);
+    constructor() {
+        super("Ingredients", "Ingredients");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new Ingredient(item.Id, item.Name, item.Categories, item.UnitTypes);
+            return new Ingredient(item.CountId, item.Id, item.Name, item.ImageLocation, item.AverageWeightInKgPerUnit, item.AverageVolumeInLPerUnit,
+                item.Categories ? item.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                item.UnitTypes ? item.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []);
         }) : [];
 
         return fixedData;
@@ -245,7 +294,9 @@ class IngredientEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new Ingredient(item.Id, item.Name, item.Categories, item.UnitTypes);
+        const fixedData = new Ingredient(item.CountId, item.Id, item.Name, item.ImageLocation, item.AverageWeightInKgPerUnit, item.AverageVolumeInLPerUnit,
+            item.Categories ? item.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+            item.UnitTypes ? item.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []);
 
         return fixedData;
     };
@@ -253,22 +304,25 @@ class IngredientEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new Ingredient(item.Id, item.Name, item.Categories, item.UnitTypes);
+        const fixedData = new Ingredient(item.CountId, item.Id, item.Name, item.ImageLocation, item.AverageWeightInKgPerUnit, item.AverageVolumeInLPerUnit,
+            item.Categories ? item.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+            item.UnitTypes ? item.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []);
 
         return fixedData;
     };
 };
 
 class UserEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("Users", "Users", accessToken, refreshToken);
+    constructor() {
+        super("Users", "Users");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate, item.Roles, item.Kitchen);
+            return new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate,
+                item.Roles ? item.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []);
         }) : [];
 
         return fixedData;
@@ -277,7 +331,8 @@ class UserEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate, item.Roles, item.Kitchen);
+        const fixedData = new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate,
+            item.Roles ? item.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []);
 
         return fixedData;
     };
@@ -285,7 +340,8 @@ class UserEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate, item.Roles, item.Kitchen);
+        const fixedData = new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate,
+            item.Roles ? item.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []);
 
         return fixedData;
     };
@@ -294,7 +350,10 @@ class UserEntityGroup extends EntityGroup {
         var res = await super.PerformCustom('get', this.ApiUrl + '/' + id + "/actions");
 
         const fixedData = res.data && res !== "Error" && res.data.map ? res.data.map((item) => {
-            return new UserAction(item.CountId, item.User, item.Endpoint, item.RequestType, item.Description, item.RefObject ? item.RefObject : { Id: item.RefObjectid, Name: item.RefObjectName }, item.ActionPerformedOnTable, item.Success );
+            return new UserAction(item.CountId,
+                new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                    item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []),
+                item.Endpoint, item.RequestType, item.Description, item.RefObject ? item.RefObject : { Id: item.RefObjectid, Name: item.RefObjectName }, item.ActionPerformedOnTable, item.Success );
         }) : [];
 
         return fixedData;
@@ -304,7 +363,7 @@ class UserEntityGroup extends EntityGroup {
         var data = await super.PerformCustom('get', this.ApiUrl + '/getroles/' + id);
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new Role(item.CountId, item.Id, item.Name, item.Users);
+            return new Role(item.CountId, item.Id, item.Name);
         }) : [];
 
         return fixedData;
@@ -312,15 +371,15 @@ class UserEntityGroup extends EntityGroup {
 };
 
 class RoleEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("Roles", "Roles", accessToken, refreshToken);
+    constructor() {
+        super("Roles", "Roles");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new Role(item.CountId, item.Id, item.Name, item.Users);
+            return new Role(item.CountId, item.Id, item.Name);
         }) : [];
 
         return fixedData;
@@ -329,7 +388,7 @@ class RoleEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new Role(item.CountId, item.Id, item.Name, item.Users);
+        const fixedData = new Role(item.CountId, item.Id, item.Name);
 
         return fixedData;
     };
@@ -337,22 +396,36 @@ class RoleEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new Role(item.CountId, item.Id, item.Name, item.Users);
+        const fixedData = new Role(item.CountId, item.Id, item.Name);
 
         return fixedData;
     };
 };
 
 class RecipeEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("Recipes", "Recipes", accessToken, refreshToken);
+    constructor() {
+        super("Recipes", "Recipes");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new Recipe(item.Id, item.Name, item.Categories, item.RequirementsList, item.User);
+            return new Recipe(item.CountId, item.Id, item.Name,
+                item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
+                item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.Id,
+                    new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                        requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                        requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                    requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
+                    new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name,
+                        requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                        null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
+                            requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
+                            requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
+                )) : [],
+                new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                    item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
         }) : [];
 
         return fixedData;
@@ -362,7 +435,45 @@ class RecipeEntityGroup extends EntityGroup {
         var res = await super.PerformCustom('get', this.ApiUrl + '/preparable/' + userId);
 
         const fixedData = res.data && res.data !== "Error" && res.data.map ? res.data.map((item) => {
-            return new Recipe(item.Id, item.Name, item.Categories, item.RequirementsList, item.User);
+            return new Recipe(item.CountId, item.Id, item.Name,
+                item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
+                item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.Id,
+                    new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                        requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                        requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                    requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
+                    new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name,
+                        requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                        null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
+                            requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
+                            requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
+                )) : [],
+                new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                    item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
+        }) : [];
+
+        return fixedData;
+    };
+
+    async GetAllFromCook(userId) {
+        var res = await super.PerformCustom('get', this.ApiUrl + '/bycook/' + userId);
+
+        const fixedData = res.data && res.data !== "Error" && res.data.map ? res.data.map((item) => {
+            return new Recipe(item.CountId, item.Id, item.Name,
+                item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
+                item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.Id,
+                    new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                        requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                        requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                    requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
+                    new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name,
+                        requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                        null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
+                            requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
+                            requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
+                )) : [],
+                new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                    item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
         }) : [];
 
         return fixedData;
@@ -371,7 +482,21 @@ class RecipeEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new Recipe(item.Id, item.Name, item.Categories, item.RequirementsList, item.User);
+        const fixedData = new Recipe(item.CountId, item.Id, item.Name,
+            item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
+            item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.Id,
+                new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                    requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                    requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
+                new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name,
+                    requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
+                        requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
+                        requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
+            )) : [],
+            new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
 
         return fixedData;
     };
@@ -379,22 +504,41 @@ class RecipeEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new Recipe(item.Id, item.Name, item.Categories, item.RequirementsList, item.User);
+        const fixedData = new Recipe(item.CountId, item.Id, item.Name,
+            item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
+            item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.Id,
+                new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                    requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                    requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
+                new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name,
+                    requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
+                        requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
+                        requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
+            )) : [],
+            new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
 
         return fixedData;
     };
 };
 
 class KitchenEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("Kitchens", "Kitchens", accessToken, refreshToken);
+    constructor() {
+        super("Kitchens", "Kitchens");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new KitchenIngredient(item.Id, item.Ingredient, item.Units, item.UnitType, item.User);
+            return new KitchenIngredient(item.Id, new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+                item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
+                new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                    item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
         }) : [];
 
         return fixedData;
@@ -403,7 +547,12 @@ class KitchenEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new KitchenIngredient(item.Id, item.Ingredient, item.Units, item.UnitType, item.User);
+        const fixedData = new KitchenIngredient(item.Id, new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+            item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+            item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+            item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
+            new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
 
         return fixedData;
     };
@@ -420,7 +569,12 @@ class KitchenEntityGroup extends EntityGroup {
         var res = await super.PerformCustom('get', this.ApiUrl + '/byusername/' + name);
 
         const fixedData = res.data && res !== "Error" && res.data.map ? res.data.map((item) => {
-            return new KitchenIngredient(item.Id, item.Ingredient, item.Units, item.UnitType, item.User);
+            return new KitchenIngredient(item.Id, new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+                item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
+                new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                    item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
         }) : [];
 
         return fixedData;
@@ -428,15 +582,25 @@ class KitchenEntityGroup extends EntityGroup {
 };
 
 class RequirementsListEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("RequirementsLists", "RequirementsLists", accessToken, refreshToken);
+    constructor() {
+        super("RequirementsLists", "RequirementsLists");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new RequirementsListIngredient(item.Id, item.Ingredient, item.Units, item.UnitType, item.Recipe);
+            return new RequirementsListIngredient(item.Id,
+                new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+                    item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                    item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
+                new Recipe(item.Recipe.CountId, item.Recipe.Id, item.Recipe.Name,
+                    item.Recipe.Categories ? item.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    null, new User(item.Recipe.User.CountId, item.Recipe.User.Id, item.Recipe.User.Name, item.Recipe.User.Email,
+                        item.Recipe.User.PhoneNumber, item.Recipe.User.PasswordHashed, item.Recipe.User.Salt, item.Recipe.User.DOB, item.Recipe.User.CreationDate,
+                        item.Recipe.User.Roles ? item.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []))
+                )
         }) : [];
 
         return fixedData;
@@ -445,7 +609,16 @@ class RequirementsListEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new RequirementsListIngredient(item.Id, item.Ingredient, item.Units, item.UnitType, item.Recipe);
+        const fixedData = new RequirementsListIngredient(item.Id,
+            new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+                item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+            item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
+            new Recipe(item.Recipe.CountId, item.Recipe.Id, item.Recipe.Name,
+                item.Recipe.Categories ? item.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                null, new User(item.Recipe.User.CountId, item.Recipe.User.Id, item.Recipe.User.Name, item.Recipe.User.Email,
+                    item.Recipe.User.PhoneNumber, item.Recipe.User.PasswordHashed, item.Recipe.User.Salt, item.Recipe.User.DOB, item.Recipe.User.CreationDate,
+                    item.Recipe.User.Roles ? item.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : [])));
 
         return fixedData;
     };
@@ -454,7 +627,17 @@ class RequirementsListEntityGroup extends EntityGroup {
         var res = await super.PerformCustom('get', this.ApiUrl + '/byrecipeid/' + id);
 
         const fixedData = res.data && res !== "Error" && res.data.map ? res.data.map((item) => {
-            return new RequirementsListIngredient(item.Id, item.Ingredient, item.Units, item.UnitType, item.Recipe);
+            return new RequirementsListIngredient(item.Id,
+                new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+                    item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                    item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
+                new Recipe(item.Recipe.CountId, item.Recipe.Id, item.Recipe.Name,
+                    item.Recipe.Categories ? item.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    null, new User(item.Recipe.User.CountId, item.Recipe.User.Id, item.Recipe.User.Name, item.Recipe.User.Email,
+                        item.Recipe.User.PhoneNumber, item.Recipe.User.PasswordHashed, item.Recipe.User.Salt, item.Recipe.User.DOB, item.Recipe.User.CreationDate,
+                        item.Recipe.User.Roles ? item.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []))
+                )
         }) : [];
 
         return fixedData;
@@ -464,7 +647,16 @@ class RequirementsListEntityGroup extends EntityGroup {
         var res = await super.PerformCustom('get', this.ApiUrl + '/byrecipename/' + name);
 
         const fixedData = res.data && res !== "Error" && res.data.map ? res.data.map((item) => {
-            return new RequirementsListIngredient(item.Id, item.Ingredient, item.Units, item.UnitType, item.Recipe);
+            return new RequirementsListIngredient(item.Id,
+                new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+                    item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                    item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
+                new Recipe(item.Recipe.CountId, item.Recipe.Id, item.Recipe.Name,
+                    item.Recipe.Categories ? item.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    null, new User(item.Recipe.User.CountId, item.Recipe.User.Id, item.Recipe.User.Name, item.Recipe.User.Email,
+                        item.Recipe.User.PhoneNumber, item.Recipe.User.PasswordHashed, item.Recipe.User.Salt, item.Recipe.User.DOB, item.Recipe.User.CreationDate,
+                        item.Recipe.User.Roles ? item.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : [])));
         }) : [];
 
         return fixedData;
@@ -472,15 +664,15 @@ class RequirementsListEntityGroup extends EntityGroup {
 };
 
 class UnitTypeEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("UnitTypes", "UnitTypes", accessToken, refreshToken);
+    constructor() {
+        super("UnitTypes", "UnitTypes");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new UnitType(item.CountId, item.Name, item.AllowDecimals, item.Ingredients);
+            return new UnitType(item.CountId, item.Name, item.AllowDecimals);
         }) : [];
 
         return fixedData;
@@ -489,7 +681,7 @@ class UnitTypeEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new UnitType(item.Id, item.Name, item.AllowDecimals, item.Ingredients);
+        const fixedData = new UnitType(item.CountId, item.Name, item.AllowDecimals);
 
         return fixedData;
     };
@@ -497,22 +689,22 @@ class UnitTypeEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new UnitType(item.Id, item.Name, item.AllowDecimals, item.Ingredients);
+        const fixedData = new UnitType(item.CountId, item.Name, item.AllowDecimals);
 
         return fixedData;
     };
 };
 
 class IngredientCategoryEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("IngredientCategories", "IngredientCategories", accessToken, refreshToken);
+    constructor() {
+        super("IngredientCategories", "IngredientCategories");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new IngredientCategory(item.Id, item.Name, item.Ingredients);
+            return new IngredientCategory(item.CountId, item.Name);
         }) : [];
 
         return fixedData;
@@ -521,7 +713,7 @@ class IngredientCategoryEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new IngredientCategory(item.Id, item.Name, item.Ingredients);
+        const fixedData = new IngredientCategory(item.CountId, item.Name);
 
         return fixedData;
     };
@@ -529,22 +721,22 @@ class IngredientCategoryEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new IngredientCategory(item.Id, item.Name, item.Ingredients);
+        const fixedData = new IngredientCategory(item.CountId, item.Name);
 
         return fixedData;
     };
 };
 
 class RecipeCategoryEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("RecipeCategories", "RecipeCategories", accessToken, refreshToken);
+    constructor() {
+        super("RecipeCategories", "RecipeCategories");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new RecipeCategory(item.Id, item.Name, item.Recipes);
+            return new RecipeCategory(item.CountId, item.Name);
         }) : [];
 
         return fixedData;
@@ -553,7 +745,7 @@ class RecipeCategoryEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new RecipeCategory(item.Id, item.Name, item.Recipes);
+        const fixedData = new RecipeCategory(item.CountId, item.Name);
 
         return fixedData;
     };
@@ -561,22 +753,25 @@ class RecipeCategoryEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new RecipeCategory(item.Id, item.Name, item.Recipes);
+        const fixedData = new RecipeCategory(item.CountId, item.Name);
 
         return fixedData;
     };
 };
 
 class GroceryListEntityGroup extends EntityGroup {
-    constructor(accessToken, refreshToken) {
-        super("GroceryLists", "GroceryLists", accessToken, refreshToken);
+    constructor() {
+        super("GroceryLists", "GroceryLists");
     };
 
     async GetAll() {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new GroceryList(item.Id, item.Name, item.Value, item.User);
+            return new GroceryList(item.CountId, item.Name, item.Value,
+                new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt,
+                    item.User.DOB, item.User.CreationDate,
+                    item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
         }) : [];
 
         return fixedData;
@@ -586,7 +781,10 @@ class GroceryListEntityGroup extends EntityGroup {
         var res = await super.PerformCustom('get', this.ApiUrl + '/byuserid/' + id);
 
         const fixedData = res.data && res !== "Error" && res.data.map ? res.data.map((item) => {
-            return new GroceryList(item.Id, item.Name, item.Value, item.User);
+            return new GroceryList(item.CountId, item.Name, item.Value,
+                new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt,
+                    item.User.DOB, item.User.CreationDate,
+                    item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
         }) : [];
 
         return fixedData;
@@ -595,7 +793,10 @@ class GroceryListEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new GroceryList(item.Id, item.Name, item.Value, item.User);
+        const fixedData = new GroceryList(item.CountId, item.Name, item.Value,
+            new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt,
+                item.User.DOB, item.User.CreationDate,
+                item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
 
         return fixedData;
     };
@@ -603,14 +804,17 @@ class GroceryListEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new GroceryList(item.Id, item.Name, item.Value, item.User);
+        const fixedData = new GroceryList(item.CountId, item.Name, item.Value,
+            new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt,
+                item.User.DOB, item.User.CreationDate,
+                item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
 
         return fixedData;
     };
 };
 
 export default class Api {
-    constructor(accessToken) {
+    constructor() {
         const authReturnUrlPath = '/returnAuthorization';
 
         const authPage = "/api/authorize/login",
@@ -620,16 +824,19 @@ export default class Api {
 
         this.AuthReturnUrlPath = authReturnUrlPath;
 
-        this.Ingredients = new IngredientEntityGroup(accessToken);
-        this.Users = new UserEntityGroup(accessToken);
-        this.Roles = new RoleEntityGroup(accessToken);
-        this.Recipes = new RecipeEntityGroup(accessToken);
-        this.Kitchens = new KitchenEntityGroup(accessToken);
-        this.RequirementsLists = new RequirementsListEntityGroup(accessToken);
-        this.UnitTypes = new UnitTypeEntityGroup(accessToken);
-        this.IngredientCategories = new IngredientCategoryEntityGroup(accessToken);
-        this.RecipeCategories = new RecipeCategoryEntityGroup(accessToken);
-        this.GroceryLists = new GroceryListEntityGroup(accessToken);
-        this.Custom = new CustomEntityGroup(accessToken);
+        this.Url = api_url;
+        this.AccessTokenHeaderName = AccessTokenHeaderName;
+
+        this.Ingredients = new IngredientEntityGroup();
+        this.Users = new UserEntityGroup();
+        this.Roles = new RoleEntityGroup();
+        this.Recipes = new RecipeEntityGroup();
+        this.Kitchens = new KitchenEntityGroup();
+        this.RequirementsLists = new RequirementsListEntityGroup();
+        this.UnitTypes = new UnitTypeEntityGroup();
+        this.IngredientCategories = new IngredientCategoryEntityGroup();
+        this.RecipeCategories = new RecipeCategoryEntityGroup();
+        this.GroceryLists = new GroceryListEntityGroup();
+        this.Custom = new CustomEntityGroup();
     };
 };

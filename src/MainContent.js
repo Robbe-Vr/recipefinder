@@ -13,7 +13,6 @@ import AccountsPage from "./components/Accounts/index";
 import EditAccountPage from "./components/Accounts/update";
 import AccountDetailsPage from "./components/Accounts/details";
 import { drawerWidth } from "./components/Drawer/AppDrawer";
-import { CustomRecipeBookPage } from "./components/RecipeBook/custom";
 import { CRUDPage } from "./components/CRUD/CRUDPage";
 import CRUDPagesInfo from "./API/CRUDPagesInfo";
 import CRUDDetailsPage from "./components/CRUD/details";
@@ -77,16 +76,16 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                         <AddIngredients setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/recipebook/index">
-                        <RecipeBookHomePage setTitle={setTitle} userId={userId} Api={Api} />
+                        <RecipeBookHomePage setTitle={setTitle} isCook={isCook} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/recipebook/details/:recipeId">
                         <RecipeDetailsPage setTitle={setTitle} Api={Api} />
                     </Route>
                     {
                         isRegistered ? (
-                            <Redirect strict from="/" to="/home/index" />
+                            <Redirect exact strict from="/" to="/home/index" />
                         ) : (
-                            <Redirect strict from="/" to="/home/index" />
+                            <></>
                         )
                     }
                 </Switch>
@@ -94,7 +93,7 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                     isCook ?
                     <Switch>
                         <Route path="/recipebook/custom">
-                            <CustomRecipeBookPage setTitle={setTitle} userId={userId} Api={Api} />
+                            <RecipeBookHomePage setTitle={setTitle} isCook={isCook} userId={userId} Api={Api} defaultRecipeListState={0} />
                         </Route>
                         <Route path="/recipebook/custom/edit/:recipeId">
                             <RecipeEditPage setTitle={setTitle} userId={userId} Api={Api} />
@@ -106,7 +105,7 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                     isCreator ?
                     CRUDPagesInfo.Pages.map((CRUD, index) => {
                         return (
-                            <Switch key={`${CRUD.Name}-${index}`}>
+                            <Switch >
                                 <Route path={`/${CRUD.Name}/index`}>
                                     <CRUDPage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} Api={Api} />
                                 </Route>
@@ -119,7 +118,7 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                                 <Route path={`/${CRUD.Name}/create`}>
                                     <CRUDCreatePage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} Api={Api} />
                                 </Route>
-                             </Switch>
+                            </Switch>
                         );
                     })
                     : null

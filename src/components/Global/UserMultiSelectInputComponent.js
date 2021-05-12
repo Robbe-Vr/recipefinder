@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function UserMultiSelectInputComponent({ name, label, variant = "outlined", defaultValues = [''], options, onChange }) {
+function UserMultiSelectInputComponent({ name, variant = "outlined", defaultValues = [], options, onChange }) {
     const [values, setValues] = useState(defaultValues);
 
     if ((!values || values.length < 1) && (defaultValues && defaultValues.length > 0)) {
@@ -32,16 +32,12 @@ function UserMultiSelectInputComponent({ name, label, variant = "outlined", defa
             alignItems="center"
         >
             <Grid>
-                <InputLabel id={name}>{name}: </InputLabel>
-            </Grid>
-            <Grid>
-                <InputLabel id={name + "-label"}>{label}</InputLabel>
                 <Select
                     multiple={true}
                     className={classes.inputBox}
                     variant={variant}
                     id={name}
-                    label={name + "-label"}
+                    label={name}
                     value={values}
                     onChange={(e) => {
                         overrideOnChange(e.target.value);
