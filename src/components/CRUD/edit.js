@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { UserInputComponent } from "../Global/UserInputComponent";
-import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
-import { Role, User } from "../../models";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import CRUDPagesInfo from "../../API/CRUDPagesInfo";
+import { Ingredient, IngredientCategory, RecipeCategory, UnitType } from "../../models";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -26,53 +28,127 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function CRUDEditPage({ setTitle, Api, NonEditableProps, TableName, DisplayName }) {
+export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) {
     useEffect(() => {
         setTitle && setTitle(DisplayName + " CRUD Edit");
     });
 
     const { id } = useParams();
 
-    const [currentUser, setCurrentUser] = useState(new User());
+    const [currentItem, setCurrentItem] = useState({});
 
-    const [updateUser, setUpdateUser] = useState(new User());
+    const [updateItem, setUpdateItem] = useState({});
 
     useEffect(() => {
-        Api[TableName].GetById(id).then((user) => {
-            if (user === "Error") { return; }
+        Api[TableName].GetById(id).then((obj) => {
+            if (obj === "Error") { return; }
         
-            setCurrentUser(user);
-            setUpdateUser(user);
+            setCurrentItem(obj);
+            setUpdateItem(obj);
         });
-    }, [Api[TableName], id]);
+    }, [Api, TableName, id]);
+
+    const [unitTypes, setUnitTypes] = useState([new UnitType()]);
+    if (unitTypes.length === 1 && unitTypes[0].CountId === -1) {
+        unitTypes.pop();
+    }
+
+    useEffect(() => {
+        Api.UnitTypes.GetAll().then((items) => {
+            if (items === "Error") { return; }
+        
+            setUnitTypes(items);
+        });
+    }, [Api.UnitTypes]);
+
+    const [ingredients, setIngredients] = useState([new Ingredient()]);
+    if (ingredients.length === 1 && ingredients[0].CountId === -1) {
+        ingredients.pop();
+    }
+
+    useEffect(() => {
+        Api.Ingredients.GetAll().then((items) => {
+            if (items === "Error") { return; }
+        
+            setIngredients(items);
+        });
+    }, [Api.Ingredients]);
+
+    const [ingredientCategories, setIngredientCategories] = useState([new IngredientCategory()]);
+    if (ingredientCategories.length === 1 && ingredientCategories[0].CountId === -1) {
+        ingredientCategories.pop();
+    }
+
+    useEffect(() => {
+        Api.IngredientCategories.GetAll().then((items) => {
+            if (items === "Error") { return; }
+        
+            setIngredientCategories(items);
+        });
+    }, [Api.IngredientCategories]);
+
+    const [recipeCategories, setRecipeCategories] = useState([new RecipeCategory()]);
+    if (recipeCategories.length === 1 && recipeCategories[0].CountId === -1) {
+        recipeCategories.pop();
+    }
+
+    useEffect(() => {
+        Api.RecipeCategories.GetAll().then((items) => {
+            if (items === "Error") { return; }
+        
+            setRecipeCategories(items);
+        });
+    }, [Api.RecipeCategories]);
 
     const classes = useStyles();
 
-    const onUserEdited = (update) => {
-        setUpdateUser({
-            ...updateUser,
+    const onItemEdited = (update) => {
+        setUpdateItem({
+            ...updateItem,
             ...update,
         });
     }
 
     const onEdit = () => {
-        Api.Users.Update(updateUser);
+        if (TableName === "Recipes") {
+            var correctedRecipe = { ...updateItem };
+
+            correctedRecipe.RequirementsList = {
+                Ingredients: updateItem.RequirementsList,
+                RecipeId: updateItem.Id,
+            };
+
+            Api[TableName].Update(id, correctedRecipe);
+        }
+        else {
+            Api[TableName].Update(id, updateItem);
+        }
     };
 
+    const CRUDInfo = CRUDPagesInfo.Pages[TableName];
+
+    const [preparationStepsOpen, setPreparationStepsOpen] = useState(false);
+    const [requirementsListOpen, setRequirementsListOpen] = useState(false);
+
     return (
-        <div className={classes.paper}>
+        <Grid container direction="row" className={classes.paper}>
             <Typography className={classes.txt} variant="h2">
-                Edit {currentUser.Name}
+                {DisplayName} CRUD Edit:<br />{currentItem.Name}
             </Typography>
-            <div>
-                <UserInputComponent
-                    
-                    defaultValue={currentUser.Name}
-                    name="Name"
-                    onChange={(value) => onUserEdited({ Name: value })}
-                />
+            <Grid container direction="row" style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px', justifyContent: 'center' }}>
+                {
+                    CRUDInfo.getEditPage(currentItem.CountId && currentItem.CountId > 0 ? currentItem : null, { unitTypes, ingredients, ingredientCategories, recipeCategories },
+                        onItemEdited, Api, { preparationStepsOpen, setPreparationStepsOpen, requirementsListOpen, setRequirementsListOpen,
+                                             preparationStepsCount: updateItem?.PreparationSteps?.split('{NEXT}').length ?? currentItem?.PreparationSteps?.split('{NEXT}').length,
+                                             requirementsCount: updateItem?.RequirementsList?.length ?? currentItem?.RequirementsList?.length })
+                }
                 <Button onClick={onEdit} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
-            </div>
-        </div>
+            </Grid>
+            <Grid container direction="row" style={{ justifyContent: 'center' }}>
+                <Link to={`/${TableName}/index`}>
+                    <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to {DisplayName}</Button>
+                </Link>
+            </Grid>
+        </Grid>
     );
 };

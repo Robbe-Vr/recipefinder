@@ -3,16 +3,24 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
+
+import { drawerWidth } from "./components/Drawer/AppDrawer";
+
 import { HomePage } from "./components/Home/Index";
+
 import { KitchenHomePage } from "./components/Kitchen/index";
 import { AddIngredients } from "./components/Kitchen/AddIngredients";
+
 import { RecipeBookHomePage } from "./components/RecipeBook/index";
 import RecipeDetailsPage from "./components/RecipeBook/details";
+import RecipeTutorialPage from "./components/RecipeBook/tutorial";
 import RecipeEditPage from "./components/RecipeBook/edit";
+import RecipeCreatePage from "./components/RecipeBook/create";
+
 import AccountsPage from "./components/Accounts/index";
 import EditAccountPage from "./components/Accounts/update";
 import AccountDetailsPage from "./components/Accounts/details";
-import { drawerWidth } from "./components/Drawer/AppDrawer";
+
 import { CRUDPage } from "./components/CRUD/CRUDPage";
 import CRUDPagesInfo from "./API/CRUDPagesInfo";
 import CRUDDetailsPage from "./components/CRUD/details";
@@ -81,6 +89,9 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                     <Route path="/recipebook/details/:recipeId">
                         <RecipeDetailsPage setTitle={setTitle} Api={Api} />
                     </Route>
+                    <Route path="/recipebook/tutorial/:recipeId">
+                        <RecipeTutorialPage setTitle={setTitle} Api={Api} />
+                    </Route>
                     {
                         isRegistered ? (
                             <Redirect exact strict from="/" to="/home/index" />
@@ -92,31 +103,34 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                 {
                     isCook ?
                     <Switch>
-                        <Route path="/recipebook/custom">
+                        <Route path="/recipebook/custom/index">
                             <RecipeBookHomePage setTitle={setTitle} isCook={isCook} userId={userId} Api={Api} defaultRecipeListState={0} />
                         </Route>
                         <Route path="/recipebook/custom/edit/:recipeId">
                             <RecipeEditPage setTitle={setTitle} userId={userId} Api={Api} />
+                        </Route>
+                        <Route path="/recipebook/custom/create">
+                            <RecipeCreatePage setTitle={setTitle} userId={userId} Api={Api} />
                         </Route>
                     </Switch>
                     : null
                 }
                 {
                     isCreator ?
-                    CRUDPagesInfo.Pages.map((CRUD, index) => {
+                    Object.keys(CRUDPagesInfo.Pages).map((CRUD, index) => {
                         return (
                             <Switch >
-                                <Route path={`/${CRUD.Name}/index`}>
-                                    <CRUDPage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} Api={Api} />
+                                <Route path={`/${CRUD}/index`}>
+                                    <CRUDPage setTitle={setTitle} TableName={CRUD} DisplayName={CRUDPagesInfo.Pages[CRUD].DisplayName} Api={Api} />
                                 </Route>
-                                <Route path={`/${CRUD.Name}/details/:id`}>
-                                    <CRUDDetailsPage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} Api={Api} />
+                                <Route path={`/${CRUD}/details/:id`}>
+                                    <CRUDDetailsPage setTitle={setTitle} TableName={CRUD} DisplayName={CRUDPagesInfo.Pages[CRUD].DisplayName} Api={Api} />
                                 </Route>
-                                <Route path={`/${CRUD.Name}/edit/:id`}>
-                                    <CRUDEditPage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} NotEditableProps={CRUD.notEditableProperties} Api={Api} />
+                                <Route path={`/${CRUD}/edit/:id`}>
+                                    <CRUDEditPage setTitle={setTitle} TableName={CRUD} DisplayName={CRUDPagesInfo.Pages[CRUD].DisplayName} Api={Api} />
                                 </Route>
-                                <Route path={`/${CRUD.Name}/create`}>
-                                    <CRUDCreatePage setTitle={setTitle} TableName={CRUD.Name} DisplayName={CRUD.DisplayName} Api={Api} />
+                                <Route path={`/${CRUD}/create`}>
+                                    <CRUDCreatePage setTitle={setTitle} TableName={CRUD} DisplayName={CRUDPagesInfo.Pages[CRUD].DisplayName} Api={Api} />
                                 </Route>
                             </Switch>
                         );

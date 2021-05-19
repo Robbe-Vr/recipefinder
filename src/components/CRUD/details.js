@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { EntityList } from "../Global/EntityList";
-import { User, UserAction } from "../../models";
-import { Card } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faCross } from "@fortawesome/free-solid-svg-icons";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -30,28 +28,37 @@ export default function CRUDDetailsPage({ setTitle, Api, TableName, DisplayName 
 
     const { id } = useParams();
 
-    const [userDetails, setUserDetails] = useState(new User());
+    const [item, setItem] = useState({});
 
     useEffect(() => {
-        Api[TableName].GetById(id).then((user) => {
-            if (user === "Error") { return; }
+        Api[TableName].GetById(id).then((obj) => {
+            if (obj === "Error") { return; }
         
-            setUserDetails(user);
+            setItem(obj);
         });
-    }, [Api[TableName], id]);
+    }, [Api, TableName, id]);
 
     const classes = useStyles();
 
     return (
-        <div className={classes.paper}>
+        <Grid className={classes.paper}>
             <Typography className={classes.txt} variant="h2">
-                {userDetails.Name} Details
+                {DisplayName} CRUD Details:<br />{item.Name}
             </Typography>
-            <div>
-                <Typography>
-                    Name: {userDetails.Name}
-                </Typography>
-            </div>
-        </div>
+            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
+                {
+                    Object.keys(item).map((key) => {
+                        return (
+                            <Typography>
+                                {key}: {item[key]}
+                            </Typography>
+                        );
+                    })
+                }
+            </Grid>
+            <Link to={`/${TableName}/index`}>
+                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to {DisplayName}</Button>
+            </Link>
+        </Grid>
     );
 };

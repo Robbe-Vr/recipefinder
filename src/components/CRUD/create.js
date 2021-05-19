@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { UserInputComponent } from "../Global/UserInputComponent";
-import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import CRUDPagesInfo from "../../API/CRUDPagesInfo";
+import { Ingredient, IngredientCategory, RecipeCategory, UnitType } from "../../models";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -29,34 +33,109 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
         setTitle && setTitle(DisplayName + " CRUD Create");
     });
 
-    const [Item, setItem] = useState({});
+    const [item, setItem] = useState({});
+
+    const [unitTypes, setUnitTypes] = useState([new UnitType()]);
+    if (unitTypes.length === 1 && unitTypes[0].CountId === -1) {
+        unitTypes.pop();
+    }
+
+    useEffect(() => {
+        Api.UnitTypes.GetAll().then((items) => {
+            if (items === "Error") { return; }
+        
+            setUnitTypes(items);
+        });
+    }, [Api.UnitTypes]);
+
+    const [ingredients, setIngredients] = useState([new Ingredient()]);
+    if (ingredients.length === 1 && ingredients[0].CountId === -1) {
+        ingredients.pop();
+    }
+
+    useEffect(() => {
+        Api.Ingredients.GetAll().then((items) => {
+            if (items === "Error") { return; }
+        
+            setIngredients(items);
+        });
+    }, [Api.Ingredients]);
+
+    const [ingredientCategories, setIngredientCategories] = useState([new IngredientCategory()]);
+    if (ingredientCategories.length === 1 && ingredientCategories[0].CountId === -1) {
+        ingredientCategories.pop();
+    }
+
+    useEffect(() => {
+        Api.IngredientCategories.GetAll().then((items) => {
+            if (items === "Error") { return; }
+        
+            setIngredientCategories(items);
+        });
+    }, [Api.IngredientCategories]);
+
+    const [recipeCategories, setRecipeCategories] = useState([new RecipeCategory()]);
+    if (recipeCategories.length === 1 && recipeCategories[0].CountId === -1) {
+        recipeCategories.pop();
+    }
+
+    useEffect(() => {
+        Api.RecipeCategories.GetAll().then((items) => {
+            if (items === "Error") { return; }
+        
+            setRecipeCategories(items);
+        });
+    }, [Api.RecipeCategories]);
+
     const classes = useStyles();
 
-    const onItemEdited = (patch) => {
+    const onItemEdited = (update) => {
         setItem({
-            ...Item,
-            ...patch,
+            ...item,
+            ...update,
         });
-    };
+    }
 
     const onCreate = () => {
-        Api[TableName].Create(Item);
+        if (TableName === "Recipes") {
+            var correctedRecipe = { ...item };
+
+            correctedRecipe.RequirementsList = {
+                Ingredients: item.RequirementsList,
+                RecipeId: item.Id,
+            };
+
+            Api[TableName].Create(correctedRecipe);
+        }
+        else {
+            Api[TableName].Create(item);
+        }
     };
 
+    const CRUDInfo = CRUDPagesInfo.Pages[TableName];
+
+    const [preparationStepsOpen, setPreparationStepsOpen] = useState(false);
+    const [requirementsListOpen, setRequirementsListOpen] = useState(false);
+
     return (
-        <div className={classes.paper}>
+        <Grid container direction="row" className={classes.paper}>
             <Typography className={classes.txt} variant="h2">
-                Create {DisplayName}
+                {DisplayName} CRUD Create
             </Typography>
-            <div>
-                <UserInputComponent
-                    
-                    defaultValue={Item.Name}
-                    name="Name"
-                    onChange={(value) => onItemEdited({ Name: value })}
-                />
+            <Grid container direction="row" style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px', justifyContent: 'center' }}>
+                {
+                    CRUDInfo.getEditPage(null, { unitTypes, ingredients, ingredientCategories, recipeCategories },
+                        onItemEdited, Api, { preparationStepsOpen, setPreparationStepsOpen, requirementsListOpen, setRequirementsListOpen,
+                                             preparationStepsCount: item?.PreparationSteps?.split('{NEXT}').length ?? item?.PreparationSteps?.split('{NEXT}').length,
+                                             requirementsCount: item?.RequirementsList?.length })
+                }
                 <Button onClick={onCreate} style={{ backgroundColor: 'forestgreen' }}>Create</Button>
-            </div>
-        </div>
+            </Grid>
+            <Grid container direction="row" style={{ justifyContent: 'center' }}>
+                <Link to={`/${TableName}/index`}>
+                    <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to {DisplayName}</Button>
+                </Link>
+            </Grid>
+        </Grid>
     );
 };

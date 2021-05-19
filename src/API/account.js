@@ -1,6 +1,4 @@
-import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router";
 import { useAPI } from "../API/api-context";
 
 const ACCOUNT_LS = "recipefinder_account";
@@ -10,7 +8,6 @@ const AccountContext = React.createContext({});
 export function Authenticate({ children }) {
 
     const { Api } = useAPI();
-    const history = useHistory();
 
     const [account, setAccount] = useState({});
     const [loaded, setLoaded] = useState(false);

@@ -9,22 +9,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Thumbnail({ source, size = "256px" }) {
+function Thumbnail({ source, size = 256 }) {
     const classes = useStyles();
 
     return (
         <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="center"
+            style={{ border: 'solid 1px', width: ((size + 2) + "px").toString(), maxWidth: ((size + 2) + "px").toString(), height: ((size + 2) + "px").toString(), maxHeight: ((size + 2) + "px").toString() }}
             className={classes.inputBox}
         >
             <img
                 alt=""
                 src={source}
-                width={size}
-                height={size}
+                width={(size + "px").toString()}
+                height={(size + "px").toString()}
             />
         </Grid>
     );

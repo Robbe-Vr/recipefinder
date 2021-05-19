@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { EntityList } from "../Global/EntityList";
 import { User, UserAction } from "../../models";
-import { Card, CardActions } from "@material-ui/core";
+import { Card } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faCross } from "@fortawesome/free-solid-svg-icons";
 

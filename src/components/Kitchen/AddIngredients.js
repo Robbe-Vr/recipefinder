@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { Grid, makeStyles, Typography } from "@material-ui/core";
-import { EntityList } from "../Global/EntityList";
 import { Thumbnail } from "../Global/Thumbnail";
 import Button from "@material-ui/core/Button";
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBackward, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Ingredient, IngredientCategory } from "../../models";
-import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
+import { faArrowRight, faBackward, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Ingredient } from "../../models";
+import { SelectIngredientComponent } from "../Global/SelectIngredientComponent";
 
 const useStyles = makeStyles((theme) => ({
     ingredientSelectContainer: {
@@ -37,29 +36,8 @@ function AddIngredients({ setTitle, userId, Api }) {
         UnitTypeId: 1,
     });
 
-    const [ingredients, setIngredients] = useState([
-        {
-            Id: '',
-            Name: '',
-            ImageLocation: '',
-            AverageVolumeInLiterPerUnit: 0.0,
-            AverageWeightInKgPerUnit: 0.0,
-            Categories: [
-                {
-                    CountId: '',
-                    Name: '',
-                }
-            ],
-            UnitTypes: [
-                {
-                    CountId: 1,
-                    Name: '',
-                    AllowDecimals: false,
-                }
-            ]
-        }
-    ]);
-    if (ingredients.length === 1 && ingredients[0].Id === '' && unitTypeChanges)
+    const [ingredients, setIngredients] = useState([new Ingredient()]);
+    if (ingredients.length === 1 && ingredients[0].CountId === -1 && unitTypeChanges)
     {
         ingredients?.pop();
     }
@@ -81,22 +59,6 @@ function AddIngredients({ setTitle, userId, Api }) {
         setSaveIngredient(saveIngredient);
     };
 
-    const [categories, setCategories] = useState([new IngredientCategory()]);
-    if (categories.length === 1 && categories[0].CountId === -1)
-    {
-        categories.pop();
-    }
-
-    useEffect(() => {
-        Api.IngredientCategories.GetAll().then((categories) => {
-            if (categories === "Error") { return; }
-        
-            setCategories(categories);
-        });
-    }, [Api.IngredientCategories]);
-
-    const [filterOptions, setFilterOptions] = useState({ name: '', categories: [] });
-
     const SaveIngredient = () => {
         if (saveIngredient.IngredientId && saveIngredient.UserId &&
             saveIngredient.Units && saveIngredient.UnitTypeId) {
@@ -107,89 +69,54 @@ function AddIngredients({ setTitle, userId, Api }) {
 
     const allowDecimals = ingredients.find(x => x.Id === selectedIngredient.Id)?.UnitTypes.find(x => x.CountId === saveIngredient.UnitTypeId)?.AllowDecimals;
 
-    const filter = (ingredient = new Ingredient()) => {
-        return (
-            (filterOptions.name?.length > 0 ? ingredient.Name.toLowerCase().indexOf(filterOptions.name.toLowerCase()) > -1 : true) &&
-            (filterOptions.categories?.length > 0 ?
-                ingredient.Categories.filter(c => {
-                    return filterOptions.categories.filter(x => {
-                        return x === c.CountId;
-                    }).length > 0;
-                }).length > 0
-            : true)
-        );
-    };
-
     return (
         <Grid
             container
             direction="row"
         >
-            <Grid
-                className={classes.ingredientSelectedContainer}
-                xs={6}
-            >
-                {selectedIngredient && selectedIngredient.Id ?
-                    <Grid>
-                        <Grid>
-                            <Grid xs={6}>
-                                <Thumbnail source={selectedIngredient.ImageLocation} size="50px" />
+            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
+                <Grid
+                    className={classes.ingredientSelectedContainer}
+                    item
+                    xs={6}
+                >
+                    {selectedIngredient && selectedIngredient.Id ?
+                        <>
+                            <Grid container direction="row">
+                                <Grid container direction="row">
+                                    <Grid>
+                                        <Thumbnail source={selectedIngredient.ImageLocation} size={50} />
+                                    </Grid>
+                                    <Grid style={{ marginLeft: '5px' }}>
+                                        <Typography variant="h5">{selectedIngredient.Name}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid container direction="row">
+                                    <Grid>
+                                        <UserInputComponent type="number" name="Amount" defaultValue={1.0} inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }}
+                                            onChange={(value) => { saveIngredient.Units = parseFloat(value); setSaveIngredient(saveIngredient); }} />
+                                    </Grid>
+                                    <Grid style={{ marginLeft: '5px' }}>
+                                        <UserSelectInputComponent name="Unit Type" options={selectedIngredient.UnitTypes.map(unitType => { return { value: unitType.CountId, name: unitType.Name }; })}
+                                            onChange={(value) => { saveIngredient.UnitTypeId = parseInt(value); setSaveIngredient(saveIngredient); setUnitTypeChanges(unitTypeChanges => unitTypeChanges + 1); }} />
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                            <Grid xs={6}>
-                                <Typography variant="h4">{selectedIngredient.Name}</Typography>
-                            </Grid>
-                        </Grid>
-                        <Grid>
-                            <UserInputComponent type="number" name="Amount" defaultValue={1.0} inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }}
-                                onChange={(value) => { saveIngredient.Units = parseFloat(value); setSaveIngredient(saveIngredient); }} />
-                            <UserSelectInputComponent name="Unit Type" options={selectedIngredient.UnitTypes.map(unitType => { return { value: unitType.CountId, name: unitType.Name }; })}
-                                onChange={(value) => { saveIngredient.UnitTypeId = parseInt(value); setSaveIngredient(saveIngredient); setUnitTypeChanges(unitTypeChanges => unitTypeChanges + 1); }} />
-                        </Grid>
-                    </Grid>
-                    :
-                    <Typography variant="h5">Select an ingredient first!</Typography>
-                }
-                <Button onClick={SaveIngredient} variant="outlined" style={{ marginTop: "20px", color: 'green' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> Add Ingredient</Button>
-            </Grid>
-            <Grid
-                className={classes.ingredientSelectContainer}
-                style={{ borderLeft: "solid", paddingLeft: "10px" }}
-                xs={6}
-            >
-                <Grid style={{ borderBottom: 'solid' }}>
-                    <UserInputComponent
-                        defaultValue={filterOptions.name}
-                        name="search by name"
-                        onChange={(value) => setFilterOptions(filterOptions => { return { ...filterOptions, ...{ name: value } }; })}
-                    />
-
-                    <UserMultiSelectInputComponent
-                        name="select categories"
-                        defaultValue={filterOptions.categories}
-                        options={categories.map(category => { return { name: category.Name, value: category.CountId }; })}
-                        onChange={(values) => setFilterOptions(filterOptions => { return { ...filterOptions, ...{ categories: values } }; })}
-                    />
+                            <Button onClick={SaveIngredient} variant="outlined" style={{ marginTop: "20px", color: 'green' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> Add Ingredient</Button>
+                        </>
+                        :
+                        <Typography variant="h5">Select an ingredient on the right. <FontAwesomeIcon icon={faArrowRight}/></Typography>
+                    }
                 </Grid>
-                <Grid>
-                    <Typography variant="h3">Select an ingredient</Typography>
-                    <EntityList
-                        columns={[
-                            { id: 'image', label: '', minWidth: 50 },
-                            { id: 'name', label: 'Name', minWidth: 100 },
-                            { id: 'unitTypes', label: 'Available Types', minWidth: 125 },
-                            { id: 'categories', label: 'Categories', minWidth: 125 },
-                            { id: 'select', label: 'Choose', minWidth: 100 },
-                        ]}
-                        rows={ingredients.filter(i => filter(i)).map(ingredient => {
-                            return {
-                                id: ingredient.Id,
-                                image: <Thumbnail source={ingredient.ImageLocation} size="50px" />,
-                                name: ingredient.Name,
-                                unitTypes: ingredient.UnitTypes.map((unitType, index) => { if (index > 0) return ", " + unitType.Name; else return unitType.Name; }),
-                                categories: ingredient.Categories.map((category, index) => { if (index > 0) return ", " + category.Name; else return category.Name; }),
-                                select: <Button onClick={() => selectIngredient(ingredient)} style={{ color: 'forestgreen' }}>Select</Button>
-                            };
-                        })}
+                <Grid
+                    className={classes.ingredientSelectContainer}
+                    style={{ borderLeft: "solid 1px", height: window.innerHeight * 0.8 }}
+                    xs={6}
+                >
+                    <SelectIngredientComponent
+                        Api={Api}
+                        ingredients={ingredients}
+                        selectIngredient={selectIngredient}
                     />
                 </Grid>
             </Grid>

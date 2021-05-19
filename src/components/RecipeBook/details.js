@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { EntityList } from "../Global/EntityList";
 import { Recipe } from "../../models";
-import { Card } from "@material-ui/core";
+import { Button, Card, Grid, Link } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faCross } from "@fortawesome/free-solid-svg-icons";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -28,6 +27,8 @@ export default function RecipeDetailsPage({ setTitle, Api }) {
         setTitle && setTitle("Recipe Details");
     });
 
+    const history = useHistory();
+
     const { recipeId } = useParams();
 
     const [recipeDetails, setRecipeDetails] = useState(new Recipe());
@@ -42,12 +43,16 @@ export default function RecipeDetailsPage({ setTitle, Api }) {
 
     const classes = useStyles();
 
+    const onTutorial = () => {
+        history.push(`/recipebook/tutorial/${recipeId}`);
+    };
+
     return (
-        <div className={classes.paper}>
+        <Grid className={classes.paper}>
             <Typography className={classes.txt} variant="h2">
                 {recipeDetails.Name} Details
             </Typography>
-            <div>
+            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
                 <Typography>
                     Name: {recipeDetails.Name}
                 </Typography>
@@ -57,8 +62,14 @@ export default function RecipeDetailsPage({ setTitle, Api }) {
                 <Typography>
                     Categories:
                 </Typography>
-                {recipeDetails.Categories.map(cat => <Card key={`${cat.Name}-${cat.CountId}`} variant="outlined" style={{ margin: '2px', padding: '5px' }}>{cat.Name}</Card>)}
-            </div>
-        </div>
+                {recipeDetails.Categories.map(cat =>
+                        <Card key={`${cat.Name}-${cat.CountId}`} variant="outlined" style={{ margin: '2px', padding: '5px' }}>{cat.Name}</Card>
+                    )}
+                <Button variant="outlined" onClick={onTutorial} style={{ marginTop: '15px' }}>View Tutorial</Button>
+            </Grid>
+            <Link to="/recipebook/custom/index">
+                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Recipes</Button>
+            </Link>
+        </Grid>
     );
 };

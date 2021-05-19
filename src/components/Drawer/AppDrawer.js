@@ -81,7 +81,7 @@ function AppDrawer({ open, onOpen, isAdmin, isCreator, isCook }) {
                         <Divider />
                         <List>
                             <i style={{ marginLeft: '10px' }}>Cook</i>
-                            <DrawerItem icon={faMortarPestle} link="/recipebook/custom" text="Your Recipes" />
+                            <DrawerItem icon={faMortarPestle} link="/recipebook/custom/index" text="Your Recipes" />
                         </List>
                     </div>
                 ) : (
@@ -95,9 +95,9 @@ function AppDrawer({ open, onOpen, isAdmin, isCreator, isCook }) {
                         <List>
                         <i style={{ marginLeft: '10px' }}>Creator</i>
                             {
-                                CRUDPagesInfo.Pages.map((CRUD, index) => {
+                                Object.keys(CRUDPagesInfo.Pages).map((CRUD, index) => {
                                     return (
-                                        <DrawerItem icon={faBookOpen} key={`${CRUD.Name}-${index}`} link={`/${CRUD.Name}/index`} text={CRUD.DisplayName} />
+                                        <DrawerItem icon={faBook} key={`${CRUD}-${index}`} link={`/${CRUD}/index`} text={CRUDPagesInfo.Pages[CRUD].DisplayName} />
                                     );
                                 })
                             }

@@ -44,7 +44,7 @@ function EntityList({ rows, columns }) {
                 <TableBody>
                 {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     return (
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id} onClick={row.onClick ? () => row.onClick(row.id) : () => {}}>
                         {columns.map((column) => {
                             const value = row[column.id];
                             return (

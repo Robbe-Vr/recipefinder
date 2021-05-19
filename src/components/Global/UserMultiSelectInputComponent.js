@@ -6,7 +6,7 @@ import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     inputBox: {
-        marginBottom: theme.spacing(3),
+        
     },
 }));
 
@@ -25,31 +25,25 @@ function UserMultiSelectInputComponent({ name, variant = "outlined", defaultValu
     };
 
     return (
-        <Grid
-            container
-            xs={6}
-            justify="center"
-            alignItems="center"
-        >
-            <Grid>
-                <Select
-                    multiple={true}
-                    className={classes.inputBox}
-                    variant={variant}
-                    id={name}
-                    label={name}
-                    value={values}
-                    onChange={(e) => {
-                        overrideOnChange(e.target.value);
-                    }}
-                > 
-                {
-                    options.map(option =>
-                        <MenuItem id={name + "-" + option.name} value={option.value} selected={defaultValues.indexOf(option.value) > -1}>{option.name}</MenuItem>
-                    )
-                }
-                </Select>
-            </Grid>
+        <Grid>
+            <InputLabel id={name}/>
+            <Select
+                multiple={true}
+                className={classes.inputBox}
+                variant={variant}
+                id={name}
+                label={name}
+                value={values}
+                onChange={(e) => {
+                    overrideOnChange(e.target.value);
+                }}
+            > 
+            {
+                options.map(option =>
+                    <MenuItem key={name + "-" + option.name} id={name + "-" + option.name} value={option.value} selected={values.indexOf(option.value) > -1}>{option.name}</MenuItem>
+                )
+            }
+            </Select>
         </Grid>
     );
 };

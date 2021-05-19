@@ -88,7 +88,7 @@ export default function App() {
 };
 
 function AppShell() {
-    const { id, name, registered, roles, logOut } = useAccount();
+    const { id, name, registered, loaded, roles, logOut } = useAccount();
     const [title, setTitle] = useState("");
     const [open, setOpen] = useState(true);
 
@@ -96,7 +96,7 @@ function AppShell() {
 
     const { Api } = useAPI();
 
-    if (!registered) {
+    if (loaded && !registered) {
         return <Onboarding setTitle={setTitle} Api={Api} />;
     }
 
