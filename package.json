@@ -22,8 +22,7 @@
     "build": "react-scripts build",
     "test": "react-script test",
     "eject": "react-scripts eject",
-    "server": "node server/server.js",
-    "lint": "prettier --check src/**/*.js server/**/*.js cypress/**/*.js",
+    "lint": "prettier --check src/**/*.js cypress/**/*.js",
     "cy:run": "cypress run",
     "cy:ci": "cypress run",
     "cy:verify": "cypress verify",
@@ -48,5 +47,8 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
+  },
+  "devDependencies": {
+    "cypress": "^7.3.0"
   }
 }

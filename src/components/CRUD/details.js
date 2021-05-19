@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button, Grid } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import CRUDPagesInfo from "../../API/CRUDPagesInfo";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -28,37 +29,38 @@ export default function CRUDDetailsPage({ setTitle, Api, TableName, DisplayName 
 
     const { id } = useParams();
 
-    const [item, setItem] = useState({});
+    const [currentItem, setCurrentItem] = useState({});
 
     useEffect(() => {
         Api[TableName].GetById(id).then((obj) => {
             if (obj === "Error") { return; }
         
-            setItem(obj);
+            setCurrentItem(obj);
         });
     }, [Api, TableName, id]);
 
     const classes = useStyles();
 
+    const CRUDInfo = CRUDPagesInfo.Pages[TableName];
+
     return (
-        <Grid className={classes.paper}>
+        <Grid container direction="row" className={classes.paper}>
             <Typography className={classes.txt} variant="h2">
-                {DisplayName} CRUD Details:<br />{item.Name}
+                {DisplayName} CRUD Details:<br />{currentItem.Name}
             </Typography>
-            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
+            <Grid container direction="row" style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px', justifyContent: 'center' }}>
                 {
-                    Object.keys(item).map((key) => {
-                        return (
-                            <Typography>
-                                {key}: {item[key]}
-                            </Typography>
-                        );
-                    })
+                    CRUDInfo.getDetailsPage(currentItem.CountId && currentItem.CountId > 0 ? currentItem : null)
                 }
+                <Link to={`/${TableName}/edit/${id}`}>
+                    <Button style={{ backgroundColor: 'yellow' }}>Edit</Button>
+                </Link>
             </Grid>
-            <Link to={`/${TableName}/index`}>
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to {DisplayName}</Button>
-            </Link>
+            <Grid container direction="row" style={{ justifyContent: 'center' }}>
+                <Link to={`/${TableName}/index`}>
+                    <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to {DisplayName}</Button>
+                </Link>
+            </Grid>
         </Grid>
     );
 };

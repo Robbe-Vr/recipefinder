@@ -106,7 +106,7 @@ export default function AccountsPage({ setTitle, Api }) {
                             id: user.Id,
                             name: user.Name,
                             email: user.Email,
-                            roles: user.Roles.map(role => { return (<Card key={role.Id} style={{ margin: '2px', padding: '3px' }}>{role.name}</Card>); }),
+                            roles: user.Roles.map(role => { return <Card key={role.Id} style={{ margin: '2px', padding: '3px' }}>{role.Name}</Card>; }),
                             actions: <RowActions rowEntityId={user.Id} rowEntity={user} onDetails={onDetails} onEdit={onEdit} onRemove={ToggleRemove} />
                         }
                     })}

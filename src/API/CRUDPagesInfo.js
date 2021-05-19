@@ -1,5 +1,6 @@
-import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
+import { Button, Card, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { ImageInputComponent } from "../components/Global/ImageInputComponent";
+import { Thumbnail } from "../components/Global/Thumbnail";
 import { UserInputComponent } from "../components/Global/UserInputComponent";
 import { UserMultiSelectInputComponent } from "../components/Global/UserMultiSelectInputComponent";
 import { UserSelectInputComponent } from "../components/Global/UserSelectInputComponent";
@@ -229,6 +230,157 @@ function CreateEditPage(item, tableName, notEditableProps, ApiTables, onItemEdit
     };
 };
 
+function CreateIngredientDetailsPage(item) {
+    return (
+        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Name: {item?.Name}
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Image:
+                {
+                    item?.ImageLocation ?
+                        <Thumbnail source={item.ImageLocation} size={50} />
+                        : "Not set"
+                }
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                UnitTypes:
+                {
+                    item?.UnitTypes.map(unitType => <Card key={unitType.CountId} style={{ margin: '2px', padding: '3px' }}>{unitType.Name}</Card>)
+                }
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Average Weight per Unit: {item?.AverageWeightInKgPerUnit} Kg / Unit
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Average Volume per Unit: {item?.AverageVolumeInLiterPerUnit} L / Unit
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Categories:
+                {
+                    item?.Categories.map(cat => <Card key={cat.CountId} style={{ margin: '2px', padding: '3px' }}>{cat.Name}</Card>)
+                }
+            </Grid>
+        </Grid>
+    );
+};
+
+function CreateIngredientCategoryDetailsPage(item) {
+    return (
+        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Name: {item?.Name}
+            </Grid>
+        </Grid>
+    );
+};
+
+function CreateUnitTypeDetailsPage(item) {
+    return (
+        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Name: {item?.Name}
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Allow Decimals: {item?.AllowDecimals ? "True" : "False"}
+            </Grid>
+        </Grid>
+    );
+};
+
+function CreateRecipeDetailsPage(item) {
+    
+    return (
+        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Name: {item?.Name}
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Description: {item?.Description}
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Image:
+                {
+                    item?.ImageLocation ?
+                        <Thumbnail source={item.ImageLocation} size={50} />
+                        : "Not set"
+                }
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Tutorial Video: {item?.VideoTutorialLink ? <a href={item?.VideoTutorialLink}>Click here to watch</a> : "Not set"}
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Preparation Steps:
+                {
+                    item?.PreparationSteps ?
+                    item.PreparationSteps.split('{NEXT}').map((step, index) =>
+                        <Card key={index} style={{ margin: '2px', padding: '3px' }}>
+                            Step {index}. {step}
+                        </Card>
+                    )
+                    : "Not set"
+                }
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Requirements:
+                {
+                    item?.RequirementsList ?
+                        item.RequirementsList.map((requirement, index) =>
+                            <Card key={requirement.CountId} style={{ margin: '2px', padding: '3px' }}>
+                                {requirement.Ingredient.Name} - {requirement.Units} {requirement.unitType.Name}
+                            </Card>
+                        )
+                        : "Not set"
+                }
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Public: {item?.IsPublic ? "Public" : "Private"}
+            </Grid>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Categories:
+                {
+                    item?.Categories.map(cat => <Card key={cat.CountId} style={{ margin: '2px', padding: '3px' }}>{cat.Name}</Card>)
+                }
+            </Grid>
+        </Grid>
+    );
+};
+
+function CreateRecipeCategoryDetailsPage(item) {
+    return (
+        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+                Name: {item?.Name}
+            </Grid>
+        </Grid>
+    );
+};
+
+function CreateDetailsPage(item, tableName) {
+    switch (tableName) {
+        case "Ingredients":
+            return CreateIngredientDetailsPage(item);
+
+        case "IngredientCategories":
+            return CreateIngredientCategoryDetailsPage(item);
+
+        case "UnitTypes":
+            return CreateUnitTypeDetailsPage(item);
+
+        case "Recipes":
+            return CreateRecipeDetailsPage(item);
+
+        case "RecipeCategories":
+            return CreateRecipeCategoryDetailsPage(item);
+
+        default:
+            return (
+                <></>
+            );
+    };
+};
+
 function generateCRUDInfo(tableName, displayName, notEditableProps, context) {
     context[tableName] = {
         DisplayName: displayName,
@@ -237,6 +389,15 @@ function generateCRUDInfo(tableName, displayName, notEditableProps, context) {
                 <Grid container direction="row">
                     {
                         CreateEditPage(item, tableName, notEditableProps, ApiTables, onItemEdited, Api, additionals)
+                    }
+                </Grid>
+            );
+        },
+        getDetailsPage: (item, ApiTables, onItemEdited, Api, additionals) => {
+            return (
+                <Grid container direction="row">
+                    {
+                        CreateDetailsPage(item, tableName)
                     }
                 </Grid>
             );

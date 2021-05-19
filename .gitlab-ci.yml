@@ -1,0 +1,62 @@
+stages:
+  - install
+  - build
+  - test
+  - lint
+
+# to cache both npm modules and Cypress binary we use environment variables
+# to point at the folders we can list as paths in "cache" job settings
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+  HUSKY_SKIP_INSTALL: 1
+
+image: "cypress/base:10"
+
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm
+    - cache/Cypress
+    - node_modules
+
+install:
+  stage: install
+  script:
+    - npm ci
+
+build:
+  stage: build
+  script:
+    - CI=false npm run build
+  artifacts:
+    paths:
+      - build/
+
+unit-tests:
+  stage: test
+  script:
+    - npm run test
+
+integration-tests:
+  stage: test
+  artifacts:
+    paths:
+      - cypress/screenshots
+      - cypress/videos
+    when: always
+    expire_in: 2 days
+  script:
+    - npx cypress cache path
+    - npx cypress cache list
+    - npm run cy:verify
+    - npm run cy:info
+    - npx serve -s -p 3000 build/ & npx wait-port localhost:3000
+    - npm run cy:ci
+
+lint:
+  stage: lint
+  script:
+    - npm run lint
