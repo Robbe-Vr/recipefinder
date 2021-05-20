@@ -9,22 +9,26 @@
     "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
     "crypto-js": "^4.0.0",
+    "cypress": "^7.3.0",
     "oidc-client": "^1.11.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.3"
+    "react-scripts": "^4.0.3",
+    "start-server-and-test": "^1.12.2"
   },
   "name": "recipefinderreact",
   "version": "1.0.0",
   "scripts": {
     "start": "set PORT=3000&&set HTTPS=true&&react-scripts start",
+    "npx-start": "npx serve -s -p 3000 build/",
     "build": "react-scripts build",
     "test": "react-script test",
     "eject": "react-scripts eject",
     "lint": "prettier --check src/**/*.js cypress/**/*.js",
     "cy:run": "cypress run",
     "cy:ci": "cypress run",
+    "cy:test": "start-server-and-test npx-start http://localhost:3000 cy:run",
     "cy:verify": "cypress verify",
     "cy:info": "cypress info"
   },
@@ -49,6 +53,6 @@
     }
   },
   "devDependencies": {
-    "cypress": "^7.3.0"
+    "@babel/parser": "^7.14.3"
   }
 }

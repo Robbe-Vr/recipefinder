@@ -23,3 +23,9 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+const ls_key = "recipefinder_account";
+Cypress.Commands.add("connect", (version) => {
+    cy.fixture(`connected_account_${version}`).then((data) => {
+        window.localStorage.setItem(ls_key, JSON.stringify(data));
+    });
+});
