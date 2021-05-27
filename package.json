@@ -26,7 +26,7 @@
     "test": "react-script test",
     "eject": "react-scripts eject",
     "lint": "prettier --check src/**/*.js cypress/**/*.js",
-    "cy:run": "cypress run",
+    "cy:run": "cypress run --browser=chrome",
     "cy:ci": "cypress run",
     "cy:test": "start-server-and-test npx-start http://localhost:3000 cy:run",
     "cy:verify": "cypress verify",
@@ -53,6 +53,7 @@
     }
   },
   "devDependencies": {
-    "@babel/parser": "^7.14.3"
+    "@babel/parser": "^7.14.3",
+    "cypress-log-to-output": "^1.1.2"
   }
 }

@@ -1,0 +1,28 @@
+{
+    "AccessFailedCount": 0,
+    "ConcurrencyStamp": "M1EZAjPJO4E=",
+    "CountId": 1,
+    "CreationDate": "2021-01-02T00:00:00",
+    "Deleted": false,
+    "DOB": "0001-01-01T00:00:00",
+    "Email": "admin@recipefinder.com",
+    "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+    "EmailConfirmationToken": "11111",
+    "EmailConfirmed": false,
+    "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+    "LockoutEnabled": false,
+    "LockoutEnd": null,
+    "Name": "Recipe Finder admin",
+    "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+    "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+    "PhoneNumber": "000 000 00 00",
+    "PhoneNumberConfirmed": false,
+    "Roles": [
+        {"CountId": 3, "Id": "a2d07a78-b02d-43c5-9882-7966396c8082", "Name": "Default"},
+        {"CountId": 2, "Id": "0d2b2cd5-51a1-4863-ade1-e422f1876506", "Name": "Admin"},
+        {"CountId": 4, "Id": "dd3f86d6-7b5d-42b5-be49-947cd0b2d0b3", "Name": "Creator"},
+        {"CountId": 1, "Id": "00462ce8-2cec-4f04-85e9-446c63b8d440", "Name": "Cook"}
+    ],
+    "Salt": "M1EZAjPJO4E=",
+    "SecurityStamp": "M1EZAjPJO4E="
+}

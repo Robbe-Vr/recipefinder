@@ -4,6 +4,6 @@ describe("Login Test", () => {
     });
   
     it("check if correct home page", () => {
-      cy.get("h1").should("have.text", "Hello");
+      cy.get("h1").should("have.text", "Hello Recipe Finder admin!");
     });
 });

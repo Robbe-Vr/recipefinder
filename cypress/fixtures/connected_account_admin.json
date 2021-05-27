@@ -1,5 +1,5 @@
 {
-  "access_token": "dev-test-access-token",
+  "AccessToken": "dev-test-access-token-12345678909876543210123",
   "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
   "Name": "Recipe Finder admin",
   "Email": "admin@recipefinder.com",

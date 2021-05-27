@@ -29,6 +29,8 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
     useEffect(() => {
         setTitle && setTitle("CRUD " + TableName);
     });
+
+    const [entityGroup] = useState(Api[TableName]);
     
     const history = useHistory();
 
@@ -60,8 +62,6 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
     };
 
     const classes = useStyles();
-
-    const entityGroup = Api[TableName];
 
     useEffect(() => {
         entityGroup.GetAll().then((items) => {

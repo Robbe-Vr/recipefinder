@@ -74,15 +74,18 @@ function AddIngredients({ setTitle, userId, Api }) {
             container
             direction="row"
         >
-            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
+            <Grid container style={{ width: '100%', marginBottom: '10px', padding: '5px' }}>
                 <Grid
-                    className={classes.ingredientSelectedContainer}
+                    container
                     item
+                    direction="column"
+                    className={classes.ingredientSelectedContainer}
+                    style={{ display: 'inline-block', verticalAlign: 'top', width: '50%', height: window.innerHeight * 0.8 }}
                     xs={6}
                 >
                     {selectedIngredient && selectedIngredient.Id ?
                         <>
-                            <Grid container direction="row">
+                            <Grid container direction="row" style={{ marginTop: '10%' }}>
                                 <Grid container direction="row">
                                     <Grid>
                                         <Thumbnail source={selectedIngredient.ImageLocation} size={50} />
@@ -109,8 +112,11 @@ function AddIngredients({ setTitle, userId, Api }) {
                     }
                 </Grid>
                 <Grid
+                    container
+                    item
+                    direction="column"
                     className={classes.ingredientSelectContainer}
-                    style={{ borderLeft: "solid 1px", height: window.innerHeight * 0.8 }}
+                    style={{ borderLeft: "solid 1px", display: 'inline-block', height: window.innerHeight * 0.8 }}
                     xs={6}
                 >
                     <SelectIngredientComponent

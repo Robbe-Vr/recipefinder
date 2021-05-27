@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { KitchenList } from "./KitchenList";
+import { EntityList } from "../Global/EntityList";
 import { Thumbnail } from "../Global/Thumbnail";
 import { RowActions } from "../Global/RowActions";
-import { Grid } from "@material-ui/core";
+import { Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -42,8 +42,8 @@ function KitchenHomePage({ setTitle, userId, Api }) {
         kitchen.Ingredients.pop();
     }
 
-    const [editingIngredients, setEditingIngredients] = useState([]);
-    const [removingIngredients, setRemovingIngredients] = useState([]);
+    const [editItem, setEditItem] = useState({ item: {}, dialogOpened: false });
+    const [removeItem, setRemoveItem] = useState({ item: {}, dialogOpened: false });
 
     const [updates, setUpdates] = useState({});
     const [unitTypeChanges, setUnitTypeChanges] = useState(0);
@@ -61,23 +61,12 @@ function KitchenHomePage({ setTitle, userId, Api }) {
         });
     }, [Api.Kitchens, userId]);
 
-    const ToggleEdit = (id) => {
-        if (editingIngredients.indexOf(id) > -1) {
-            setEditingIngredients(editingIngredients => editingIngredients.filter(x => x !== id));
-            setUpdates(updates => { updates[id] = undefined; return updates; });
-        }
-        else {
-            setEditingIngredients(editingIngredients => [...editingIngredients, id]);
-            setRemovingIngredients(removingIngredients => removingIngredients.filter(x => x !== id));
-        }
-    };
-
     const onEdit = async (id) => {
         if (!updates[id]) return;
 
-        await Api.Kitchens.Update(updates[id].CountId, updates[id]);
+        
 
-        window.location.reload();
+        await Api.Kitchens.Update(updates[id].CountId, updates[id]);
     };
 
     const onUnitsEdited = (id, newUnits) => {
@@ -98,33 +87,54 @@ function KitchenHomePage({ setTitle, userId, Api }) {
         setUnitTypeChanges(unitTypeChanges => unitTypeChanges + 1);
     };
 
-    const ToggleRemove = (id) => {
-        if (removingIngredients.indexOf(id) > -1) {
-            setRemovingIngredients(removingIngredients => removingIngredients.filter(x => x !== id));
-        }
-        else {
-            setRemovingIngredients(removingIngredients => [...removingIngredients, id]);
-            setEditingIngredients(editingIngredients => editingIngredients.filter(x => x !== id));
-        }
-    };
-
     const onRemove = (id) => {
         var ingredient = kitchen.Ingredients.find(x => x.Ingredient.Id === id);
 
-        Api.Kitchens.Delete(kitchen.UserId + "/" + ingredient.IngredientId, ingredient);
+        var updatedKitchen = [...kitchen.Ingredients];
+        updatedKitchen.splice(kitchen.Ingredients.indexOf(ingredient), 1);
 
-        window.location.reload();
+        setKitchen({ ...kitchen, Ingredients: updatedKitchen });
+
+        Api.Kitchens.Delete(kitchen.UserId + "/" + ingredient.IngredientId, ingredient);
+    };
+
+    const closeEditDialog = () => {
+        setEditItem({ ...removeItem, dialogOpened: false });
+    };
+
+    const closeRemoveDialog = () => {
+        setRemoveItem({ ...removeItem, dialogOpened: false });
     };
 
     return (
         <Grid className={classes.form}>
+            <Dialog open={removeItem.dialogOpened} onClose={closeRemoveDialog}>
+                <DialogTitle>Remove {removeItem.item.Name}</DialogTitle>
+                <DialogContent>
+                    Are you sure you want to remove this ingredient?
+                    <Button id={removeItem.item.IngredientId} style={{ backgroundColor: 'red', marginRight: '5px' }} onClick={async (e) => await onRemove(removeItem.item.IngredientId)}>Remove</Button>
+                    <Button style={{ backgroundColor: 'forestgreen' }} onClick={closeRemoveDialog}>Cancel</Button>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={editItem.dialogOpened} onClose={closeEditDialog}>
+                <DialogTitle>Edit {editItem.item.Name}</DialogTitle>
+                <DialogContent>
+                    <UserInputComponent onChange={(value) => onUnitsEdited(editItem.item.IngredientId, value)} name="Units" defaultValue={editItem.item.Units}
+                        type="number" inputProps={{ min: editItem.allowDecimals ? 0.01 : 1.00, max: 1000.00, step: editItem.allowDecimals ? 0.01 : 1.00 }} />
+                    <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(editItem.item.IngredientId, value)} name="Unit Type" defaultValue={editItem.item.UnitType?.CountId} type="number"
+                        options={editItem.item.Ingredient?.UnitTypes.map(unitType => { return { id: unitType.CountId, name: unitType.Name, value: unitType.CountId } }) ?? []} />
+                    <Button id={editItem.item.IngredientId} style={{ backgroundColor: 'forestgreen', marginRight: '5px' }} onClick={async (e) => await onEdit(editItem.item.IngredientId)}>Save</Button>
+                    <Button style={{ backgroundColor: 'gold' }} onClick={closeEditDialog}>Cancel</Button>
+                </DialogContent>
+            </Dialog>
+
             <Typography className={classes.txt} variant="h3">
                 {kitchen?.User.Name}'s Kitchen
             </Typography>
 
             {!kitchen || kitchen.Ingredients.length < 1 ?
                 "No ingredients in your kitchen." :
-                <KitchenList
+                <EntityList
                     columns={[
                         { id: 'image', label: '', minWidth: 50 },
                         { id: 'name', label: 'Name', minWidth: 150 },
@@ -141,29 +151,23 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                             image: <Thumbnail source={ingredient.Ingredient.ImageLocation} size="50px" />,
                             name: ingredient.Ingredient.Name,
                             units: ingredient.Units + " " + ingredient.UnitType.Name,
-                            actions: <RowActions rowEntity={ingredient} rowEntityId={ingredient.IngredientId} onEdit={ToggleEdit} onRemove={ToggleRemove} />,
-                            editComponent: editingIngredients.indexOf(ingredient.Ingredient.Id) > -1 ?
-                                <div>
-                                    <UserInputComponent onChange={(value) => onUnitsEdited(ingredient.IngredientId, value)} name="Units" defaultValue={ingredient.Units}
-                                        type="number" inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }} />
-                                    <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(ingredient.IngredientId, value)} name="Unit Type" defaultValue={ingredient.UnitType.CountId} type="number"
-                                        options={ingredient.Ingredient.UnitTypes.map(unitType => { return { id: unitType.CountId, name: unitType.Name, value: unitType.CountId } })} />
-                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'forestgreen', marginRight: '5px' }} onClick={async (e) => await onEdit(ingredient.IngredientId)}>Save</Button>
-                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'gold' }} onClick={(e) => ToggleEdit(ingredient.Ingredient.Id)}>Cancel</Button>
-                                </div> : null,
-                            removeComponent: removingIngredients.indexOf(ingredient.Ingredient.Id) > -1 ?
-                                <div>
-                                    Are you sure you want to remove this ingredient?
-                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'red', marginRight: '5px' }} onClick={async (e) => await onRemove(ingredient.IngredientId)}>Remove</Button>
-                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'forestgreen' }} onClick={(e) => ToggleRemove(ingredient.IngredientId)}>Cancel</Button>
-                                </div> : null,
+                            actions: <RowActions rowEntity={ingredient} rowEntityId={ingredient.IngredientId}
+                                onEdit={() => setEditItem({ item: ingredient, allowDecimals: allowDecimals, dialogOpened: true })}
+                                onRemove={() => setRemoveItem({ item: ingredient, dialogOpened: true })} />,
                         }
                     }) ?? []}
                 />
             }
-            <Link to="/kitchen/add">
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> Add Ingredients</Button>
-            </Link>
+            <Grid style={{ marginRight: '5px', marginBottom: '20px' }}>
+                <Link to="/kitchen/add">
+                    <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} /> Add Ingredients</Button>
+                </Link>
+            </Grid>
+            <Grid style={{ marginRight: '5px' }}>
+                <Link to="/kitchen/whattobuy">
+                    <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} /> What to Buy</Button>
+                </Link>
+            </Grid>
         </Grid>
     );
 };

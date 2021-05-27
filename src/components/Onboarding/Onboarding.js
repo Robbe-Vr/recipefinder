@@ -35,14 +35,18 @@ function Onboarding({ setTitle, Api }) {
         const TestAuthPage = async () => {
             const authPage = (await Api.Custom.PerformCustom('get', Api.AuthorizationPage))?.data;
 
-            const pageActive = authPage ? authPage.length ? authPage.length > 1 : false : false;
+            console.log("auth page data:", authPage);
 
-            console.log("auth page: " + (pageActive ? 'active' : 'inactive'));
+            const pageActive = authPage && authPage.length && authPage.length > 1 && authPage !== 'Error';
 
-            setAuthPageAvailable(pageActive);
+            console.log("auth page: " + (pageActive === true ? 'active' : 'inactive'));
+
+            setAuthPageAvailable(pageActive === true);
         }
 
-        TestAuthPage();
+        if (window.location.pathname.indexOf('returnAuthorization') < 0) {
+            TestAuthPage();
+        }
     }, [Api.AuthorizationPage, Api.Custom]);
 
     const handleConnectionSuccess = () => {

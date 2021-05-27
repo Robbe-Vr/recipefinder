@@ -77,7 +77,7 @@ export default function RecipeTutorialPage({ setTitle, Api }) {
                         </Grid>
                 }
             </Grid>
-            <Link to="/recipebook/custom/index">
+            <Link to="/recipebook/index">
                 <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Recipes</Button>
             </Link>
         </div>

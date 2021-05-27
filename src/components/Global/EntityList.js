@@ -58,7 +58,6 @@ function EntityList({ rows, columns }) {
                 })}
                 </TableBody>
             </Table>
-            </TableContainer>
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
@@ -68,6 +67,7 @@ function EntityList({ rows, columns }) {
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
             />
+            </TableContainer>
         </div>
     );
 };

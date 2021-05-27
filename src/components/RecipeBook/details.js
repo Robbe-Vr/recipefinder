@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, Link } from "react-router-dom";
 
 import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Recipe } from "../../models";
-import { Button, Card, Grid, Link } from "@material-ui/core";
+import { Button, Card, Grid } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
@@ -67,7 +67,7 @@ export default function RecipeDetailsPage({ setTitle, Api }) {
                     )}
                 <Button variant="outlined" onClick={onTutorial} style={{ marginTop: '15px' }}>View Tutorial</Button>
             </Grid>
-            <Link to="/recipebook/custom/index">
+            <Link to="/recipebook/index">
                 <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Recipes</Button>
             </Link>
         </Grid>

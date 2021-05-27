@@ -328,7 +328,7 @@ function CreateRecipeDetailsPage(item) {
                     item?.RequirementsList ?
                         item.RequirementsList.map((requirement, index) =>
                             <Card key={requirement.CountId} style={{ margin: '2px', padding: '3px' }}>
-                                {requirement.Ingredient.Name} - {requirement.Units} {requirement.unitType.Name}
+                                {requirement.Ingredient.Name} - {requirement.Units} {requirement.UnitType.Name}
                             </Card>
                         )
                         : "Not set"

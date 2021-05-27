@@ -285,7 +285,7 @@ class IngredientEntityGroup extends EntityGroup {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new Ingredient(item.CountId, item.Id, item.Name, item.ImageLocation, item.AverageWeightInKgPerUnit, item.AverageVolumeInLPerUnit,
+            return new Ingredient(item.CountId, item.Id, item.Name, item.ImageLocation, item.AverageWeightInKgPerUnit, item.AverageVolumeInLiterPerUnit,
                 item.Categories ? item.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                 item.UnitTypes ? item.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []);
         }) : [];
@@ -293,10 +293,51 @@ class IngredientEntityGroup extends EntityGroup {
         return fixedData;
     };
 
+    async GetWhatToBuy(userId, type = 'recipes' || 'ingredients') {
+        var res = await super.PerformCustom('get', this.ApiUrl + `/whattobuy${type}/` + userId);
+
+        const fixedData = res.data && res.data !== "Error" && res.data.map ?
+            type === 'recipes' ?
+                res.data.map((item) => {
+                    return new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
+                        item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
+                        item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.CountId,
+                            new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLiterPerUnit,
+                                requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                                requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                            requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
+                            new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name, requirement.Recipe.Description, requirement.Recipe.ImageLocation, requirement.Recipe.IsPublic, requirement.Recipe.PreparationSteps, requirement.Recipe.VideoTutorialLink,
+                                requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
+                                null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
+                                    requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
+                                    requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
+                        )) : [],
+                        new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
+                            item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
+                })
+                :
+                res.data.map(requirement => {
+                    return new RequirementsListIngredient(requirement.CountId,
+                        new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLiterPerUnit,
+                            requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
+                            requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
+                        requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
+                        new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name, requirement.Recipe.Description, requirement.Recipe.ImageLocation, requirement.Recipe.IsPublic, requirement.Recipe.PreparationSteps, requirement.Recipe.VideoTutorialLink,
+                            requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
+                            null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
+                                requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
+                                requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
+                    )
+                })
+            : [];
+
+        return fixedData;
+    };
+
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new Ingredient(item.CountId, item.Id, item.Name, item.ImageLocation, item.AverageWeightInKgPerUnit, item.AverageVolumeInLPerUnit,
+        const fixedData = new Ingredient(item.CountId, item.Id, item.Name, item.ImageLocation, item.AverageWeightInKgPerUnit, item.AverageVolumeInLiterPerUnit,
             item.Categories ? item.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
             item.UnitTypes ? item.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []);
 
@@ -306,7 +347,7 @@ class IngredientEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new Ingredient(item.CountId, item.Id, item.Name, item.ImageLocation, item.AverageWeightInKgPerUnit, item.AverageVolumeInLPerUnit,
+        const fixedData = new Ingredient(item.CountId, item.Id, item.Name, item.ImageLocation, item.AverageWeightInKgPerUnit, item.AverageVolumeInLiterPerUnit,
             item.Categories ? item.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
             item.UnitTypes ? item.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []);
 
@@ -416,12 +457,12 @@ class RecipeEntityGroup extends EntityGroup {
             return new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
                 item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                 item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.CountId,
-                    new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                    new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLiterPerUnit,
                         requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                         requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                     requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
                     new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name, requirement.Recipe.Description, requirement.Recipe.ImageLocation, requirement.Recipe.IsPublic, requirement.Recipe.PreparationSteps, requirement.Recipe.VideoTutorialLink,
-                        requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                        requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                         null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
                             requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
                             requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
@@ -440,12 +481,12 @@ class RecipeEntityGroup extends EntityGroup {
             return new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
                 item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                 item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.CountId,
-                    new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                    new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLiterPerUnit,
                         requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                         requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                     requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
                     new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name, requirement.Recipe.Description, requirement.Recipe.ImageLocation, requirement.Recipe.IsPublic, requirement.Recipe.PreparationSteps, requirement.Recipe.VideoTutorialLink,
-                        requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                        requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                         null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
                             requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
                             requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
@@ -464,12 +505,12 @@ class RecipeEntityGroup extends EntityGroup {
             return new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
                 item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                 item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.CountId,
-                    new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                    new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLiterPerUnit,
                         requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                         requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                     requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
                     new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name, requirement.Recipe.Description, requirement.Recipe.ImageLocation, requirement.Recipe.IsPublic, requirement.Recipe.PreparationSteps, requirement.Recipe.VideoTutorialLink,
-                        requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                        requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                         null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
                             requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
                             requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
@@ -487,12 +528,12 @@ class RecipeEntityGroup extends EntityGroup {
         const fixedData = new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
             item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
             item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.CountId,
-                new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLiterPerUnit,
                     requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                     requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                 requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
                 new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name, requirement.Recipe.Description, requirement.Recipe.ImageLocation, requirement.Recipe.IsPublic, requirement.Recipe.PreparationSteps, requirement.Recipe.VideoTutorialLink,
-                    requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                     null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
                         requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
                         requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
@@ -509,12 +550,12 @@ class RecipeEntityGroup extends EntityGroup {
         const fixedData = new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
             item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
             item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.CountId,
-                new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLPerUnit,
+                new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLiterPerUnit,
                     requirement.Ingredient.Categories ? requirement.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                     requirement.Ingredient.UnitTypes ? requirement.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                 requirement.Units, new UnitType(requirement.UnitType.CountId, requirement.UnitType.Name, requirement.UnitType.AllowDecimals),
                 new Recipe(requirement.Recipe.CountId, requirement.Recipe.Id, requirement.Recipe.Name, requirement.Recipe.Description, requirement.Recipe.ImageLocation, requirement.Recipe.IsPublic, requirement.Recipe.PreparationSteps, requirement.Recipe.VideoTutorialLink,
-                    requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    requirement.Recipe.Categories ? requirement.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                     null, requirement.Recipe.User ? new User(requirement.Recipe.User.CountId, requirement.Recipe.User.Id, requirement.Recipe.User.Name, requirement.Recipe.User.Email,
                         requirement.Recipe.User.PhoneNumber, requirement.Recipe.User.PasswordHashed, requirement.Recipe.User.Salt, requirement.Recipe.User.DOB, requirement.Recipe.User.CreationDate,
                         requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
@@ -535,7 +576,7 @@ class KitchenEntityGroup extends EntityGroup {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new KitchenIngredient(item.Id, new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+            return new KitchenIngredient(item.Id, new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLiterPerUnit,
                 item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                 item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                 item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
@@ -549,7 +590,7 @@ class KitchenEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new KitchenIngredient(item.Id, new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+        const fixedData = new KitchenIngredient(item.Id, new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLiterPerUnit,
             item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
             item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
             item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
@@ -571,7 +612,7 @@ class KitchenEntityGroup extends EntityGroup {
         var res = await super.PerformCustom('get', this.ApiUrl + '/byusername/' + name);
 
         const fixedData = res.data && res !== "Error" && res.data.map ? res.data.map((item) => {
-            return new KitchenIngredient(item.Id, new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+            return new KitchenIngredient(item.Id, new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLiterPerUnit,
                 item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                 item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                 item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
@@ -593,12 +634,12 @@ class RequirementsListEntityGroup extends EntityGroup {
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
             return new RequirementsListIngredient(item.CountId,
-                new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+                new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLiterPerUnit,
                     item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                     item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                 item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
                 new Recipe(item.Recipe.CountId, item.Recipe.Id, item.Recipe.Name, item.Recipe.Description, item.Recipe.ImageLocation, item.Recipe.IsPublic, item.Recipe.PreparationSteps, item.Recipe.VideoTutorialLink,
-                    item.Recipe.Categories ? item.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    item.Recipe.Categories ? item.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                     null, new User(item.Recipe.User.CountId, item.Recipe.User.Id, item.Recipe.User.Name, item.Recipe.User.Email,
                         item.Recipe.User.PhoneNumber, item.Recipe.User.PasswordHashed, item.Recipe.User.Salt, item.Recipe.User.DOB, item.Recipe.User.CreationDate,
                         item.Recipe.User.Roles ? item.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []))
@@ -612,12 +653,12 @@ class RequirementsListEntityGroup extends EntityGroup {
         var item = await super.GetById(id);
 
         const fixedData = new RequirementsListIngredient(item.CountId,
-            new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+            new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLiterPerUnit,
                 item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                 item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
             item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
             new Recipe(item.Recipe.CountId, item.Recipe.Id, item.Recipe.Name, item.Recipe.Description, item.Recipe.ImageLocation, item.Recipe.IsPublic, item.Recipe.PreparationSteps, item.Recipe.VideoTutorialLink,
-                item.Recipe.Categories ? item.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                item.Recipe.Categories ? item.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                 null, new User(item.Recipe.User.CountId, item.Recipe.User.Id, item.Recipe.User.Name, item.Recipe.User.Email,
                     item.Recipe.User.PhoneNumber, item.Recipe.User.PasswordHashed, item.Recipe.User.Salt, item.Recipe.User.DOB, item.Recipe.User.CreationDate,
                     item.Recipe.User.Roles ? item.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : [])));
@@ -630,12 +671,12 @@ class RequirementsListEntityGroup extends EntityGroup {
 
         const fixedData = res.data && res !== "Error" && res.data.map ? res.data.map((item) => {
             return new RequirementsListIngredient(item.CountId,
-                new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+                new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLiterPerUnit,
                     item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                     item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                 item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
                 new Recipe(item.Recipe.CountId, item.Recipe.Id, item.Recipe.Name, item.Recipe.Description, item.Recipe.ImageLocation, item.Recipe.IsPublic, item.Recipe.PreparationSteps, item.Recipe.VideoTutorialLink,
-                    item.Recipe.Categories ? item.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    item.Recipe.Categories ? item.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                     null, new User(item.Recipe.User.CountId, item.Recipe.User.Id, item.Recipe.User.Name, item.Recipe.User.Email,
                         item.Recipe.User.PhoneNumber, item.Recipe.User.PasswordHashed, item.Recipe.User.Salt, item.Recipe.User.DOB, item.Recipe.User.CreationDate,
                         item.Recipe.User.Roles ? item.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []))
@@ -650,12 +691,12 @@ class RequirementsListEntityGroup extends EntityGroup {
 
         const fixedData = res.data && res !== "Error" && res.data.map ? res.data.map((item) => {
             return new RequirementsListIngredient(item.CountId,
-                new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLPerUnit,
+                new Ingredient(item.Ingredient.CountId, item.Ingredient.Id, item.Ingredient.Name, item.Ingredient.ImageLocation, item.Ingredient.AverageWeightInKgPerUnit, item.Ingredient.AverageVolumeInLiterPerUnit,
                     item.Ingredient.Categories ? item.Ingredient.Categories.map(category => new IngredientCategory(category.CountId, category.Name)) : [],
                     item.Ingredient.UnitTypes ? item.Ingredient.UnitTypes.map(unitType => new UnitType(unitType.CountId, unitType.Name, unitType.AllowDecimals)) : []),
                 item.Units, new UnitType(item.UnitType.CountId, item.UnitType.Name, item.UnitType.AllowDecimals),
                 new Recipe(item.Recipe.CountId, item.Recipe.Id, item.Recipe.Name, item.Recipe.Description, item.Recipe.ImageLocation, item.Recipe.IsPublic, item.Recipe.PreparationSteps, item.Recipe.VideoTutorialLink,
-                    item.Recipe.Categories ? item.Recipe.Categories.map(category => RecipeCategory(category.CountId, category.Name)) : [],
+                    item.Recipe.Categories ? item.Recipe.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
                     null, new User(item.Recipe.User.CountId, item.Recipe.User.Id, item.Recipe.User.Name, item.Recipe.User.Email,
                         item.Recipe.User.PhoneNumber, item.Recipe.User.PasswordHashed, item.Recipe.User.Salt, item.Recipe.User.DOB, item.Recipe.User.CreationDate,
                         item.Recipe.User.Roles ? item.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : [])));

@@ -92,6 +92,10 @@ export function Authenticate({ children }) {
                 console.log(e);
             }
 
+            if (!account?.Id && localAcc) {
+                setAccount(localAcc);
+            }
+
             if (window.location.pathname === '/returnAuthorization' && !(localAcc?.AccessToken && localAcc?.Id)) {
                 getTokens();
 

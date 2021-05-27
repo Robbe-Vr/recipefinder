@@ -7,7 +7,7 @@ import { Thumbnail } from "../Global/Thumbnail";
 import { RowActions } from "../Global/RowActions";
 import { Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { UserInputComponent } from "../Global/UserInputComponent";
-import { RecipeList } from "./RecipeList";
+import { EntityList } from "../Global/EntityList";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCross, faPlus, faSync } from '@fortawesome/free-solid-svg-icons';
 import { Recipe, RecipeCategory } from "../../models";
@@ -137,7 +137,7 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
                 }
                 {recipes.length < 1 ?
                     "No recipes found." :
-                    <RecipeList
+                    <EntityList
                         columns={(() => {
                             var columns = [
                                 { id: 'image', label: '', minWidth: 50 },

@@ -96,7 +96,11 @@ function AppShell() {
 
     const { Api } = useAPI();
 
-    if (loaded && !registered) {
+    if (!loaded) {
+        return <></>;
+    }
+
+    if (!registered) {
         return <Onboarding setTitle={setTitle} Api={Api} />;
     }
 

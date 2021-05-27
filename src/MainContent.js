@@ -10,6 +10,7 @@ import { HomePage } from "./components/Home/Index";
 
 import { KitchenHomePage } from "./components/Kitchen/index";
 import { AddIngredients } from "./components/Kitchen/AddIngredients";
+import { WhatToBuyPage } from "./components/Kitchen/WhatToBuy";
 
 import { RecipeBookHomePage } from "./components/RecipeBook/index";
 import RecipeDetailsPage from "./components/RecipeBook/details";
@@ -86,6 +87,9 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                     </Route>
                     <Route path="/kitchen/add">
                         <AddIngredients setTitle={setTitle} userId={userId} Api={Api} />
+                    </Route>
+                    <Route path="/kitchen/whattobuy">
+                        <WhatToBuyPage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/recipebook/index">
                         <RecipeBookHomePage setTitle={setTitle} isCook={isCook} userId={userId} Api={Api} />
