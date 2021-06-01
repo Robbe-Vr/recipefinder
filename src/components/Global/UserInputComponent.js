@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-import { makeStyles } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import { Grid } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Grid, TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     inputBox: {

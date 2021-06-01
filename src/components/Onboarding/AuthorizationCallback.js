@@ -1,6 +1,6 @@
-import React, { } from "react";
-
+import React from "react";
 import { Link, useHistory } from "react-router-dom";
+
 import { Button, Typography } from "@material-ui/core";
 
 function AuthorizationCallback({ Api }) {

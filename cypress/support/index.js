@@ -18,6 +18,6 @@ beforeEach(() => {
 
         cy.wait('@validate');
 
-        cy.wait(2000);
+        cy.wait(300);
     });
 });

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import Typography from "@material-ui/core/Typography";
-
 import { makeStyles } from "@material-ui/core/styles";
-import { EntityList } from "../Global/EntityList";
-import { User, UserAction } from "../../models";
-import { Card } from "@material-ui/core";
+import { Card, Typography } from "@material-ui/core";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faCross } from "@fortawesome/free-solid-svg-icons";
+
+import { EntityList } from "../Global/EntityList";
+
+import { User, UserAction } from "../../models";
 
 const useStyles = makeStyles((theme) => ({
     paper: {

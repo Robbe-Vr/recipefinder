@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { useAccount } from "../API/index";
-import { makeStyles } from "@material-ui/core/styles";
 
+import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({

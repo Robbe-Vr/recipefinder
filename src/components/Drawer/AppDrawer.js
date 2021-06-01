@@ -1,14 +1,14 @@
 import React from "react";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
+import { Typography, Drawer, IconButton, Divider, List } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
-import DrawerItem from "./DrawerItem";
-import Typography from "@material-ui/core/Typography";
+
 import { faBook, faBookOpen, faHome, faListAlt, faMortarPestle, faUsers, faUtensils } from "@fortawesome/free-solid-svg-icons";
+
+import DrawerItem from "./DrawerItem";
+
 import CRUDPagesInfo from "../../API/CRUDPagesInfo";
 
 const drawerWidth = 240;
@@ -72,25 +72,25 @@ function AppDrawer({ open, onOpen, isAdmin, isCreator, isCook }) {
                     <DrawerItem icon={faHome} link="/home/index" text="Home" />
                     <DrawerItem icon={faUtensils} link="/kitchen/index" text="Your Kitchen" />
                     <DrawerItem icon={faBookOpen} link="/recipebook/index" text="Recipe Book" />
-                    <DrawerItem icon={faListAlt} link="/kitchen/index" text="Grocery List" />
+                    <DrawerItem icon={faListAlt} link="/grocerylists/index" text="Grocery Lists" />
                 </div>
             </List>
             {
                 isCook ? (
-                    <div>
+                    <>
                         <Divider />
                         <List>
                             <i style={{ marginLeft: '10px' }}>Cook</i>
                             <DrawerItem icon={faMortarPestle} link="/recipebook/custom/index" text="Your Recipes" />
                         </List>
-                    </div>
+                    </>
                 ) : (
-                    <div></div>
+                    <></>
                 )
             }
             {
                 isCreator ? (
-                    <div>
+                    <>
                         <Divider />
                         <List>
                         <i style={{ marginLeft: '10px' }}>Creator</i>
@@ -102,22 +102,22 @@ function AppDrawer({ open, onOpen, isAdmin, isCreator, isCook }) {
                                 })
                             }
                         </List>
-                    </div>
+                    </>
                 ) : (
-                    <div></div>
+                    <></>
                 )
             }
             {
                 isAdmin ? (
-                <div>
-                    <Divider />
-                    <List>
-                        <i style={{ marginLeft: '10px' }}>Admin</i>
-                        <DrawerItem icon={faUsers} link="/accounts/index" text="Accounts" />
-                    </List>
-                </div>
+                    <>
+                        <Divider />
+                        <List>
+                            <i style={{ marginLeft: '10px' }}>Admin</i>
+                            <DrawerItem icon={faUsers} link="/accounts/index" text="Accounts" />
+                        </List>
+                    </>
                 ) : (
-                    <div></div>
+                    <></>
                 )
             }
         </Drawer>

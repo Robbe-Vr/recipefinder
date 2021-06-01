@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import { Thumbnail } from "../Global/Thumbnail";
-import { RowActions } from "../Global/RowActions";
-import { Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
-import { UserInputComponent } from "../Global/UserInputComponent";
-import { EntityList } from "../Global/EntityList";
+import { Dialog, DialogContent, DialogTitle, Grid, Button, Typography } from "@material-ui/core";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCross, faPlus, faSync } from '@fortawesome/free-solid-svg-icons';
-import { Recipe, RecipeCategory } from "../../models";
+
+import { Thumbnail } from "../Global/Thumbnail";
+import { RowActions } from "../Global/RowActions";
+import { UserInputComponent } from "../Global/UserInputComponent";
+import { EntityList } from "../Global/EntityList";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
+
+import { Recipe, RecipeCategory } from "../../models";
 
 const useStyles = makeStyles(() => ({
     form: {

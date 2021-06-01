@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
-import { Grid } from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
+
 import { SelectIngredientComponent } from "../Global/SelectIngredientComponent";
 import { UserInputComponent } from "../Global/UserInputComponent";
-import { Ingredient, RequirementsListIngredient, UnitType } from "../../models";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
+
+import { Ingredient, RequirementsListIngredient, UnitType } from "../../models";
 
 function RequirementsInputComponent({ Api, defaultValues = [new RequirementsListIngredient()], parentRecipe, onChange }) {
     const [values, setValues] = useState(defaultValues);

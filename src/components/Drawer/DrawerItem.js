@@ -1,9 +1,8 @@
 import React from "react";
-
 import { Link } from "react-router-dom";
 
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import { ListItem, ListItemText } from "@material-ui/core";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function DrawerItem(props) {

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { Grid, makeStyles, Typography } from "@material-ui/core";
-import { Thumbnail } from "../Global/Thumbnail";
-import Button from "@material-ui/core/Button";
-import { UserInputComponent } from "../Global/UserInputComponent";
-import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
+import { Grid, Button, makeStyles, Typography } from "@material-ui/core";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faBackward, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { Ingredient } from "../../models";
+
+import { Thumbnail } from "../Global/Thumbnail";
+import { UserInputComponent } from "../Global/UserInputComponent";
+import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 import { SelectIngredientComponent } from "../Global/SelectIngredientComponent";
+
+import { Ingredient } from "../../models";
 
 const useStyles = makeStyles((theme) => ({
     ingredientSelectContainer: {

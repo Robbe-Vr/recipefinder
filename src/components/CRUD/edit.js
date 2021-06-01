@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-
 import { makeStyles } from "@material-ui/core/styles";
+import { Grid, Typography, Button } from "@material-ui/core";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
+
 import CRUDPagesInfo from "../../API/CRUDPagesInfo";
+
 import { Ingredient, IngredientCategory, RecipeCategory, UnitType } from "../../models";
-import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {

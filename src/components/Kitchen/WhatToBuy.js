@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBackward, faPlus, faSync } from '@fortawesome/free-solid-svg-icons';
+
 import { EntityList } from "../Global/EntityList";
 import { Thumbnail } from "../Global/Thumbnail";
 import { Card, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { UserInputComponent } from "../Global/UserInputComponent";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faSync } from '@fortawesome/free-solid-svg-icons';
-import { Recipe, RecipeCategory, RequirementsListIngredient } from "../../models";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
+
+import { Recipe, RecipeCategory, RequirementsListIngredient } from "../../models";
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -222,6 +227,9 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
                     </Grid>
                 </Grid>
             </Grid>
+            <Link to="/kitchen/index">
+                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Kitchen</Button>
+            </Link>
         </Grid>
     );
 };

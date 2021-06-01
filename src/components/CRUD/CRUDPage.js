@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useHistory } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import { Thumbnail } from "../Global/Thumbnail";
-import { RowActions } from "../Global/RowActions";
-import { Card, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
+import { Card, Dialog, DialogContent, DialogTitle, Grid, Button, Typography } from "@material-ui/core";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCross, faPlus } from '@fortawesome/free-solid-svg-icons';
+
+import { Thumbnail } from "../Global/Thumbnail";
+import { RowActions } from "../Global/RowActions";
+
 import { EntityList } from "../Global/EntityList";
+
 import { Ingredient, IngredientCategory, Recipe, RecipeCategory, RequirementsListIngredient, UnitType, User } from "../../models";
 
 const useStyles = makeStyles(() => ({
@@ -74,6 +77,10 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
                 var keys = Object.keys(items[0]);
 
                 keys.forEach(key => {
+                    if (key.indexOf("Id") > -1) {
+                        return;
+                    }
+
                     columns.push({
                         id: key,
                         label: key,
@@ -88,8 +95,10 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
                     minWidth: 100,
                 });
 
-                items.forEach((item) => {
-                    var obj = {};
+                items.forEach((item, index) => {
+                    var obj = {
+                        id: index,
+                    };
 
                     keys.forEach((key) => {
                         var value;
@@ -99,7 +108,7 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
                                                          el instanceof UnitType ? <Card key={el.Name + "-" + el.CountId} style={{ margin: '2px', padding: '3px' }}>{el.Name} ({el.AllowDecimals ? "decimals" : "integers"})</Card> :
                                                          el instanceof RequirementsListIngredient ? <Card key={el.Ingredient.Id} style={{ margin: '2px', padding: '3px' }}>{el.Ingredient.Name} ({el.Units} {el.UnitType.Name})</Card> : <Card key={el} style={{ margin: '2px', padding: '3px' }}>{el}</Card>);
                         }
-                        else if (item[key]instanceof Object ||
+                        else if (item[key] instanceof Object ||
                                  item[key] instanceof Ingredient ||
                                  item[key] instanceof IngredientCategory ||
                                  item[key] instanceof UnitType ||
@@ -108,11 +117,29 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
                                  item[key] instanceof User) {
                             value = item[key].Name;
                         }
+                        else if (key === "Id" || key === "CountId") {
+                            return;
+                        }
+                        else if (key === "AllowDecimals") {
+                            value = item[key] ? 'Decimals' : 'Integers'
+                        }
                         else if (key === "ImageLocation") {
                             value = <>
                                         <Thumbnail source={item[key]} size={50}/>
                                         <a href={item[key]}>to location</a>
                                     </>
+                        }
+                        else if (key === "VideoTutorialLink") {
+                            value = item[key] ? <a href={item[key]}>to location</a> : 'Not set.'
+                        }
+                        else if (key === "IsPublic") {
+                            value = item[key] ? 'Public' : 'Private'
+                        }
+                        else if (key === "Description") {
+                            value = <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: 100 }}>{item[key]}</div>
+                        }
+                        else if (key === "PreparationSteps") {
+                            value = <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: 100 }}>{item[key].split('{NEXT}')[0]}...</div>
                         }
                         else value = item[key];
 

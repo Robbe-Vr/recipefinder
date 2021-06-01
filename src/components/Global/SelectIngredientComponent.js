@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Button, Typography } from "@material-ui/core";
+
 import { EntityList } from "../Global/EntityList";
 import { Thumbnail } from "../Global/Thumbnail";
-import Button from "@material-ui/core/Button";
 import { UserInputComponent } from "../Global/UserInputComponent";
-import { Ingredient, IngredientCategory } from "../../models";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
+
+import { Ingredient, IngredientCategory } from "../../models";
 
 function SelectIngredientComponent({ Api, ingredients, selectIngredient }) {
     const [categories, setCategories] = useState([new IngredientCategory()]);

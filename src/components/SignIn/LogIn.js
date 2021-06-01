@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import { UserInputComponent } from "../Global/UserInputComponent";
+import { Link } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { Button, Grid, Typography } from "@material-ui/core";
+
+import { UserInputComponent } from "../Global/UserInputComponent";
+
 import { useAccount, GetUserIdByName } from "../../API/index";
-import { Grid } from "@material-ui/core";
-import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -97,7 +96,7 @@ export default function LogInPage({ setTitle, isAdmin, onSuccess, Api }) {
                     alignItems="center"
                 >
                     <Button
-                    className={classes.btn}
+                        className={classes.btn}
                         color="primary"
                         variant="outlined"
                         onClick={async () => { await AttemptLogIn(userName, password); }}

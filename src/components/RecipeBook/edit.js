@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import { useParams, Link, useHistory } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { Typography, Button } from "@material-ui/core";
+
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
 import { Recipe, RecipeCategory } from "../../models";
@@ -39,6 +38,8 @@ export default function EditRecipePage({ setTitle, Api }) {
     useEffect(() => {
         setTitle && setTitle("Edit Recipe");
     });
+
+    const history = useHistory();
 
     const { recipeId } = useParams();
 
@@ -83,6 +84,8 @@ export default function EditRecipePage({ setTitle, Api }) {
         };
 
         Api.Recipes.Update(recipeId, correctedRecipe);
+
+        history.push('/recipebook/custom/index');
     };
 
     const [preparationStepsOpen, setPreparationStepsOpen] = useState(false);

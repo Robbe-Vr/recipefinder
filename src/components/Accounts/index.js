@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-
 import { makeStyles } from "@material-ui/core/styles";
-import { EntityList } from "../Global/EntityList";
-import { RowActions } from "../Global/RowActions";
-import { Card, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Typography, Button, Card, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
+
+import { EntityList } from "../Global/EntityList";
+import { RowActions } from "../Global/RowActions";
 
 const useStyles = makeStyles((theme) => ({
     paper: {

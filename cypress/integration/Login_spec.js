@@ -1,4 +1,4 @@
-describe("Login Test", () => {
+describe("Login Page Test", () => {
     it("first visit", () => {
       cy.visit("/home/index");
     });

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-
 import { makeStyles } from "@material-ui/core/styles";
+import { Typography, Button } from "@material-ui/core";
+
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
+
 import { Role, User } from "../../models";
 
 const useStyles = makeStyles((theme) => ({

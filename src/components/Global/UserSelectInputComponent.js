@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-import { makeStyles } from "@material-ui/core";
-import { Select, MenuItem } from "@material-ui/core";
-import { Grid } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Grid, Select, MenuItem } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     inputBox: {

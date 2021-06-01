@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import { Dialog, DialogContent, DialogTitle, Grid, Button } from "@material-ui/core";
+
 import { EntityList } from "../Global/EntityList";
 import { Thumbnail } from "../Global/Thumbnail";
 import { RowActions } from "../Global/RowActions";
-import { Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
 import { KitchenIngredient } from "../../models";
 
 const useStyles = makeStyles(() => ({

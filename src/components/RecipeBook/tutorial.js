@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import Typography from "@material-ui/core/Typography";
-
 import { makeStyles } from "@material-ui/core/styles";
-import { Recipe } from "../../models";
-import { Button, Grid, Table, TableBody, TableCell, TableRow } from "@material-ui/core";
+import { Button, Grid, Table, TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward, faList, faVideo } from "@fortawesome/free-solid-svg-icons";
+
+import { Recipe } from "../../models";
 
 const useStyles = makeStyles((theme) => ({
     paper: {

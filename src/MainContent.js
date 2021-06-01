@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Redirect, Route, Switch } from "react-router-dom";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
@@ -89,6 +88,9 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                         <AddIngredients setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/kitchen/whattobuy">
+                        <WhatToBuyPage setTitle={setTitle} userId={userId} Api={Api} />
+                    </Route>
+                    <Route path="/grocerylist/whattobuy">
                         <WhatToBuyPage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/recipebook/index">
