@@ -2,7 +2,6 @@ stages:
   - install
   - build
   - test
-  - lint
 
 # to cache both npm modules and Cypress binary we use environment variables
 # to point at the folders we can list as paths in "cache" job settings
@@ -35,11 +34,6 @@ build:
     paths:
       - build/
 
-unit-tests:
-  stage: test
-  script:
-    - npm run test
-
 integration-tests:
   stage: test
   artifacts:
@@ -55,8 +49,3 @@ integration-tests:
     - npm run cy:info
     - npx serve -s -p 3000 build/ & npx wait-port localhost:3000
     - npm run cy:ci
-
-lint:
-  stage: lint
-  script:
-    - npm run lint
