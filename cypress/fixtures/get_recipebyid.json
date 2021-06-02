@@ -1,0 +1,245 @@
+{
+    "RequirementsList": {
+        "RecipeId": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+        "Recipe": {
+            "CountId": 1,
+            "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+            "Name": "Pancakes",
+            "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+            "User": {
+                "CountId": 1,
+                "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                "Name": "Recipe Finder admin",
+                "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                "Salt": "M1EZAjPJO4E=",
+                "PhoneNumber": "000 000 00 00",
+                "PhoneNumberConfirmed": false,
+                "DOB": "0001-01-01T00:00:00",
+                "CreationDate": "2021-01-02T00:00:00",
+                "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                "Email": "admin@recipefinder.com",
+                "EmailConfirmed": false,
+                "EmailConfirmationToken": "11111",
+                "SecurityStamp": "M1EZAjPJO4E=",
+                "ConcurrencyStamp": "M1EZAjPJO4E=",
+                "LockoutEnabled": false,
+                "LockoutEnd": null,
+                "AccessFailedCount": 0,
+                "Roles": null,
+                "Deleted": false
+            },
+            "Categories": [
+                {
+                    "CountId": 8,
+                    "Name": "Sweet",
+                    "Recipes": [],
+                    "Deleted": false
+                }
+            ],
+            "IsPublic": true,
+            "VideoTutorialLink": "",
+            "ImageLocation": "",
+            "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+            "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+            "Deleted": false
+        },
+        "Ingredients": [
+            {
+                "CountId": 4,
+                "RecipeId": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                "Recipe": {
+                    "CountId": 1,
+                    "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                    "Name": "Pancakes",
+                    "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                    "User": null,
+                    "Categories": null,
+                    "IsPublic": true,
+                    "VideoTutorialLink": "",
+                    "ImageLocation": "",
+                    "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+                    "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+                    "Deleted": false
+                },
+                "IngredientId": "eaa45862-d9a9-4793-8332-8278f0da815a",
+                "Ingredient": {
+                    "CountId": 7,
+                    "Id": "eaa45862-d9a9-4793-8332-8278f0da815a",
+                    "Name": "Milk",
+                    "ImageLocation": "https://www.campina.nl/assets/images/_thumbs/08712800147008_VA_CampinaWeb._500x500.png",
+                    "AverageWeightInKgPerUnit": 0.0,
+                    "AverageVolumeInLiterPerUnit": 1.0,
+                    "Categories": [
+                        {
+                            "CountId": 5,
+                            "Name": "Dairy",
+                            "Ingredients": [],
+                            "Deleted": false
+                        }
+                    ],
+                    "UnitTypes": [
+                        {
+                            "CountId": 9,
+                            "Name": "Units",
+                            "AllowDecimals": false,
+                            "Ingredients": [],
+                            "Deleted": false
+                        },
+                        {
+                            "CountId": 11,
+                            "Name": "L",
+                            "AllowDecimals": true,
+                            "Ingredients": [],
+                            "Deleted": false
+                        }
+                    ],
+                    "Deleted": false
+                },
+                "Units": 0.5,
+                "UnitTypeId": 11,
+                "UnitType": {
+                    "CountId": 11,
+                    "Name": "L",
+                    "AllowDecimals": true,
+                    "Ingredients": null,
+                    "Deleted": false
+                },
+                "Deleted": false
+            },
+            {
+                "CountId": 5,
+                "RecipeId": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                "Recipe": {
+                    "CountId": 1,
+                    "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                    "Name": "Pancakes",
+                    "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                    "User": null,
+                    "Categories": null,
+                    "IsPublic": true,
+                    "VideoTutorialLink": "",
+                    "ImageLocation": "",
+                    "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+                    "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+                    "Deleted": false
+                },
+                "IngredientId": "71434fa6-b248-41a0-8826-a3bbfa15d53a",
+                "Ingredient": {
+                    "CountId": 4,
+                    "Id": "71434fa6-b248-41a0-8826-a3bbfa15d53a",
+                    "Name": "Sugar",
+                    "ImageLocation": null,
+                    "AverageWeightInKgPerUnit": 0.0,
+                    "AverageVolumeInLiterPerUnit": 0.0,
+                    "Categories": [
+                        {
+                            "CountId": 4,
+                            "Name": "Spices",
+                            "Ingredients": [],
+                            "Deleted": false
+                        }
+                    ],
+                    "UnitTypes": [
+                        {
+                            "CountId": 10,
+                            "Name": "Kg",
+                            "AllowDecimals": true,
+                            "Ingredients": [],
+                            "Deleted": false
+                        }
+                    ],
+                    "Deleted": false
+                },
+                "Units": 0.2,
+                "UnitTypeId": 10,
+                "UnitType": {
+                    "CountId": 10,
+                    "Name": "Kg",
+                    "AllowDecimals": true,
+                    "Ingredients": null,
+                    "Deleted": false
+                },
+                "Deleted": false
+            }
+        ],
+        "Deleted": false
+    },
+    "CountId": 1,
+    "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+    "Name": "Pancakes",
+    "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+    "User": {
+        "CountId": 1,
+        "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+        "Name": "Recipe Finder admin",
+        "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+        "Salt": "M1EZAjPJO4E=",
+        "PhoneNumber": "000 000 00 00",
+        "PhoneNumberConfirmed": false,
+        "DOB": "0001-01-01T00:00:00",
+        "CreationDate": "2021-01-02T00:00:00",
+        "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+        "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+        "Email": "admin@recipefinder.com",
+        "EmailConfirmed": false,
+        "EmailConfirmationToken": "11111",
+        "SecurityStamp": "M1EZAjPJO4E=",
+        "ConcurrencyStamp": "M1EZAjPJO4E=",
+        "LockoutEnabled": false,
+        "LockoutEnd": null,
+        "AccessFailedCount": 0,
+        "Roles": null,
+        "Deleted": false
+    },
+    "Categories": [
+        {
+            "CountId": 8,
+            "Name": "Sweet",
+            "Recipes": [
+                {
+                    "CountId": 1,
+                    "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                    "Name": "Pancakes",
+                    "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                    "User": {
+                        "CountId": 1,
+                        "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                        "Name": "Recipe Finder admin",
+                        "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                        "Salt": "M1EZAjPJO4E=",
+                        "PhoneNumber": "000 000 00 00",
+                        "PhoneNumberConfirmed": false,
+                        "DOB": "0001-01-01T00:00:00",
+                        "CreationDate": "2021-01-02T00:00:00",
+                        "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                        "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                        "Email": "admin@recipefinder.com",
+                        "EmailConfirmed": false,
+                        "EmailConfirmationToken": "11111",
+                        "SecurityStamp": "M1EZAjPJO4E=",
+                        "ConcurrencyStamp": "M1EZAjPJO4E=",
+                        "LockoutEnabled": false,
+                        "LockoutEnd": null,
+                        "AccessFailedCount": 0,
+                        "Roles": null,
+                        "Deleted": false
+                    },
+                    "IsPublic": true,
+                    "VideoTutorialLink": "",
+                    "ImageLocation": "",
+                    "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+                    "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+                    "Deleted": false
+                }
+            ],
+            "Deleted": false
+        }
+    ],
+    "IsPublic": true,
+    "VideoTutorialLink": "",
+    "ImageLocation": "",
+    "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+    "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+    "Deleted": false
+}

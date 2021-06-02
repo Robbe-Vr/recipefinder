@@ -24,7 +24,7 @@ function WelcomePage() {
     return (
         <div className={classes.form}>
             <Typography className={classes.txt} variant="h1">
-                Welkom!
+                Welcome!
             </Typography>
             <Typography className={classes.txt} variant="subtitle1">
                 to Recipe Finder!

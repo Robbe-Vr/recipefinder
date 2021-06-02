@@ -12,6 +12,6 @@ describe("Recipes CRUD Page Test", () => {
     });
 
     it("check if recipes are shown", () => {
-        cy.get("tbody").first().get('tr').eq(0).get('td').eq(1).should("have.text", "FruitMix");
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').find("td").eq(3).should("have.text", "Pancakes");
     });
 });

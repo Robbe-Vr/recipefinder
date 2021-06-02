@@ -9,6 +9,6 @@ describe("Accounts Page Test", () => {
     });
 
     it("check if recipes are shown", () => {
-        cy.get("tbody").first().get('tr').eq(0).get('td').eq(1).should("have.text", "Recipe Finder admin");
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').find("td").eq(0).should("have.text", "Recipe Finder admin");
     });
 });

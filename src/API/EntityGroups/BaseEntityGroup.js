@@ -6,9 +6,17 @@ const protocol = "https://", serverIp = window.location.hostname === "localhost"
     port = 5001, apiPage = "/api",
     api_url = protocol + serverIp + ":" + port + apiPage;
 
+export {
+    protocol,
+    serverIp,
+    port,
+    apiPage,
+    api_url,
+};
+
 const defaultHeaders = (data) => ({ "Accept": "*/*", "Content-Type": "application/json" });
 
-const AccessTokenHeaderName = "RecipeFinder_AccessToken";
+export const AccessTokenHeaderName = "RecipeFinder_AccessToken";
 
 var accessToken;
 const AuthorizationHeaders = () => {

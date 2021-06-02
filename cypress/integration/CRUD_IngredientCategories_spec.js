@@ -12,6 +12,6 @@ describe("IngredientCategories CRUD Page Test", () => {
     });
 
     it("check if ingredient categories are shown", () => {
-        cy.get("tbody").first().get('tr').eq(0).get('td').eq(1).should("have.text", "Fruits");
+        cy.get('.MuiTableRow-root').find("td").eq(0).should("have.text", "Fruits");
     });
 });

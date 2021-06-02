@@ -8,8 +8,8 @@ describe("Kitchen Page Test", () => {
     });
 
     it("check if kitchen contains items", () => {
-        cy.get("tbody").first().get('tr').eq(0).get('td').eq(1).should("have.text", "Apple");
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').eq(0).find("td").eq(1).should("have.text", "Apple");
 
-        cy.get("tbody").first().get('tr').eq(1).get('td').eq(1).should("have.text", "Banana");
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').eq(1).find("td").eq(1).should("have.text", "Banana");
     });
 });

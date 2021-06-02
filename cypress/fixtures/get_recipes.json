@@ -1,1 +1,561 @@
-[]
+[
+    {
+        "RequirementsList": {
+            "RecipeId": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+            "Recipe": {
+                "CountId": 1,
+                "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                "Name": "Pancakes",
+                "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                "User": {
+                    "CountId": 1,
+                    "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                    "Name": "Recipe Finder admin",
+                    "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                    "Salt": "M1EZAjPJO4E=",
+                    "PhoneNumber": "000 000 00 00",
+                    "PhoneNumberConfirmed": false,
+                    "DOB": "0001-01-01T00:00:00",
+                    "CreationDate": "2021-01-02T00:00:00",
+                    "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                    "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                    "Email": "admin@recipefinder.com",
+                    "EmailConfirmed": false,
+                    "EmailConfirmationToken": "11111",
+                    "SecurityStamp": "M1EZAjPJO4E=",
+                    "ConcurrencyStamp": "M1EZAjPJO4E=",
+                    "LockoutEnabled": false,
+                    "LockoutEnd": null,
+                    "AccessFailedCount": 0,
+                    "Roles": null,
+                    "Deleted": false
+                },
+                "Categories": [
+                    {
+                        "CountId": 8,
+                        "Name": "Sweet",
+                        "Recipes": [],
+                        "Deleted": false
+                    }
+                ],
+                "IsPublic": true,
+                "VideoTutorialLink": "",
+                "ImageLocation": "",
+                "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+                "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+                "Deleted": false
+            },
+            "Ingredients": [
+                {
+                    "CountId": 4,
+                    "RecipeId": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                    "Recipe": {
+                        "CountId": 1,
+                        "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                        "Name": "Pancakes",
+                        "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                        "User": null,
+                        "Categories": null,
+                        "IsPublic": true,
+                        "VideoTutorialLink": "",
+                        "ImageLocation": "",
+                        "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+                        "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+                        "Deleted": false
+                    },
+                    "IngredientId": "eaa45862-d9a9-4793-8332-8278f0da815a",
+                    "Ingredient": {
+                        "CountId": 7,
+                        "Id": "eaa45862-d9a9-4793-8332-8278f0da815a",
+                        "Name": "Milk",
+                        "ImageLocation": "https://www.campina.nl/assets/images/_thumbs/08712800147008_VA_CampinaWeb._500x500.png",
+                        "AverageWeightInKgPerUnit": 0.0,
+                        "AverageVolumeInLiterPerUnit": 1.0,
+                        "Categories": [
+                            {
+                                "CountId": 5,
+                                "Name": "Dairy",
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "UnitTypes": [
+                            {
+                                "CountId": 9,
+                                "Name": "Units",
+                                "AllowDecimals": false,
+                                "Ingredients": [],
+                                "Deleted": false
+                            },
+                            {
+                                "CountId": 11,
+                                "Name": "L",
+                                "AllowDecimals": true,
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "Deleted": false
+                    },
+                    "Units": 0.5,
+                    "UnitTypeId": 11,
+                    "UnitType": {
+                        "CountId": 11,
+                        "Name": "L",
+                        "AllowDecimals": true,
+                        "Ingredients": null,
+                        "Deleted": false
+                    },
+                    "Deleted": false
+                },
+                {
+                    "CountId": 5,
+                    "RecipeId": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                    "Recipe": {
+                        "CountId": 1,
+                        "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                        "Name": "Pancakes",
+                        "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                        "User": null,
+                        "Categories": null,
+                        "IsPublic": true,
+                        "VideoTutorialLink": "",
+                        "ImageLocation": "",
+                        "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+                        "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+                        "Deleted": false
+                    },
+                    "IngredientId": "71434fa6-b248-41a0-8826-a3bbfa15d53a",
+                    "Ingredient": {
+                        "CountId": 4,
+                        "Id": "71434fa6-b248-41a0-8826-a3bbfa15d53a",
+                        "Name": "Sugar",
+                        "ImageLocation": null,
+                        "AverageWeightInKgPerUnit": 0.0,
+                        "AverageVolumeInLiterPerUnit": 0.0,
+                        "Categories": [
+                            {
+                                "CountId": 4,
+                                "Name": "Spices",
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "UnitTypes": [
+                            {
+                                "CountId": 10,
+                                "Name": "Kg",
+                                "AllowDecimals": true,
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "Deleted": false
+                    },
+                    "Units": 0.2,
+                    "UnitTypeId": 10,
+                    "UnitType": {
+                        "CountId": 10,
+                        "Name": "Kg",
+                        "AllowDecimals": true,
+                        "Ingredients": null,
+                        "Deleted": false
+                    },
+                    "Deleted": false
+                }
+            ],
+            "Deleted": false
+        },
+        "CountId": 1,
+        "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+        "Name": "Pancakes",
+        "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+        "User": {
+            "CountId": 1,
+            "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+            "Name": "Recipe Finder admin",
+            "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+            "Salt": "M1EZAjPJO4E=",
+            "PhoneNumber": "000 000 00 00",
+            "PhoneNumberConfirmed": false,
+            "DOB": "0001-01-01T00:00:00",
+            "CreationDate": "2021-01-02T00:00:00",
+            "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+            "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+            "Email": "admin@recipefinder.com",
+            "EmailConfirmed": false,
+            "EmailConfirmationToken": "11111",
+            "SecurityStamp": "M1EZAjPJO4E=",
+            "ConcurrencyStamp": "M1EZAjPJO4E=",
+            "LockoutEnabled": false,
+            "LockoutEnd": null,
+            "AccessFailedCount": 0,
+            "Roles": null,
+            "Deleted": false
+        },
+        "Categories": [
+            {
+                "CountId": 8,
+                "Name": "Sweet",
+                "Recipes": [
+                    {
+                        "CountId": 1,
+                        "Id": "885d0c7e-6d44-4c52-86cd-7710bbe159c4",
+                        "Name": "Pancakes",
+                        "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                        "User": {
+                            "CountId": 1,
+                            "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                            "Name": "Recipe Finder admin",
+                            "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                            "Salt": "M1EZAjPJO4E=",
+                            "PhoneNumber": "000 000 00 00",
+                            "PhoneNumberConfirmed": false,
+                            "DOB": "0001-01-01T00:00:00",
+                            "CreationDate": "2021-01-02T00:00:00",
+                            "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                            "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                            "Email": "admin@recipefinder.com",
+                            "EmailConfirmed": false,
+                            "EmailConfirmationToken": "11111",
+                            "SecurityStamp": "M1EZAjPJO4E=",
+                            "ConcurrencyStamp": "M1EZAjPJO4E=",
+                            "LockoutEnabled": false,
+                            "LockoutEnd": null,
+                            "AccessFailedCount": 0,
+                            "Roles": null,
+                            "Deleted": false
+                        },
+                        "IsPublic": true,
+                        "VideoTutorialLink": "",
+                        "ImageLocation": "",
+                        "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+                        "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+                        "Deleted": false
+                    }
+                ],
+                "Deleted": false
+            }
+        ],
+        "IsPublic": true,
+        "VideoTutorialLink": "",
+        "ImageLocation": "",
+        "Description": "A pancake is a dish consisting of flour, egg and milk and some salt, which is fried in a frying pan with heated fat",
+        "PreparationSteps": "Get a bowl{NEXT}Mix the flour eggs and milk in the bowl{NEXT}Add some salt to the mix in the bowl{NEXT}Get a frying pan{NEXT}Cover the inside of the frying pan with a layer of heated fat{NEXT}Pour a thin layer of the mix into the frying pan (make sure the mix covers the inside of the pan completely and evenly spread){NEXT}Wait until the pancake or mix gets brown spots and is glued together{NEXT}Use a spatula to flip the pancake around{NEXT}Wait until the pancake looks lightbrown with some brown spots{NEXT}Use a spatula to lift it from the frying pan onto a board{NEXT}For the next pancakes repeat from step 6, dont forget to cover the inside of the frying pan with heated fat so the pancakes do not stick to the pan and break while lifting them out with a spatula!",
+        "Deleted": false
+    },
+    {
+        "RequirementsList": {
+            "RecipeId": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+            "Recipe": {
+                "CountId": 2,
+                "Id": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+                "Name": "FruitMix",
+                "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                "User": {
+                    "CountId": 1,
+                    "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                    "Name": "Recipe Finder admin",
+                    "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                    "Salt": "M1EZAjPJO4E=",
+                    "PhoneNumber": "000 000 00 00",
+                    "PhoneNumberConfirmed": false,
+                    "DOB": "0001-01-01T00:00:00",
+                    "CreationDate": "2021-01-02T00:00:00",
+                    "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                    "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                    "Email": "admin@recipefinder.com",
+                    "EmailConfirmed": false,
+                    "EmailConfirmationToken": "11111",
+                    "SecurityStamp": "M1EZAjPJO4E=",
+                    "ConcurrencyStamp": "M1EZAjPJO4E=",
+                    "LockoutEnabled": false,
+                    "LockoutEnd": null,
+                    "AccessFailedCount": 0,
+                    "Roles": null,
+                    "Deleted": false
+                },
+                "Categories": [
+                    {
+                        "CountId": 7,
+                        "Name": "Fruits",
+                        "Recipes": [],
+                        "Deleted": false
+                    }
+                ],
+                "IsPublic": true,
+                "VideoTutorialLink": null,
+                "ImageLocation": null,
+                "Description": "Mix of 3 fruits",
+                "PreparationSteps": "Grab 3 fruits{NEXT}Mix them together",
+                "Deleted": false
+            },
+            "Ingredients": [
+                {
+                    "CountId": 1,
+                    "RecipeId": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+                    "Recipe": {
+                        "CountId": 2,
+                        "Id": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+                        "Name": "FruitMix",
+                        "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                        "User": null,
+                        "Categories": null,
+                        "IsPublic": true,
+                        "VideoTutorialLink": null,
+                        "ImageLocation": null,
+                        "Description": "Mix of 3 fruits",
+                        "PreparationSteps": "Grab 3 fruits{NEXT}Mix them together",
+                        "Deleted": false
+                    },
+                    "IngredientId": "1830252c-e363-4ceb-b66d-52cc5648f9fe",
+                    "Ingredient": {
+                        "CountId": 1,
+                        "Id": "1830252c-e363-4ceb-b66d-52cc5648f9fe",
+                        "Name": "Apple",
+                        "ImageLocation": "https://www.applesfromny.com/wp-content/uploads/2020/08/McIntosh_NYAS-Apples.png",
+                        "AverageWeightInKgPerUnit": 0.1,
+                        "AverageVolumeInLiterPerUnit": 0.0,
+                        "Categories": [
+                            {
+                                "CountId": 3,
+                                "Name": "Fruits",
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "UnitTypes": [
+                            {
+                                "CountId": 9,
+                                "Name": "Units",
+                                "AllowDecimals": false,
+                                "Ingredients": [],
+                                "Deleted": false
+                            },
+                            {
+                                "CountId": 10,
+                                "Name": "Kg",
+                                "AllowDecimals": true,
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "Deleted": false
+                    },
+                    "Units": 2.0,
+                    "UnitTypeId": 9,
+                    "UnitType": {
+                        "CountId": 9,
+                        "Name": "Units",
+                        "AllowDecimals": false,
+                        "Ingredients": null,
+                        "Deleted": false
+                    },
+                    "Deleted": false
+                },
+                {
+                    "CountId": 2,
+                    "RecipeId": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+                    "Recipe": {
+                        "CountId": 2,
+                        "Id": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+                        "Name": "FruitMix",
+                        "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                        "User": null,
+                        "Categories": null,
+                        "IsPublic": true,
+                        "VideoTutorialLink": null,
+                        "ImageLocation": null,
+                        "Description": "Mix of 3 fruits",
+                        "PreparationSteps": "Grab 3 fruits{NEXT}Mix them together",
+                        "Deleted": false
+                    },
+                    "IngredientId": "c9f7a748-7ae2-4515-af4b-ac2992a2cb7b",
+                    "Ingredient": {
+                        "CountId": 6,
+                        "Id": "c9f7a748-7ae2-4515-af4b-ac2992a2cb7b",
+                        "Name": "Banana",
+                        "ImageLocation": "https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?w=800&quality=85",
+                        "AverageWeightInKgPerUnit": 0.15,
+                        "AverageVolumeInLiterPerUnit": 0.0,
+                        "Categories": [
+                            {
+                                "CountId": 3,
+                                "Name": "Fruits",
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "UnitTypes": [
+                            {
+                                "CountId": 9,
+                                "Name": "Units",
+                                "AllowDecimals": false,
+                                "Ingredients": [],
+                                "Deleted": false
+                            },
+                            {
+                                "CountId": 10,
+                                "Name": "Kg",
+                                "AllowDecimals": true,
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "Deleted": false
+                    },
+                    "Units": 2.0,
+                    "UnitTypeId": 9,
+                    "UnitType": {
+                        "CountId": 9,
+                        "Name": "Units",
+                        "AllowDecimals": false,
+                        "Ingredients": null,
+                        "Deleted": false
+                    },
+                    "Deleted": false
+                },
+                {
+                    "CountId": 3,
+                    "RecipeId": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+                    "Recipe": {
+                        "CountId": 2,
+                        "Id": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+                        "Name": "FruitMix",
+                        "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                        "User": null,
+                        "Categories": null,
+                        "IsPublic": true,
+                        "VideoTutorialLink": null,
+                        "ImageLocation": null,
+                        "Description": "Mix of 3 fruits",
+                        "PreparationSteps": "Grab 3 fruits{NEXT}Mix them together",
+                        "Deleted": false
+                    },
+                    "IngredientId": "6a2c498d-fd8e-4d2e-8b48-f58df27a8c32",
+                    "Ingredient": {
+                        "CountId": 2,
+                        "Id": "6a2c498d-fd8e-4d2e-8b48-f58df27a8c32",
+                        "Name": "Pear",
+                        "ImageLocation": "https://images.squarespace-cdn.com/content/v1/51f17990e4b0bef09d514799/1512679151747-DBOE6GYP7EIAWWWMQN3G/ke17ZwdGBToddI8pDm48kBRLxb7qkpkgcRyru_8RK_lZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpyi650DRbYvfsL36ewo8X1_BZRsTWBh2y9puUWI_xOojnxN2Xtn_YCthuyayzvzQ5c/autumnBartlett2.jpg?format=500w",
+                        "AverageWeightInKgPerUnit": 0.12,
+                        "AverageVolumeInLiterPerUnit": 0.0,
+                        "Categories": [
+                            {
+                                "CountId": 3,
+                                "Name": "Fruits",
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "UnitTypes": [
+                            {
+                                "CountId": 9,
+                                "Name": "Units",
+                                "AllowDecimals": false,
+                                "Ingredients": [],
+                                "Deleted": false
+                            },
+                            {
+                                "CountId": 10,
+                                "Name": "Kg",
+                                "AllowDecimals": true,
+                                "Ingredients": [],
+                                "Deleted": false
+                            }
+                        ],
+                        "Deleted": false
+                    },
+                    "Units": 2.0,
+                    "UnitTypeId": 9,
+                    "UnitType": {
+                        "CountId": 9,
+                        "Name": "Units",
+                        "AllowDecimals": false,
+                        "Ingredients": null,
+                        "Deleted": false
+                    },
+                    "Deleted": false
+                }
+            ],
+            "Deleted": false
+        },
+        "CountId": 2,
+        "Id": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+        "Name": "FruitMix",
+        "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+        "User": {
+            "CountId": 1,
+            "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+            "Name": "Recipe Finder admin",
+            "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+            "Salt": "M1EZAjPJO4E=",
+            "PhoneNumber": "000 000 00 00",
+            "PhoneNumberConfirmed": false,
+            "DOB": "0001-01-01T00:00:00",
+            "CreationDate": "2021-01-02T00:00:00",
+            "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+            "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+            "Email": "admin@recipefinder.com",
+            "EmailConfirmed": false,
+            "EmailConfirmationToken": "11111",
+            "SecurityStamp": "M1EZAjPJO4E=",
+            "ConcurrencyStamp": "M1EZAjPJO4E=",
+            "LockoutEnabled": false,
+            "LockoutEnd": null,
+            "AccessFailedCount": 0,
+            "Roles": null,
+            "Deleted": false
+        },
+        "Categories": [
+            {
+                "CountId": 7,
+                "Name": "Fruits",
+                "Recipes": [
+                    {
+                        "CountId": 2,
+                        "Id": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+                        "Name": "FruitMix",
+                        "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                        "User": {
+                            "CountId": 1,
+                            "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                            "Name": "Recipe Finder admin",
+                            "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                            "Salt": "M1EZAjPJO4E=",
+                            "PhoneNumber": "000 000 00 00",
+                            "PhoneNumberConfirmed": false,
+                            "DOB": "0001-01-01T00:00:00",
+                            "CreationDate": "2021-01-02T00:00:00",
+                            "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                            "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                            "Email": "admin@recipefinder.com",
+                            "EmailConfirmed": false,
+                            "EmailConfirmationToken": "11111",
+                            "SecurityStamp": "M1EZAjPJO4E=",
+                            "ConcurrencyStamp": "M1EZAjPJO4E=",
+                            "LockoutEnabled": false,
+                            "LockoutEnd": null,
+                            "AccessFailedCount": 0,
+                            "Roles": null,
+                            "Deleted": false
+                        },
+                        "IsPublic": true,
+                        "VideoTutorialLink": null,
+                        "ImageLocation": null,
+                        "Description": "Mix of 3 fruits",
+                        "PreparationSteps": "Grab 3 fruits{NEXT}Mix them together",
+                        "Deleted": false
+                    }
+                ],
+                "Deleted": false
+            }
+        ],
+        "IsPublic": true,
+        "VideoTutorialLink": null,
+        "ImageLocation": null,
+        "Description": "Mix of 3 fruits",
+        "PreparationSteps": "Grab 3 fruits{NEXT}Mix them together",
+        "Deleted": false
+    }
+]

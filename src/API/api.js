@@ -1,6 +1,3 @@
-import { Role, User, GroceryList, UnitType, IngredientCategory, Ingredient,
-    RequirementsListIngredient, KitchenIngredient, RecipeCategory, Recipe, UserAction } from "../models";
-
 import {
     CustomEntityGroup,
     IngredientEntityGroup,
@@ -14,7 +11,8 @@ import {
     RecipeCategoryEntityGroup,
     GroceryListEntityGroup,
     
-    protocol, serverIp, port, api_url
+    protocol, serverIp, port, api_url,
+    AccessTokenHeaderName,
 } from "./EntityGroups";
 
 export default class Api {

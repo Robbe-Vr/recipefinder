@@ -1,6 +1,6 @@
 describe("Ingredients CRUD Page Test", () => {
     beforeEach(() => {
-        cy.visit("/Ingredients/index");
+        cy.visit("/Ingredients/index/");
 
         cy.intercept({ method: 'GET', url: /(.*?)\/api\/Ingredients(.*?)/ }, { fixture: 'get_ingredients.json' }).as('ingredients');
         cy.intercept({ method: 'GET', url: /(.*?)\/api\/IngredientCategories(.*?)/ }, { fixture: 'get_ingredientcategories.json' }).as('ingredientcategories');
@@ -12,6 +12,6 @@ describe("Ingredients CRUD Page Test", () => {
     });
 
     it("check if ingredients are shown", () => {
-        cy.get("tbody").first().get('tr').eq(0).get('td').eq(1).should("have.text", "Apple");
+        cy.get('.MuiTableRow-root').find("td").eq(2).should("have.text", "Apple");
     });
 });

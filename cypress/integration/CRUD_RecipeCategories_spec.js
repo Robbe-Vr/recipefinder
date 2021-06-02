@@ -12,6 +12,6 @@ describe("RecipeCategories CRUD Page Test", () => {
     });
 
     it("check if recipe categories are shown", () => {
-        cy.get("tbody").first().get('tr').eq(0).get('td').eq(1).should("have.text", "Sweet");
+        cy.get('.MuiTableRow-root').find("td").eq(0).should("have.text", "Fruits");
     });
 });

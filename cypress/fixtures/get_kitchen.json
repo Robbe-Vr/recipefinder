@@ -1,177 +1,376 @@
 {
     "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
     "User": {
-        "AccessFailedCount": 0,
-        "ConcurrencyStamp": "M1EZAjPJO4E=",
         "CountId": 1,
-        "CreationDate": "2021-01-02T00:00:00",
-        "Deleted": false,
-        "DOB": "0001-01-01T00:00:00",
-        "Email": "admin@recipefinder.com",
-        "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
-        "EmailConfirmationToken": "11111",
-        "EmailConfirmed": false,
         "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
-        "LockoutEnabled": false,
-        "LockoutEnd": null,
         "Name": "Recipe Finder admin",
-        "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
         "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+        "Salt": "M1EZAjPJO4E=",
         "PhoneNumber": "000 000 00 00",
         "PhoneNumberConfirmed": false,
-        "Roles": [
-            {"CountId": 3, "Id": "a2d07a78-b02d-43c5-9882-7966396c8082", "Name": "Default"},
-            {"CountId": 2, "Id": "0d2b2cd5-51a1-4863-ade1-e422f1876506", "Name": "Admin"},
-            {"CountId": 4, "Id": "dd3f86d6-7b5d-42b5-be49-947cd0b2d0b3", "Name": "Creator"},
-            {"CountId": 1, "Id": "00462ce8-2cec-4f04-85e9-446c63b8d440", "Name": "Cook"}
-        ],
-        "Salt": "M1EZAjPJO4E=",
-        "SecurityStamp": "M1EZAjPJO4E="
+        "DOB": "0001-01-01T00:00:00",
+        "CreationDate": "2021-01-02T00:00:00",
+        "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+        "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+        "Email": "admin@recipefinder.com",
+        "EmailConfirmed": false,
+        "EmailConfirmationToken": "11111",
+        "SecurityStamp": "M1EZAjPJO4E=",
+        "ConcurrencyStamp": "M1EZAjPJO4E=",
+        "LockoutEnabled": false,
+        "LockoutEnd": null,
+        "AccessFailedCount": 0,
+        "Roles": null,
+        "Deleted": false
     },
     "Ingredients": [
         {
             "CountId": 6,
-            "Deleted": false,
+            "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+            "User": {
+                "CountId": 1,
+                "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                "Name": "Recipe Finder admin",
+                "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                "Salt": "M1EZAjPJO4E=",
+                "PhoneNumber": "000 000 00 00",
+                "PhoneNumberConfirmed": false,
+                "DOB": "0001-01-01T00:00:00",
+                "CreationDate": "2021-01-02T00:00:00",
+                "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                "Email": "admin@recipefinder.com",
+                "EmailConfirmed": false,
+                "EmailConfirmationToken": "11111",
+                "SecurityStamp": "M1EZAjPJO4E=",
+                "ConcurrencyStamp": "M1EZAjPJO4E=",
+                "LockoutEnabled": false,
+                "LockoutEnd": null,
+                "AccessFailedCount": 0,
+                "Roles": null,
+                "Deleted": false
+            },
+            "IngredientId": "1830252c-e363-4ceb-b66d-52cc5648f9fe",
             "Ingredient": {
-                "AverageVolumeInLiterPerUnit": 0,
+                "CountId": 1,
+                "Id": "1830252c-e363-4ceb-b66d-52cc5648f9fe",
+                "Name": "Apple",
+                "ImageLocation": "https://www.applesfromny.com/wp-content/uploads/2020/08/McIntosh_NYAS-Apples.png",
                 "AverageWeightInKgPerUnit": 0.1,
+                "AverageVolumeInLiterPerUnit": 0.0,
                 "Categories": [
                     {
                         "CountId": 3,
-                        "Deleted": false,
+                        "Name": "Fruits",
                         "Ingredients": [],
-                        "Name": "Fruits"
+                        "Deleted": false
                     }
                 ],
-                "CountId": 1,
-                "Deleted": false,
-                "Id": "1830252c-e363-4ceb-b66d-52cc5648f9fe",
-                "ImageLocation": "https://www.applesfromny.com/wp-content/uploads/2020/08/McIntosh_NYAS-Apples.png",
-                "Name": "Apple",
                 "UnitTypes": [
                     {
-                        "AllowDecimals": false,
                         "CountId": 9,
-                        "Deleted": false,
+                        "Name": "Units",
+                        "AllowDecimals": false,
                         "Ingredients": [],
-                        "Name": "Units"
+                        "Deleted": false
                     },
                     {
-                        "AllowDecimals": true,
                         "CountId": 10,
-                        "Deleted": false,
+                        "Name": "Kg",
+                        "AllowDecimals": true,
                         "Ingredients": [],
-                        "Name": "Kg"
+                        "Deleted": false
                     }
-                ]
-            },
-            "IngredientId": "1830252c-e363-4ceb-b66d-52cc5648f9fe",
-            "Units": 2,
-            "UnitType": {
-                "CountId": 9, "Name": "Units", "Ingredients": [], "AllowDecimals": false, "Deleted": false
-            },
-            "UnitTypeId": 9,
-            "User": {
-                "AccessFailedCount": 0,
-                "ConcurrencyStamp": "M1EZAjPJO4E=",
-                "CountId": 1,
-                "CreationDate": "2021-01-02T00:00:00",
-                "Deleted": false,
-                "DOB": "0001-01-01T00:00:00",
-                "Email": "admin@recipefinder.com",
-                "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
-                "EmailConfirmationToken": "11111",
-                "EmailConfirmed": false,
-                "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
-                "LockoutEnabled": false,
-                "LockoutEnd": null,
-                "Name": "Recipe Finder admin",
-                "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
-                "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
-                "PhoneNumber": "000 000 00 00",
-                "PhoneNumberConfirmed": false,
-                "Roles": [
-                    {"CountId": 3, "Id": "a2d07a78-b02d-43c5-9882-7966396c8082", "Name": "Default"},
-                    {"CountId": 2, "Id": "0d2b2cd5-51a1-4863-ade1-e422f1876506", "Name": "Admin"},
-                    {"CountId": 4, "Id": "dd3f86d6-7b5d-42b5-be49-947cd0b2d0b3", "Name": "Creator"},
-                    {"CountId": 1, "Id": "00462ce8-2cec-4f04-85e9-446c63b8d440", "Name": "Cook"}
                 ],
-                "Salt": "M1EZAjPJO4E=",
-                "SecurityStamp": "M1EZAjPJO4E="
+                "Deleted": false
             },
-            "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525"
+            "Units": 2.0,
+            "UnitTypeId": 9,
+            "UnitType": {
+                "CountId": 9,
+                "Name": "Units",
+                "AllowDecimals": false,
+                "Ingredients": null,
+                "Deleted": false
+            },
+            "Deleted": false
         },
         {
             "CountId": 7,
-            "Deleted": false,
+            "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+            "User": {
+                "CountId": 1,
+                "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                "Name": "Recipe Finder admin",
+                "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                "Salt": "M1EZAjPJO4E=",
+                "PhoneNumber": "000 000 00 00",
+                "PhoneNumberConfirmed": false,
+                "DOB": "0001-01-01T00:00:00",
+                "CreationDate": "2021-01-02T00:00:00",
+                "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                "Email": "admin@recipefinder.com",
+                "EmailConfirmed": false,
+                "EmailConfirmationToken": "11111",
+                "SecurityStamp": "M1EZAjPJO4E=",
+                "ConcurrencyStamp": "M1EZAjPJO4E=",
+                "LockoutEnabled": false,
+                "LockoutEnd": null,
+                "AccessFailedCount": 0,
+                "Roles": null,
+                "Deleted": false
+            },
+            "IngredientId": "c9f7a748-7ae2-4515-af4b-ac2992a2cb7b",
             "Ingredient": {
-                "AverageVolumeInLiterPerUnit": 0,
+                "CountId": 6,
+                "Id": "c9f7a748-7ae2-4515-af4b-ac2992a2cb7b",
+                "Name": "Banana",
+                "ImageLocation": "https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?w=800&quality=85",
                 "AverageWeightInKgPerUnit": 0.15,
+                "AverageVolumeInLiterPerUnit": 0.0,
                 "Categories": [
                     {
                         "CountId": 3,
-                        "Deleted": false,
+                        "Name": "Fruits",
                         "Ingredients": [],
-                        "Name": "Fruits"
+                        "Deleted": false
                     }
                 ],
-                "CountId": 6,
-                "Deleted": false,
-                "Id": "c9f7a748-7ae2-4515-af4b-ac2992a2cb7b",
-                "ImageLocation": "https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?w=800&quality=85",
-                "Name": "Banana",
                 "UnitTypes": [
                     {
-                        "AllowDecimals": false,
                         "CountId": 9,
-                        "Deleted": false,
+                        "Name": "Units",
+                        "AllowDecimals": false,
                         "Ingredients": [],
-                        "Name": "Units"
+                        "Deleted": false
                     },
                     {
-                        "AllowDecimals": true,
                         "CountId": 10,
-                        "Deleted": false,
+                        "Name": "Kg",
+                        "AllowDecimals": true,
                         "Ingredients": [],
-                        "Name": "Kg"
+                        "Deleted": false
                     }
-                ]
+                ],
+                "Deleted": false
             },
-            "IngredientId": "c9f7a748-7ae2-4515-af4b-ac2992a2cb7b",
-            "Units": 2,
-            "UnitType": {
-                "CountId": 9, "Name": "Units", "Ingredients": [], "AllowDecimals": false, "Deleted": false
-            },
+            "Units": 5.0,
             "UnitTypeId": 9,
+            "UnitType": {
+                "CountId": 9,
+                "Name": "Units",
+                "AllowDecimals": false,
+                "Ingredients": null,
+                "Deleted": false
+            },
+            "Deleted": false
+        },
+        {
+            "CountId": 9,
+            "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
             "User": {
-                "AccessFailedCount": 0,
-                "ConcurrencyStamp": "M1EZAjPJO4E=",
                 "CountId": 1,
-                "CreationDate": "2021-01-02T00:00:00",
-                "Deleted": false,
-                "DOB": "0001-01-01T00:00:00",
-                "Email": "admin@recipefinder.com",
-                "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
-                "EmailConfirmationToken": "11111",
-                "EmailConfirmed": false,
                 "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
-                "LockoutEnabled": false,
-                "LockoutEnd": null,
                 "Name": "Recipe Finder admin",
-                "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
                 "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                "Salt": "M1EZAjPJO4E=",
                 "PhoneNumber": "000 000 00 00",
                 "PhoneNumberConfirmed": false,
-                "Roles": [
-                    {"CountId": 3, "Id": "a2d07a78-b02d-43c5-9882-7966396c8082", "Name": "Default"},
-                    {"CountId": 2, "Id": "0d2b2cd5-51a1-4863-ade1-e422f1876506", "Name": "Admin"},
-                    {"CountId": 4, "Id": "dd3f86d6-7b5d-42b5-be49-947cd0b2d0b3", "Name": "Creator"},
-                    {"CountId": 1, "Id": "00462ce8-2cec-4f04-85e9-446c63b8d440", "Name": "Cook"}
-                ],
-                "Salt": "M1EZAjPJO4E=",
-                "SecurityStamp": "M1EZAjPJO4E="
+                "DOB": "0001-01-01T00:00:00",
+                "CreationDate": "2021-01-02T00:00:00",
+                "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                "Email": "admin@recipefinder.com",
+                "EmailConfirmed": false,
+                "EmailConfirmationToken": "11111",
+                "SecurityStamp": "M1EZAjPJO4E=",
+                "ConcurrencyStamp": "M1EZAjPJO4E=",
+                "LockoutEnabled": false,
+                "LockoutEnd": null,
+                "AccessFailedCount": 0,
+                "Roles": null,
+                "Deleted": false
             },
-            "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525"
+            "IngredientId": "71434fa6-b248-41a0-8826-a3bbfa15d53a",
+            "Ingredient": {
+                "CountId": 4,
+                "Id": "71434fa6-b248-41a0-8826-a3bbfa15d53a",
+                "Name": "Sugar",
+                "ImageLocation": null,
+                "AverageWeightInKgPerUnit": 0.0,
+                "AverageVolumeInLiterPerUnit": 0.0,
+                "Categories": [
+                    {
+                        "CountId": 4,
+                        "Name": "Spices",
+                        "Ingredients": [],
+                        "Deleted": false
+                    }
+                ],
+                "UnitTypes": [
+                    {
+                        "CountId": 10,
+                        "Name": "Kg",
+                        "AllowDecimals": true,
+                        "Ingredients": [],
+                        "Deleted": false
+                    }
+                ],
+                "Deleted": false
+            },
+            "Units": 0.2,
+            "UnitTypeId": 10,
+            "UnitType": {
+                "CountId": 10,
+                "Name": "Kg",
+                "AllowDecimals": true,
+                "Ingredients": null,
+                "Deleted": false
+            },
+            "Deleted": false
+        },
+        {
+            "CountId": 11,
+            "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+            "User": {
+                "CountId": 1,
+                "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                "Name": "Recipe Finder admin",
+                "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                "Salt": "M1EZAjPJO4E=",
+                "PhoneNumber": "000 000 00 00",
+                "PhoneNumberConfirmed": false,
+                "DOB": "0001-01-01T00:00:00",
+                "CreationDate": "2021-01-02T00:00:00",
+                "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                "Email": "admin@recipefinder.com",
+                "EmailConfirmed": false,
+                "EmailConfirmationToken": "11111",
+                "SecurityStamp": "M1EZAjPJO4E=",
+                "ConcurrencyStamp": "M1EZAjPJO4E=",
+                "LockoutEnabled": false,
+                "LockoutEnd": null,
+                "AccessFailedCount": 0,
+                "Roles": null,
+                "Deleted": false
+            },
+            "IngredientId": "6a2c498d-fd8e-4d2e-8b48-f58df27a8c32",
+            "Ingredient": {
+                "CountId": 2,
+                "Id": "6a2c498d-fd8e-4d2e-8b48-f58df27a8c32",
+                "Name": "Pear",
+                "ImageLocation": "https://images.squarespace-cdn.com/content/v1/51f17990e4b0bef09d514799/1512679151747-DBOE6GYP7EIAWWWMQN3G/ke17ZwdGBToddI8pDm48kBRLxb7qkpkgcRyru_8RK_lZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpyi650DRbYvfsL36ewo8X1_BZRsTWBh2y9puUWI_xOojnxN2Xtn_YCthuyayzvzQ5c/autumnBartlett2.jpg?format=500w",
+                "AverageWeightInKgPerUnit": 0.12,
+                "AverageVolumeInLiterPerUnit": 0.0,
+                "Categories": [
+                    {
+                        "CountId": 3,
+                        "Name": "Fruits",
+                        "Ingredients": [],
+                        "Deleted": false
+                    }
+                ],
+                "UnitTypes": [
+                    {
+                        "CountId": 9,
+                        "Name": "Units",
+                        "AllowDecimals": false,
+                        "Ingredients": [],
+                        "Deleted": false
+                    },
+                    {
+                        "CountId": 10,
+                        "Name": "Kg",
+                        "AllowDecimals": true,
+                        "Ingredients": [],
+                        "Deleted": false
+                    }
+                ],
+                "Deleted": false
+            },
+            "Units": 7.0,
+            "UnitTypeId": 9,
+            "UnitType": {
+                "CountId": 9,
+                "Name": "Units",
+                "AllowDecimals": false,
+                "Ingredients": null,
+                "Deleted": false
+            },
+            "Deleted": false
+        },
+        {
+            "CountId": 16,
+            "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+            "User": {
+                "CountId": 1,
+                "Id": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+                "Name": "Recipe Finder admin",
+                "PasswordHashed": "1D69A80FCC8EF126F0099BC12C50EFDC5159E63BDE8E1E0C3F35F44CE1F536F4",
+                "Salt": "M1EZAjPJO4E=",
+                "PhoneNumber": "000 000 00 00",
+                "PhoneNumberConfirmed": false,
+                "DOB": "0001-01-01T00:00:00",
+                "CreationDate": "2021-01-02T00:00:00",
+                "NAME_NORMALIZED": "RECIPE FINDER ADMIN",
+                "EMAIL_NORMALIZED": "ADMIN@RECIPEFINDER.COM",
+                "Email": "admin@recipefinder.com",
+                "EmailConfirmed": false,
+                "EmailConfirmationToken": "11111",
+                "SecurityStamp": "M1EZAjPJO4E=",
+                "ConcurrencyStamp": "M1EZAjPJO4E=",
+                "LockoutEnabled": false,
+                "LockoutEnd": null,
+                "AccessFailedCount": 0,
+                "Roles": null,
+                "Deleted": false
+            },
+            "IngredientId": "eaa45862-d9a9-4793-8332-8278f0da815a",
+            "Ingredient": {
+                "CountId": 7,
+                "Id": "eaa45862-d9a9-4793-8332-8278f0da815a",
+                "Name": "Milk",
+                "ImageLocation": "https://www.campina.nl/assets/images/_thumbs/08712800147008_VA_CampinaWeb._500x500.png",
+                "AverageWeightInKgPerUnit": 0.0,
+                "AverageVolumeInLiterPerUnit": 1.0,
+                "Categories": [
+                    {
+                        "CountId": 5,
+                        "Name": "Dairy",
+                        "Ingredients": [],
+                        "Deleted": false
+                    }
+                ],
+                "UnitTypes": [
+                    {
+                        "CountId": 9,
+                        "Name": "Units",
+                        "AllowDecimals": false,
+                        "Ingredients": [],
+                        "Deleted": false
+                    },
+                    {
+                        "CountId": 11,
+                        "Name": "L",
+                        "AllowDecimals": true,
+                        "Ingredients": [],
+                        "Deleted": false
+                    }
+                ],
+                "Deleted": false
+            },
+            "Units": 1.0,
+            "UnitTypeId": 11,
+            "UnitType": {
+                "CountId": 11,
+                "Name": "L",
+                "AllowDecimals": true,
+                "Ingredients": null,
+                "Deleted": false
+            },
+            "Deleted": false
         }
     ],
     "Deleted": false

@@ -1,0 +1,40 @@
+{
+    "CountId": 3,
+    "Name": "Fruits",
+    "Ingredients": [
+        {
+            "CountId": 1,
+            "Id": "1830252c-e363-4ceb-b66d-52cc5648f9fe",
+            "Name": "Apple",
+            "ImageLocation": "https://www.applesfromny.com/wp-content/uploads/2020/08/McIntosh_NYAS-Apples.png",
+            "AverageWeightInKgPerUnit": 0.1,
+            "AverageVolumeInLiterPerUnit": 0.0,
+            "Categories": [],
+            "UnitTypes": null,
+            "Deleted": false
+        },
+        {
+            "CountId": 2,
+            "Id": "6a2c498d-fd8e-4d2e-8b48-f58df27a8c32",
+            "Name": "Pear",
+            "ImageLocation": "https://images.squarespace-cdn.com/content/v1/51f17990e4b0bef09d514799/1512679151747-DBOE6GYP7EIAWWWMQN3G/ke17ZwdGBToddI8pDm48kBRLxb7qkpkgcRyru_8RK_lZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpyi650DRbYvfsL36ewo8X1_BZRsTWBh2y9puUWI_xOojnxN2Xtn_YCthuyayzvzQ5c/autumnBartlett2.jpg?format=500w",
+            "AverageWeightInKgPerUnit": 0.12,
+            "AverageVolumeInLiterPerUnit": 0.0,
+            "Categories": [],
+            "UnitTypes": null,
+            "Deleted": false
+        },
+        {
+            "CountId": 6,
+            "Id": "c9f7a748-7ae2-4515-af4b-ac2992a2cb7b",
+            "Name": "Banana",
+            "ImageLocation": "https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?w=800&quality=85",
+            "AverageWeightInKgPerUnit": 0.15,
+            "AverageVolumeInLiterPerUnit": 0.0,
+            "Categories": [],
+            "UnitTypes": null,
+            "Deleted": false
+        }
+    ],
+    "Deleted": false
+}

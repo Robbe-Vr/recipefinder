@@ -1,6 +1,6 @@
 import { EntityGroup } from "./BaseEntityGroup";
 
-import { IngredientCategory } from "../../models";
+import { RecipeCategory } from "../../models";
 
 export class RecipeCategoryEntityGroup extends EntityGroup {
     constructor() {

@@ -14,7 +14,7 @@ beforeEach(() => {
             req.reply(404);
         }).as('login');
         
-        cy.visit('/');
+        cy.visit('/home/index');
 
         cy.wait('@validate');
 

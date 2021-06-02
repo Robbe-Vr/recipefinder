@@ -185,7 +185,7 @@ export function Authenticate({ children }) {
     }, [account, Api, loaded]);
     	
     const logIn = (name, password) => {
-        
+        // offline login ?
     };
 
     const logOut = () => {

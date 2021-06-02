@@ -1,0 +1,33 @@
+{
+    "CountId": 1,
+    "Id": "1830252c-e363-4ceb-b66d-52cc5648f9fe",
+    "Name": "Apple",
+    "ImageLocation": "https://www.applesfromny.com/wp-content/uploads/2020/08/McIntosh_NYAS-Apples.png",
+    "AverageWeightInKgPerUnit": 0.1,
+    "AverageVolumeInLiterPerUnit": 0.0,
+    "Categories": [
+        {
+            "CountId": 3,
+            "Name": "Fruits",
+            "Ingredients": [],
+            "Deleted": false
+        }
+    ],
+    "UnitTypes": [
+        {
+            "CountId": 9,
+            "Name": "Units",
+            "AllowDecimals": false,
+            "Ingredients": [],
+            "Deleted": false
+        },
+        {
+            "CountId": 10,
+            "Name": "Kg",
+            "AllowDecimals": true,
+            "Ingredients": [],
+            "Deleted": false
+        }
+    ],
+    "Deleted": false
+}

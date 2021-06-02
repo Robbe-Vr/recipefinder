@@ -1,0 +1,21 @@
+{
+    "CountId": 7,
+    "Name": "Fruits",
+    "Recipes": [
+        {
+            "CountId": 2,
+            "Id": "a120ff47-b3e5-4500-b3c1-029c414868a9",
+            "Name": "FruitMix",
+            "UserId": "17bcd9a5-67a5-4695-9c2c-0211a140e525",
+            "User": null,
+            "Categories": [],
+            "IsPublic": true,
+            "VideoTutorialLink": null,
+            "ImageLocation": null,
+            "Description": "Mix of 3 fruits",
+            "PreparationSteps": "Grab 3 fruits{NEXT}Mix them together",
+            "Deleted": false
+        }
+    ],
+    "Deleted": false
+}
