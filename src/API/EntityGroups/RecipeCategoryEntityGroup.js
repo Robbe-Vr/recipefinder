@@ -20,7 +20,7 @@ export class RecipeCategoryEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new RecipeCategory(item.CountId, item.Name);
+        const fixedData = item && item !== "Error" ? new RecipeCategory(item.CountId, item.Name) : null;
 
         return fixedData;
     };
@@ -28,7 +28,7 @@ export class RecipeCategoryEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new RecipeCategory(item.CountId, item.Name);
+        const fixedData = item && item !== "Error" ? new RecipeCategory(item.CountId, item.Name) : null;
 
         return fixedData;
     };

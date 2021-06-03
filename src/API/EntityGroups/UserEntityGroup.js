@@ -21,8 +21,8 @@ export class UserEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate,
-            item.Roles ? item.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []);
+        const fixedData = item && item !== "Error" ? new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate,
+            item.Roles ? item.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null;
 
         return fixedData;
     };
@@ -30,8 +30,8 @@ export class UserEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate,
-            item.Roles ? item.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []);
+        const fixedData = item && item !== "Error" ? new User(item.CountId, item.Id, item.Name, item.Email, item.PhoneNumber, item.PasswordHashed, item.Salt, item.DOB, item.CreationDate,
+            item.Roles ? item.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null;
 
         return fixedData;
     };

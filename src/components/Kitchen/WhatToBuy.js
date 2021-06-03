@@ -123,7 +123,7 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
                                 { id: 'img', label: '', minWidth: 100 },
                                 { id: 'name', label: 'Name', minWidth: 100 },
                                 { id: 'category', label: 'Categories', minWidth: 150 },
-                                { id: 'amount', label: 'Amount', minWidth: 50 },
+                                { id: 'amount', label: 'Missing Amount', minWidth: 50 },
                             ]}
                             rows={selectedItem.item.RequirementsList?.map(ingredient => {
                                 return {
@@ -152,7 +152,7 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
                             Ingredient: {selectedIngredient.item.Ingredient?.Name}
                         </Grid>
                         <Grid>
-                            Amount: {selectedIngredient.item.Units} {selectedIngredient.item.UnitType?.Name}
+                            Missing Amount: {selectedIngredient.item.Units} {selectedIngredient.item.UnitType?.Name}
                         </Grid>
                     </Grid>
                     <Button onClick={() => addIngredient(selectedIngredient.item)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem', marginRight: '20px' }}>
@@ -174,7 +174,7 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
                                 { id: 'image', label: '', minWidth: 50 },
                                 { id: 'name', label: 'Name', minWidth: 150 },
                                 { id: 'category', label: 'Category', minWidth: 100 },
-                                { id: 'amount', label: 'Amount', minWidth: 50 },
+                                { id: 'amount', label: 'Missing Amount', minWidth: 50 },
                             ];
 
                             return columns;

@@ -20,7 +20,7 @@ export class UnitTypeEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new UnitType(item.CountId, item.Name, item.AllowDecimals);
+        const fixedData = item && item !== "Error" ? new UnitType(item.CountId, item.Name, item.AllowDecimals) : null;
 
         return fixedData;
     };
@@ -28,7 +28,7 @@ export class UnitTypeEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new UnitType(item.CountId, item.Name, item.AllowDecimals);
+        const fixedData = item && item !== "Error" ? new UnitType(item.CountId, item.Name, item.AllowDecimals) : null;
 
         return fixedData;
     };

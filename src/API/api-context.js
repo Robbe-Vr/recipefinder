@@ -8,6 +8,7 @@ export function ApiProvider({ children }) {
     const API = new Api();
 
     var contextValue = {
+        authCallbackPagePath: API.AuthReturnUrlPath,
         Api: API,
         Ingredients: API.Ingredients,
         Users: API.Users,

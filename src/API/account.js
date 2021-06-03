@@ -7,7 +7,7 @@ const AccountContext = React.createContext({});
 
 export function Authenticate({ children }) {
 
-    const { Api } = useAPI();
+    const { Api, authCallbackPagePath } = useAPI();
 
     const [account, setAccount] = useState({});
     const [loaded, setLoaded] = useState(false);
@@ -96,7 +96,7 @@ export function Authenticate({ children }) {
                 setAccount(localAcc);
             }
 
-            if (window.location.pathname === '/returnAuthorization' && !(localAcc?.AccessToken && localAcc?.Id)) {
+            if (window.location.pathname === authCallbackPagePath && !(localAcc?.AccessToken && localAcc?.Id)) {
                 getTokens();
 
                 return;
@@ -182,7 +182,7 @@ export function Authenticate({ children }) {
         };
 
         checkLogin();
-    }, [account, Api, loaded]);
+    }, [account, Api, authCallbackPagePath, loaded]);
     	
     const logIn = (name, password) => {
         // offline login ?

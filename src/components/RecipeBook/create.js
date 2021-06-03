@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Typography, Button } from "@material-ui/core";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { Typography, Button } from "@material-ui/core";
 
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
-
 import { Recipe, RecipeCategory } from "../../models";
+import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
+import { Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
+import { PreparationStepsInputComponent } from "./preparationStepsInputComponent";
+import { RequirementsInputComponent } from "./RequirementsInputComponent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -26,12 +28,15 @@ const useStyles = makeStyles((theme) => ({
     errorTxt: { textAlign: "center", color: "#ff0000" },
     form: {
 
+    },
+    inputComponent: {
+        marginBottom: '15px',
     }
 }));
 
 export default function CreateRecipePage({ setTitle, Api }) {
     useEffect(() => {
-        setTitle && setTitle("Create Recipe");
+        setTitle && setTitle("Create Custom Recipe");
     });
 
     const history = useHistory();
@@ -50,14 +55,14 @@ export default function CreateRecipePage({ setTitle, Api }) {
 
     const classes = useStyles();
 
-    const onRecipeValueEdited = (update) => {
+    const onRecipeEdited = (update) => {
         setRecipe({
             ...recipe,
             ...update,
         });
     }
 
-    const onCreate = () => {
+    const onEdit = () => {
         var correctedRecipe = { ...recipe };
 
         correctedRecipe.RequirementsList = {
@@ -67,39 +72,95 @@ export default function CreateRecipePage({ setTitle, Api }) {
 
         Api.Recipes.Create(correctedRecipe);
 
-        history.push('/recipebok/custom/index');
+        history.push('/recipebook/custom/index');
     };
 
+    const [preparationStepsOpen, setPreparationStepsOpen] = useState(false);
+    const [requirementsListOpen, setRequirementsListOpen] = useState(false);
+
     return (
-        <div className={classes.paper}>
+        <Grid className={classes.paper}>
+            <Dialog open={preparationStepsOpen} onClose={() => setPreparationStepsOpen(false)}>
+                <DialogTitle>Preparation Steps</DialogTitle>
+                <DialogContent>
+                    <PreparationStepsInputComponent
+                        name="Preparation Step"
+                        onChange={(value) => { onRecipeEdited({ PreparationSteps: value }); }}
+                    />
+                </DialogContent>
+            </Dialog>
+            <Dialog open={requirementsListOpen} onClose={() => setRequirementsListOpen(false)}>
+                <DialogTitle>RequirementsList</DialogTitle>
+                <DialogContent>
+                    <RequirementsInputComponent
+                        Api={Api}
+                        parentRecipe={recipe}
+                        onChange={(value) => { onRecipeEdited({ RequirementsList: value }); }}
+                    />
+                </DialogContent>
+            </Dialog>
             <Typography className={classes.txt} variant="h2">
-                Create New Recipe
+                Create Custom Recipe
             </Typography>
-            <div>
-                <Grid container direction="row" style={{ marginTop: '15px' }}>
+            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
+                <Grid className={classes.inputComponent}>
                     <UserInputComponent
                         name="Name"
-                        defaultValue={recipe?.Name}
-                        onChange={(value) => { onRecipeValueEdited({ Name: value }); }}
+                        onChange={(value) => onRecipeEdited({ Name: value })}
                     />
                 </Grid>
-                    <Grid container direction="row" style={{ marginTop: '15px' }}>
+                <Grid className={classes.inputComponent}>
                     <UserInputComponent
                         name="Description"
-                        defaultValue={recipe?.Description}
-                        onChange={(value) => { onRecipeValueEdited({ Description: value }); }}
+                        onChange={(value) => { onRecipeEdited({ Description: value }); }}
                     />
                 </Grid>
-                <UserMultiSelectInputComponent
-                    name="Categories"
-                    options={categories.map(category => { return { name: category.Name, value: category.Id }; })}
-                    onChange={(values) => onRecipeValueEdited({ Category: values })}
-                />
-                <Button onClick={onCreate} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
-            </div>
+                <Grid className={classes.inputComponent}>
+                    <UserInputComponent
+                        name="Image"
+                        onChange={(value) => onRecipeEdited({ ImageLocation: value })}
+                    />
+                </Grid>
+                <Grid className={classes.inputComponent}>
+                    <UserInputComponent
+                        name="Tutorial Video"
+                        onChange={(value) => onRecipeEdited({ VideoTutorialLink: value })}
+                    />
+                </Grid>
+                <Grid className={classes.inputComponent}>
+                    <Button variant="outlined" onClick={() => setPreparationStepsOpen(true)}>
+                        {recipe.PreparationSteps.split('{NEXT}').length} Steps
+                    </Button>
+                </Grid>
+                <Grid className={classes.inputComponent}>
+                    <Button variant="outlined" onClick={() => setRequirementsListOpen(true)}>
+                        {recipe.RequirementsList.length} Requirements
+                    </Button>
+                </Grid>
+                <Grid className={classes.inputComponent}>
+                    <UserSelectInputComponent
+                        Name={"Public?"}
+                        options={[
+                            { name: "Public", value: true },
+                            { name: "Private", value: false },
+                        ]}
+                        onChange={(value) => { onRecipeEdited({ IsPublic: value }) }}
+                    />
+                </Grid>
+                <Grid className={classes.inputComponent}>
+                    <UserMultiSelectInputComponent
+                        name="Categories"
+                        options={categories.map(category => { return { name: category.Name, value: category.CountId }; })}
+                        onChange={(values) => onRecipeEdited({ Categories: values })}
+                    />
+                </Grid>
+                <Grid className={classes.inputComponent}>
+                    <Button onClick={onEdit} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
+                </Grid>
+            </Grid>
             <Link to="/recipebook/custom/index">
                 <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Recipes</Button>
             </Link>
-        </div>
+        </Grid>
     );
 };

@@ -82,7 +82,7 @@ export class RecipeEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
+        const fixedData = item && item !== "Error" ? new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
             item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
             item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.CountId,
                 new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLiterPerUnit,
@@ -96,7 +96,7 @@ export class RecipeEntityGroup extends EntityGroup {
                         requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
             )) : [],
             new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
-                item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
+                item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : [])) : null;
 
         return fixedData;
     };
@@ -104,7 +104,7 @@ export class RecipeEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
+        const fixedData = item && item !== "Error" ? new Recipe(item.CountId, item.Id, item.Name, item.Description, item.ImageLocation, item.IsPublic, item.PreparationSteps, item.VideoTutorialLink,
             item.Categories ? item.Categories.map(category => new RecipeCategory(category.CountId, category.Name)) : [],
             item.RequirementsList?.Ingredients ? item.RequirementsList?.Ingredients.map(requirement => new RequirementsListIngredient(requirement.CountId,
                 new Ingredient(requirement.Ingredient.CountId, requirement.Ingredient.Id, requirement.Ingredient.Name, requirement.Ingredient.ImageLocation, requirement.Ingredient.AverageWeightInKgPerUnit, requirement.Ingredient.AverageVolumeInLiterPerUnit,
@@ -118,7 +118,7 @@ export class RecipeEntityGroup extends EntityGroup {
                         requirement.Recipe.User.Roles ? requirement.Recipe.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []) : null)
             )) : [],
             new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt, item.User.DOB, item.User.CreationDate,
-                item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
+                item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : [])) : null;
 
         return fixedData;
     };

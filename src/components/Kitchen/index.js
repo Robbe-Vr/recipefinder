@@ -67,25 +67,34 @@ function KitchenHomePage({ setTitle, userId, Api }) {
     const onEdit = async (id) => {
         if (!updates[id]) return;
 
-        
-
         await Api.Kitchens.Update(updates[id].CountId, updates[id]);
+
+        var updatedKitchen = { ...kitchen };
+        let index = updatedKitchen.Ingredients.indexOf(updatedKitchen.Ingredients.find(x => x.CountId === updates[id].CountId));
+        updatedKitchen.Ingredients[index] = updates[id];
+        setKitchen(updatedKitchen);
+
+        closeEditDialog();
     };
 
     const onUnitsEdited = (id, newUnits) => {
+        if (!id) { return; }
+
         if (!updates[id]) updates[id] = kitchen.Ingredients.find(x => x.IngredientId === id);
 
         updates[id].Units = parseFloat(newUnits);
 
-        setUpdates(updates => updates);
+        setUpdates(updates);
     };
 
     const onUnitTypeEdited = (id, newUnitType) => {
+        if (!id) { return; }
+
         if (!updates[id]) updates[id] = kitchen.Ingredients.find(x => x.IngredientId === id);
 
         updates[id].UnitTypeId = parseInt(newUnitType);
 
-        setUpdates(x => updates);
+        setUpdates(updates);
 
         setUnitTypeChanges(unitTypeChanges => unitTypeChanges + 1);
     };
@@ -99,6 +108,8 @@ function KitchenHomePage({ setTitle, userId, Api }) {
         setKitchen({ ...kitchen, Ingredients: updatedKitchen });
 
         Api.Kitchens.Delete(kitchen.UserId + "/" + ingredient.IngredientId, ingredient);
+
+        closeRemoveDialog();
     };
 
     const closeEditDialog = () => {
@@ -112,7 +123,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
     return (
         <Grid className={classes.form}>
             <Dialog open={removeItem.dialogOpened} onClose={closeRemoveDialog}>
-                <DialogTitle>Remove {removeItem.item.Name}</DialogTitle>
+                <DialogTitle>Remove {removeItem.item.Ingredient?.Name}</DialogTitle>
                 <DialogContent>
                     Are you sure you want to remove this ingredient?
                     <Button id={removeItem.item.IngredientId} style={{ backgroundColor: 'red', marginRight: '5px' }} onClick={async (e) => await onRemove(removeItem.item.IngredientId)}>Remove</Button>
@@ -120,7 +131,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                 </DialogContent>
             </Dialog>
             <Dialog open={editItem.dialogOpened} onClose={closeEditDialog}>
-                <DialogTitle>Edit {editItem.item.Name}</DialogTitle>
+                <DialogTitle>Edit {editItem.item.Ingredient?.Name}</DialogTitle>
                 <DialogContent>
                     <UserInputComponent onChange={(value) => onUnitsEdited(editItem.item.IngredientId, value)} name="Units" defaultValue={editItem.item.Units}
                         type="number" inputProps={{ min: editItem.allowDecimals ? 0.01 : 1.00, max: 1000.00, step: editItem.allowDecimals ? 0.01 : 1.00 }} />

@@ -20,7 +20,7 @@ export class RoleEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = new Role(item.CountId, item.Id, item.Name);
+        const fixedData = item && item !== "Error" ? new Role(item.CountId, item.Id, item.Name) : null;
 
         return fixedData;
     };
@@ -28,7 +28,7 @@ export class RoleEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = new Role(item.CountId, item.Id, item.Name);
+        const fixedData = item && item !== "Error" ? new Role(item.CountId, item.Id, item.Name) : null;
 
         return fixedData;
     };

@@ -78,10 +78,10 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                     <Route path={Api.AuthReturnUrlPath}>
                         <AuthorizationCallback Api={Api} />
                     </Route>
-                    <Route path={["/home/index", "/home"]}>
+                    <Route exact path={["/home/index", "/home"]}>
                         <HomePage setTitle={setTitle} name={name} userId={userId} Api={Api} />
                     </Route>
-                    <Route path={["/kitchen/index", "/kitchen"]}>
+                    <Route exact path={["/kitchen/index", "/kitchen"]}>
                         <KitchenHomePage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/kitchen/add">
@@ -90,13 +90,13 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                     <Route path="/kitchen/whattobuy">
                         <WhatToBuyPage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
-                    <Route path={["/grocerylists/index", "/grocerylists"]}>
+                    <Route exact path={["/grocerylists/index", "/grocerylists"]}>
                         <WhatToBuyPage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/grocerylists/whattobuy">
                         <WhatToBuyPage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
-                    <Route path={["/recipebook/index", "/recipebook"]}>
+                    <Route exact path={["/recipebook/index", "/recipebook"]}>
                         <RecipeBookHomePage setTitle={setTitle} isCook={isCook} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/recipebook/details/:recipeId">
@@ -116,7 +116,7 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                 {
                     isCook ?
                     <Switch>
-                        <Route path={["/recipebook/custom/index", "/recipebook/custom"]}>
+                        <Route exact path={["/recipebook/custom/index", "/recipebook/custom"]}>
                             <RecipeBookHomePage setTitle={setTitle} isCook={isCook} userId={userId} Api={Api} defaultRecipeListState={0} />
                         </Route>
                         <Route path="/recipebook/custom/edit/:recipeId">
@@ -133,7 +133,7 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                     Object.keys(CRUDPagesInfo.Pages).map((CRUD, index) => {
                         return (
                             <Switch key={`CRUDSwitch-${index}`}>
-                                <Route path={[`/${CRUD}/index`, `/${CRUD}`]}>
+                                <Route exact path={[`/${CRUD}/index`, `/${CRUD.toLowerCase()}/index`, `/${CRUD}`, `/${CRUD.toLowerCase()}`]}>
                                     <CRUDPage setTitle={setTitle} TableName={CRUD} DisplayName={CRUDPagesInfo.Pages[CRUD].DisplayName} Api={Api} />
                                 </Route>
                                 <Route path={`/${CRUD}/details/:id`}>
@@ -153,7 +153,7 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                 {
                     isAdmin ?
                     <Switch>
-                         <Route path={["/accounts/index", "/accounts"]}>
+                         <Route exact path={["/accounts/index", "/accounts"]}>
                              <AccountsPage setTitle={setTitle} Api={Api} />
                         </Route>
                         <Route path="/accounts/edit/:userId">

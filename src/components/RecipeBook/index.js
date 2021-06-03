@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Dialog, DialogContent, DialogTitle, Grid, Button, Typography } from "@material-ui/core";
+import { Dialog, DialogContent, DialogTitle, Grid, Button, Typography, Card } from "@material-ui/core";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCross, faPlus, faSync } from '@fortawesome/free-solid-svg-icons';
@@ -145,12 +145,13 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
                                 { id: 'image', label: '', minWidth: 50 },
                                 { id: 'name', label: 'Name', minWidth: 150 },
                                 { id: 'category', label: 'Category', minWidth: 100 },
-                                { id: 'actions', label: 'Actions', minWidth: 200 },
                             ];
 
                             if (isCook && recipeListState === 0) {
                                 columns.push({ id: 'public', label: 'Public', minWidth: 50 });
                             }
+
+                            columns.push({ id: 'actions', label: 'Actions', minWidth: 200 });
 
                             return columns;
                         })()}
@@ -159,6 +160,7 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
                                 id: recipe.Id,
                                 image: <Thumbnail source={recipe.ImageLocation} size={50} />,
                                 name: recipe.Name,
+                                category: recipe.Categories.map(category => <Card key={category.CountId} variant="outlined" style={{ margin: '2px', padding: '5px' }}>{category.Name}</Card>),
                                 actions: isCook && recipeListState === 0 ? <RowActions rowEntity={recipe} rowEntityId={recipe.Id} onDetails={onDetails} onEdit={onEdit} onRemove={() => ToggleRemove(recipe.CountId)} />
                                     : <RowActions rowEntity={recipe} rowEntityId={recipe.Id} onDetails={onDetails} />,
                             };
