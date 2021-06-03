@@ -48,6 +48,16 @@ describe("Recipebook Page Test", () => {
     it("filter resulting recipes", () => {
         cy.get('tr.MuiTableRow-root.MuiTableRow-hover').find("td").eq(1).should("have.text", "Pancakes");
 
+        cy.get('main').find('div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-4').find('input').eq(0).clear().type('fruit').should('have.value', 'fruit');
 
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').eq(0).find("td").eq(1).should("have.text", "FruitMix");
+
+        cy.get('main').find('div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-4').find('input').eq(0).clear().should('have.value', '');
+
+        cy.get('main').find('div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-4').find('div.MuiSelect-select').eq(0).click({ force: true });
+
+        cy.get('div.MuiPaper-root.MuiMenu-paper').find('ul').contains('li', 'Fruits').focus().click({ force: true });
+
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').eq(0).find("td").eq(1).should("have.text", "FruitMix");
     });
 });
