@@ -17,6 +17,8 @@ import RecipeTutorialPage from "./components/RecipeBook/tutorial";
 import RecipeEditPage from "./components/RecipeBook/edit";
 import RecipeCreatePage from "./components/RecipeBook/create";
 
+import { GroceryListsHomePage } from "./components/GroceryLists/index";
+
 import AccountsPage from "./components/Accounts/index";
 import EditAccountPage from "./components/Accounts/update";
 import AccountDetailsPage from "./components/Accounts/details";
@@ -27,6 +29,7 @@ import CRUDDetailsPage from "./components/CRUD/details";
 import CRUDEditPage from "./components/CRUD/edit";
 import CRUDCreatePage from "./components/CRUD/create";
 import { AuthorizationCallback } from "./components/Onboarding/AuthorizationCallback";
+import CreateGroceryListPage from "./components/GroceryLists/create";
 
 const useStyles = makeStyles((theme) => ({
     drawerHeader: {
@@ -91,10 +94,10 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                         <WhatToBuyPage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route exact path={["/grocerylists/index", "/grocerylists"]}>
-                        <WhatToBuyPage setTitle={setTitle} userId={userId} Api={Api} />
+                        <GroceryListsHomePage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
-                    <Route path="/grocerylists/whattobuy">
-                        <WhatToBuyPage setTitle={setTitle} userId={userId} Api={Api} />
+                    <Route path="/grocerylists/create">
+                        <CreateGroceryListPage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route exact path={["/recipebook/index", "/recipebook"]}>
                         <RecipeBookHomePage setTitle={setTitle} isCook={isCook} userId={userId} Api={Api} />

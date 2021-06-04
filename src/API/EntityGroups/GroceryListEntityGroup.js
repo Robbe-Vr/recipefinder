@@ -11,7 +11,7 @@ export class GroceryListEntityGroup extends EntityGroup {
         var data = await super.GetAll();
 
         const fixedData = data && data !== "Error" && data.map ? data.map((item) => {
-            return new GroceryList(item.CountId, item.Name, item.Value,
+            return new GroceryList(item.CountId, item.Id, item.Name, item.Value,
                 new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt,
                     item.User.DOB, item.User.CreationDate,
                     item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
@@ -24,7 +24,7 @@ export class GroceryListEntityGroup extends EntityGroup {
         var res = await super.PerformCustom('get', this.ApiUrl + '/byuserid/' + id);
 
         const fixedData = res.data && res !== "Error" && res.data.map ? res.data.map((item) => {
-            return new GroceryList(item.CountId, item.Name, item.Value,
+            return new GroceryList(item.CountId, item.Id, item.Name, item.Value,
                 new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt,
                     item.User.DOB, item.User.CreationDate,
                     item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : []));
@@ -36,7 +36,7 @@ export class GroceryListEntityGroup extends EntityGroup {
     async GetById(id) {
         var item = await super.GetById(id);
 
-        const fixedData = item && item !== "Error" ? new GroceryList(item.CountId, item.Name, item.Value,
+        const fixedData = item && item !== "Error" ? new GroceryList(item.CountId, item.Id, item.Name, item.Value,
             new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt,
                 item.User.DOB, item.User.CreationDate,
                 item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : [])) : null;
@@ -47,7 +47,7 @@ export class GroceryListEntityGroup extends EntityGroup {
     async GetByName(name) {
         var item = await super.GetByName(name);
 
-        const fixedData = item && item !== "Error" ? new GroceryList(item.CountId, item.Name, item.Value,
+        const fixedData = item && item !== "Error" ? new GroceryList(item.CountId, item.Id, item.Name, item.Value,
             new User(item.User.CountId, item.User.Id, item.User.Name, item.User.Email, item.User.PhoneNumber, item.User.PasswordHashed, item.User.Salt,
                 item.User.DOB, item.User.CreationDate,
                 item.User.Roles ? item.User.Roles.map(role => new Role(role.CountId, role.Id, role.Name)) : [])) : null;

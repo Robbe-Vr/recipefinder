@@ -1,7 +1,8 @@
 import User from "./User"
 
 export default class GroceryList {
-    constructor(id, name, value, user) {
+    constructor(countId, id, name, value, user) {
+        this.CountId = countId ?? -1;
         this.Id = id ?? '';
         this.Name = name ?? '';
         this.Value = value ?? '';
