@@ -22,7 +22,7 @@ Architecture diagram for the back-end of our application. Showing
 
 <!-- blank line -->
 ### Database Design
-A diagram representing the base design of our database. The most important tables for the core of the application are the only tables included.
+A diagram representing hwo we designed our database for persistance.
 ![Database Design Diagram](/documentation/images/database-design.png "Database Design Diagram"){: .shadow}
 
 <!-- blank line -->
@@ -31,7 +31,7 @@ A diagram representing the base design of our database. The most important table
 ### Front-End Cypress integration test testplan
 All planned cypress integration tests are listed below:
 <details>
-    <summary markdown="span">Home Page</summary>
+    <summary markdown="span">Home Page Tests</summary>
 
     -	Page loads with 2 buttons and welcoming text
     -	Kitchen button redirects user to the kitchen page /kitchen/index
@@ -39,13 +39,13 @@ All planned cypress integration tests are listed below:
 
 </details>
 <details>
-    <summary markdown="span">Drawer</summary>
+    <summary markdown="span">Drawer Tests</summary>
 
     -	Each button in the drawer redirects to the corresponding page
 
 </details>
 <details>
-    <summary markdown="span">Kitchen Page</summary>
+    <summary markdown="span">Kitchen Page Tests</summary>
 
     -	page loads with ingredients listed
     -	update ui shows up with defaults values set as the current state of the ingredient in the kitchen when clicking edit button on listed ingredient
@@ -63,7 +63,7 @@ All planned cypress integration tests are listed below:
 
 </details>
 <details>
-    <summary markdown="span">RecipeBook Page</summary>
+    <summary markdown="span">RecipeBook Page Tests</summary>
 
     -	page loads with recipes listed
     -	change to show all recipes
@@ -73,7 +73,7 @@ All planned cypress integration tests are listed below:
 
 </details>
 <details>
-    <summary markdown="span">Custom RecipeBook Page</summary>
+    <summary markdown="span">Custom RecipeBook Page Tests</summary>
 
     -	page loads with custom recipes listed
     -	filter the results
@@ -86,7 +86,7 @@ All planned cypress integration tests are listed below:
 
 </details>
 <details>
-    <summary markdown="span">CRUD Pages</summary>
+    <summary markdown="span">CRUD Pages Tests</summary>
 
     -	page loads with corresponding items listed
     -	create page loads with empty inputs when clicking create button
@@ -97,7 +97,7 @@ All planned cypress integration tests are listed below:
 
 </details>
 <details>
-    <summary markdown="span">Accounts Page</summary>
+    <summary markdown="span">Accounts Page Tests</summary>
 
     -	page loads with users listed
     -	details user page loads when clicking details button on listed user

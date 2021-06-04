@@ -53,6 +53,8 @@ function AddIngredients({ setTitle, userId, Api }) {
     }, [Api.Ingredients]);
 
     const selectIngredient = (ingredient) => {
+        if (ingredient.CountId < 1) { return; }
+
         setSelectedIngredient(ingredient);
 
         saveIngredient.IngredientId = ingredient.Id;
