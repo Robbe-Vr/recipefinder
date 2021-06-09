@@ -3,7 +3,9 @@ import { Role, User, GroceryList, UnitType, IngredientCategory, Ingredient,
 
 const axios = require('axios').default;
 
-const protocol = "https://", serverIp = "localhost",//"192.168.2.29",
+const protocol = "https://", serverIp = window.location.hostname === "localhost" ? "localhost" : 
+                                        window.location.hostname === "192.168.2.101" ? "192.169.2.101" :
+                                        window.location.hostname.indexOf("sywapps.com") > -1 ? "recipefinderapi.sywapps.com" : "",
     port = 5001, apiPage = "/api",
     api_url = protocol + serverIp + ":" + port + apiPage;
 
@@ -157,7 +159,7 @@ class EntityGroup {
         {
             var response = {};
 
-            headers = { ...headers, ...AuthorizationHeaders() };
+            headers = { ...AuthorizationHeaders(), ...headers };
 
             if (type === 'get')
             {
@@ -167,7 +169,7 @@ class EntityGroup {
             {
                 const data = JSON.stringify(obj, null, 4);
 
-                headers = { ...headers, ...defaultHeaders(data) };
+                headers = { ...defaultHeaders(data), ...headers };
 
                 response = await axios.post(url, data,
                     { headers: headers });
@@ -176,7 +178,7 @@ class EntityGroup {
             {
                 const data = JSON.stringify(obj, null, 4);
 
-                headers = { ...headers, ...defaultHeaders(data) };
+                headers = { ...defaultHeaders(data), ...headers };
 
                 response = await axios.put(url, data,
                     { headers: headers });
@@ -185,7 +187,7 @@ class EntityGroup {
             {
                 const data = JSON.stringify(obj, null, 4);
 
-                headers = { ...headers, ...defaultHeaders(data) };
+                headers = { ...defaultHeaders(data), ...headers };
 
                 response = await axios.delete(url, data,
                     { headers: headers });
@@ -818,7 +820,7 @@ export default class Api {
         const authReturnUrlPath = '/returnAuthorization';
 
         const authPage = "/api/authorize/login",
-            params = `?ReturnUrl=https://localhost:3000` + authReturnUrlPath;
+            params = `?ReturnUrl=${window.location.protocol}//${window.location.hostname}:${window.location.port}${authReturnUrlPath}`;
 
         this.AuthorizationPage = protocol + serverIp + ":" + port + authPage + params;
 

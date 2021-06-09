@@ -26,6 +26,7 @@ import CRUDPagesInfo from "./API/CRUDPagesInfo";
 import CRUDDetailsPage from "./components/CRUD/details";
 import CRUDEditPage from "./components/CRUD/edit";
 import CRUDCreatePage from "./components/CRUD/create";
+import { AuthorizationCallback } from "./components/Onboarding/AuthorizationCallback";
 
 const useStyles = makeStyles((theme) => ({
     drawerHeader: {
@@ -74,6 +75,9 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                 }}
             >
                 <Switch>
+                    <Route path={Api.AuthReturnUrlPath}>
+                        <AuthorizationCallback Api={Api} />
+                    </Route>
                     <Route path="/home/index">
                         <HomePage setTitle={setTitle} name={name} userId={userId} Api={Api} />
                     </Route>
@@ -119,7 +123,7 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                     isCreator ?
                     Object.keys(CRUDPagesInfo.Pages).map((CRUD, index) => {
                         return (
-                            <Switch >
+                            <Switch key={`CRUDSwitch-${index}`}>
                                 <Route path={`/${CRUD}/index`}>
                                     <CRUDPage setTitle={setTitle} TableName={CRUD} DisplayName={CRUDPagesInfo.Pages[CRUD].DisplayName} Api={Api} />
                                 </Route>

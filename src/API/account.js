@@ -40,6 +40,8 @@ export function Authenticate({ children }) {
                 if ((error = getParam("Error")))
                 {
                     console.log(error);
+
+                    setLoaded(true);
                 }
                 else
                 {
@@ -68,6 +70,7 @@ export function Authenticate({ children }) {
             
                     localStorage.setItem(ACCOUNT_LS, JSON.stringify(acc));
                     setAccount(acc);
+                    
                     setLoaded(true);
                 })
                 .catch((error) => {
@@ -98,8 +101,12 @@ export function Authenticate({ children }) {
             if (!localAcc) {
                 console.log("No local account found.");
 
+                setLoaded(true);
+
             } else if (!localAcc.AccessToken || localAcc.AccessToken.length !== 45) {
                 console.log('User not authenticated.');
+
+                setLoaded(true);
 
             } else {
                 const tokenValidation = await Api.Custom.ValidateAccessToken({ [Api.AccessTokenHeaderName]: localAcc.AccessToken });
@@ -130,6 +137,8 @@ export function Authenticate({ children }) {
                         localStorage.setItem(ACCOUNT_LS, JSON.stringify(correctedAcc));
 
                         setAccount(correctedAcc);
+
+                        setLoaded(true);
                     }
 
                 } else {
@@ -155,15 +164,17 @@ export function Authenticate({ children }) {
 
                         localStorage.setItem(ACCOUNT_LS, JSON.stringify(refreshedAcc));
                         setAccount(refreshedAcc);
+
+                        setLoaded(true);
                     }
                     else {
                         localStorage.removeItem(ACCOUNT_LS);
                         setAccount({});
+
+                        setLoaded(true);
                     }
                 }
             };
-
-            setLoaded(true);
         };
 
         checkLogin();
