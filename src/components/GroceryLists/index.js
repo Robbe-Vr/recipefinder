@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 
+import { useCookies } from "react-cookie";
+
 import { makeStyles } from "@material-ui/core/styles";
 import { Dialog, DialogContent, DialogTitle, Grid, Button, Typography, Card } from "@material-ui/core";
 
@@ -27,10 +29,14 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
+const cookieName = "recipefinder_grocerylist_cookie";
+
 function GroceryListsHomePage({ setTitle, userId, Api }) {
     useEffect(() => {
         setTitle && setTitle("GroceryLists");
     });
+
+    const [cookies, setCookie] = useCookies();
 
     const history = useHistory();
 
@@ -101,6 +107,14 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
         Api.GroceryLists.Delete(listId);
     };
 
+    const setAsCurrentGroceryList = (id) => {
+        var list = groceryLists.find(x => x.CountId === id);
+
+        setCookie(cookieName, list.Value);
+
+        history.push('/grocerylists/current');
+    };
+
     const classes = useStyles();
 
     const [filterOptions, setFilterOptions] = useState({ name: '', categories: [] });
@@ -142,6 +156,7 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
                             var columns = [
                                 { id: 'name', label: 'Name', minWidth: 150 },
                                 { id: 'value', label: 'Contents', minWidth: 350},
+                                { id: 'setcurrent', label: 'Choose', minWidth: 100 },
                                 { id: 'actions', label: 'Actions', minWidth: 200 },
                             ];
 
@@ -161,6 +176,13 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
                                         </Card>
                                     );
                                 }),
+                                setcurrent:
+                                <Grid>
+                                    <Button variant="outlined" style={{ marginTop: "20px", color: 'green' }}
+                                        onClick={() => setAsCurrentGroceryList(list.CountId)}>
+                                        Set as current grocerylist
+                                    </Button>
+                                </Grid>,
                                 actions: <RowActions rowEntity={list} rowEntityId={list.Id} onDetails={onDetails} onEdit={onEdit} onRemove={() => ToggleRemove(list.CountId)} />,
                             };
 

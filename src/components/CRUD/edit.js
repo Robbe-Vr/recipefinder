@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Button } from "@material-ui/core";
@@ -32,6 +32,8 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
     useEffect(() => {
         setTitle && setTitle(DisplayName + " CRUD Edit");
     });
+
+    const history = useHistory();
 
     const { id } = useParams();
 
@@ -123,6 +125,8 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
         else {
             Api[TableName].Update(id, updateItem);
         }
+
+        history.push(`/${TableName}/index`);
     };
 
     const CRUDInfo = CRUDPagesInfo.Pages[TableName];

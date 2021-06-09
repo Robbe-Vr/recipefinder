@@ -4,6 +4,8 @@ import { Loading } from "./components/Loading";
 
 import { BrowserRouter as Router, Link } from "react-router-dom";
 
+import { CookiesProvider } from "react-cookie";
+
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -21,7 +23,7 @@ import { Onboarding } from "./components/Onboarding/Onboarding";
 
 import { Authenticate, useAccount, ApiProvider, useAPI } from "./API/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faListAlt, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,13 +78,15 @@ export default function App() {
     return (
         <ApiProvider>
             <Authenticate>
-                <Loading>
-                    <Router>
-                        <div className={classes.root}>
-                            <AppShell />
-                        </div>
-                    </Router>
-                </Loading>
+                <CookiesProvider>
+                    <Loading>
+                        <Router>
+                            <div className={classes.root}>
+                                <AppShell />
+                            </div>
+                        </Router>
+                    </Loading>
+                </CookiesProvider>
             </Authenticate>
         </ApiProvider>
     );
@@ -131,9 +135,9 @@ function AppShell() {
                         <Typography variant="subtitle2" noWrap className={classes.title}>
                             Welcome {name}
                         </Typography>
-                        <Link to="/grocerylist/current" style={{ textDecoration: 'none' }}>
+                        <Link to="/grocerylists/current" style={{ textDecoration: 'none' }}>
                             <Button>
-                                <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '5px' }}/> Grocerylist
+                                <FontAwesomeIcon icon={faListAlt} style={{ marginRight: '5px' }}/> Grocerylist
                             </Button>
                         </Link>
                         <Button

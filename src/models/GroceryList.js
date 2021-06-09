@@ -7,8 +7,9 @@ export default class GroceryList {
         this.Name = name ?? '';
         this.Value = value ?? '';
         this.UserId = user?.Id ?? '';
-        this.User = user ?? new User();
+        this.User = user ?? null;
     };
     
+    Value = '';
     User = new User();
 };

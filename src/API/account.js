@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useAPI } from "../API/api-context";
+import { User } from "../models";
 
 const ACCOUNT_LS = "recipefinder_account";
 
@@ -9,6 +10,7 @@ export function Authenticate({ children }) {
 
     const { Api, authCallbackPagePath } = useAPI();
 
+    const [currentUser, setCurrentUser] = useState(new User());
     const [account, setAccount] = useState({});
     const [loaded, setLoaded] = useState(false);
 
@@ -70,6 +72,7 @@ export function Authenticate({ children }) {
             
                     localStorage.setItem(ACCOUNT_LS, JSON.stringify(acc));
                     setAccount(acc);
+                    setCurrentUser(user);
                     
                     setLoaded(true);
                 })
@@ -131,6 +134,8 @@ export function Authenticate({ children }) {
                                 Email: user.Email,
                                 Roles: user.Roles,
                             };
+
+                            setCurrentUser(user);
                         }
 
                         var correctedAcc = {
@@ -202,6 +207,7 @@ export function Authenticate({ children }) {
         accessToken: account?.AccessToken,
         id: account?.Id,
         name: account?.Name,
+        currentUser: currentUser?.CountId > 0 ? currentUser : null,
         logIn,
         logOut,
     };
