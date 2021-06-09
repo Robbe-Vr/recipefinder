@@ -22,6 +22,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "set PORT=3000&&set HTTPS=true&&react-scripts start",
+    "start-http": "set PORT=3000&&set HTTPS=false&&react-scripts start",
     "npx-start": "npx serve -s -p 3000 build/",
     "build": "react-scripts build",
     "test": "react-script test",

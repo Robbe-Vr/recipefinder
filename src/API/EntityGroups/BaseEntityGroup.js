@@ -1,8 +1,9 @@
 const axios = require('axios').default;
 
-const protocol = "https://", serverIp = window.location.hostname === "localhost" ? "localhost" : 
-                                        window.location.hostname === "192.168.2.101" ? "192.169.2.101" :
-                                        window.location.hostname.indexOf("sywapps.com") > -1 ? "recipefinderapi.sywapps.com" : "",
+const protocol = window.location.protocol + "//",
+     serverIp = window.location.hostname === "localhost" ? "localhost" : 
+                window.location.hostname === "192.168.2.101" ? "192.169.2.101" :
+                window.location.hostname.indexOf("sywapps.com") > -1 ? "recipefinderapi.sywapps.com" : (() => { throw new Error("Unknown hostname hosting the application! Not connecting to Api."); })(),
     port = 5001, apiPage = "/api",
     api_url = protocol + serverIp + ":" + port + apiPage;
 
