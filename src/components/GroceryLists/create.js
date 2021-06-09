@@ -5,11 +5,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Typography, Button } from "@material-ui/core";
 
 import { UserInputComponent } from "../Global/UserInputComponent";
-import { Ingredient, GroceryList } from "../../models";
+import { GroceryList } from "../../models";
 import { Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
-import { SelectIngredientComponent } from "../Global/SelectIngredientComponent";
+import { GroceryListIngredientInputComponent } from "./GroceryListIngredientInputComponent";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -40,16 +40,6 @@ export default function CreateGroceryListPage({ setTitle, Api }) {
 
     const [list, setGroceryList] = useState(new GroceryList());
 
-    const [ingredients, setIngredients] = useState([new Ingredient()]);
-
-    useEffect(() => {
-        Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients === "Error") { return; }
-        
-            setIngredients(ingredients);
-        });
-    }, [Api.Ingredients]);
-
     const classes = useStyles();
 
     const onRecipeEdited = (update) => {
@@ -59,14 +49,16 @@ export default function CreateGroceryListPage({ setTitle, Api }) {
         });
     }
 
-    const onEdit = () => {
+    const onCreate = () => {
         Api.GroceryLists.Create(list);
 
         history.push('/grocerylists/index');
     };
 
-    const selectIngredient = (ingredient, index) => {
-        
+    const onIngredientSelected = (ingredients) => {
+        const value = ingredients.map(i => `${i.IngredientId}, ${i.Units}, ${i.UnitTypeId}`).join(' | ');
+
+        setGroceryList({ ...list, Value: value });
     };
 
     const [valuesEditorOpen, setValuesEditorOpen] = useState(false);
@@ -76,10 +68,10 @@ export default function CreateGroceryListPage({ setTitle, Api }) {
             <Dialog open={valuesEditorOpen} onClose={() => setValuesEditorOpen(false)}>
                 <DialogTitle>Grocery List Contents</DialogTitle>
                 <DialogContent>
-                    <SelectIngredientComponent
+                    <GroceryListIngredientInputComponent
                         Api={Api}
-                        ingredients={ingredients.filter(i => list.Value.split(' | ').filter(x => x.split(', ')[0] === i.Id).length === 0)}
-                        selectIngredient={(ingredient) => { selectIngredient(ingredient); }}
+                        defaultValues={[]}
+                        onChange={onIngredientSelected}
                     />
                 </DialogContent>
             </Dialog>
@@ -99,7 +91,7 @@ export default function CreateGroceryListPage({ setTitle, Api }) {
                     </Button>
                 </Grid>
                 <Grid className={classes.inputComponent}>
-                    <Button onClick={onEdit} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
+                    <Button onClick={onCreate} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
                 </Grid>
             </Grid>
             <Link to="/grocerylists/index">

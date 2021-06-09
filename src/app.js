@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./app.css";
 import { Loading } from "./components/Loading";
 
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 import clsx from "clsx";
 
 import { AppDrawer, drawerWidth } from "./components/Drawer/AppDrawer";
@@ -126,15 +127,22 @@ function AppShell() {
                     <Typography variant="h6" noWrap className={classes.title}>
                         {title}
                     </Typography>
-                    <Typography variant="subtitle2" noWrap className={classes.title}>
-                        logged in as: {name}
-                    </Typography>
-                    <Button
-                        className={classes.logoutButton}
-                        onClick={() => { logOut(); window.location.href = "/signin/login" }}
-                    >
-                        <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '5px' }}/> log Out
-                    </Button>
+                    <Grid>
+                        <Typography variant="subtitle2" noWrap className={classes.title}>
+                            Welcome {name}
+                        </Typography>
+                        <Link to="/grocerylist/current" style={{ textDecoration: 'none' }}>
+                            <Button>
+                                <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '5px' }}/> Grocerylist
+                            </Button>
+                        </Link>
+                        <Button
+                            className={classes.logoutButton}
+                            onClick={() => { logOut(); window.location.href = "/signin/login" }}
+                        >
+                            <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '5px' }}/> log Out
+                        </Button>
+                    </Grid>
                 </Toolbar>
             </AppBar>
             <AppDrawer

@@ -30,6 +30,8 @@ import CRUDEditPage from "./components/CRUD/edit";
 import CRUDCreatePage from "./components/CRUD/create";
 import { AuthorizationCallback } from "./components/Onboarding/AuthorizationCallback";
 import CreateGroceryListPage from "./components/GroceryLists/create";
+import EditGroceryListPage from "./components/GroceryLists/edit";
+import DetailsGroceryListPage from "./components/GroceryLists/details";
 
 const useStyles = makeStyles((theme) => ({
     drawerHeader: {
@@ -96,8 +98,17 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                     <Route exact path={["/grocerylists/index", "/grocerylists"]}>
                         <GroceryListsHomePage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
+                    <Route exact path={"/grocerylists/current"}>
+                        <GroceryListsHomePage setTitle={setTitle} userId={userId} Api={Api} />
+                    </Route>
                     <Route path="/grocerylists/create">
                         <CreateGroceryListPage setTitle={setTitle} userId={userId} Api={Api} />
+                    </Route>
+                    <Route path="/grocerylists/edit/:id">
+                        <EditGroceryListPage setTitle={setTitle} userId={userId} Api={Api} />
+                    </Route>
+                    <Route path="/grocerylists/details/:id">
+                        <DetailsGroceryListPage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route exact path={["/recipebook/index", "/recipebook"]}>
                         <RecipeBookHomePage setTitle={setTitle} isCook={isCook} userId={userId} Api={Api} />
