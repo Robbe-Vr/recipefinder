@@ -57,12 +57,12 @@ export default function RecipeDetailsPage({ setTitle, Api }) {
                     Name: {recipeDetails.Name}
                 </Typography>
                 <Typography>
-                    Created by: {recipeDetails.User.Name}
+                    Created by: {recipeDetails.User?.Name}
                 </Typography>
                 <Typography>
                     Categories:
                 </Typography>
-                {recipeDetails.Categories.map(cat =>
+                    {recipeDetails.Categories.map(cat =>
                         <Card key={`${cat.Name}-${cat.CountId}`} variant="outlined" style={{ margin: '2px', padding: '5px' }}>{cat.Name}</Card>
                     )}
                 <Button variant="outlined" onClick={onTutorial} style={{ marginTop: '15px' }}>View Tutorial</Button>
