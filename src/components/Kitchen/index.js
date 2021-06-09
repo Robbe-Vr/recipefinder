@@ -135,7 +135,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                 <DialogContent>
                     <UserInputComponent onChange={(value) => onUnitsEdited(editItem.item.IngredientId, value)} name="Units" defaultValue={editItem.item.Units}
                         type="number" inputProps={{ min: editItem.allowDecimals ? 0.01 : 1.00, max: 1000.00, step: editItem.allowDecimals ? 0.01 : 1.00 }} />
-                    <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(editItem.item.IngredientId, value)} name="Unit Type" defaultValue={editItem.item.UnitType?.CountId} type="number"
+                    <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(editItem.item.IngredientId, value)} name="Unit Type" defaultValue={editItem.item.UnitType?.CountId}
                         options={editItem.item.Ingredient?.UnitTypes.map(unitType => { return { id: unitType.CountId, name: unitType.Name, value: unitType.CountId } }) ?? []} />
                     <Button id={editItem.item.IngredientId} style={{ backgroundColor: 'forestgreen', marginRight: '5px' }} onClick={async (e) => await onEdit(editItem.item.IngredientId)}>Save</Button>
                     <Button style={{ backgroundColor: 'gold' }} onClick={closeEditDialog}>Cancel</Button>
@@ -165,22 +165,9 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                             image: <Thumbnail source={ingredient.Ingredient.ImageLocation} size="50px" />,
                             name: ingredient.Ingredient.Name,
                             units: ingredient.Units + " " + ingredient.UnitType.Name,
-                            actions: <RowActions rowEntity={ingredient} rowEntityId={ingredient.IngredientId} onEdit={ToggleEdit} onRemove={ToggleRemove} />,
-                            editComponent: editingIngredients.indexOf(ingredient.Ingredient.Id) > -1 ?
-                                <div>
-                                    <UserInputComponent onChange={(value) => onUnitsEdited(ingredient.IngredientId, value)} name="Units" defaultValue={ingredient.Units}
-                                        type="number" inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }} />
-                                    <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(ingredient.IngredientId, value)} name="Unit Type" defaultValue={ingredient.UnitType.CountId}
-                                        options={ingredient.Ingredient.UnitTypes.map(unitType => { return { id: unitType.CountId, name: unitType.Name, value: unitType.CountId } })} />
-                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'forestgreen', marginRight: '5px' }} onClick={async (e) => await onEdit(ingredient.IngredientId)}>Save</Button>
-                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'gold' }} onClick={(e) => ToggleEdit(ingredient.Ingredient.Id)}>Cancel</Button>
-                                </div> : null,
-                            removeComponent: removingIngredients.indexOf(ingredient.Ingredient.Id) > -1 ?
-                                <div>
-                                    Are you sure you want to remove this ingredient?
-                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'red', marginRight: '5px' }} onClick={async (e) => await onRemove(ingredient.IngredientId)}>Remove</Button>
-                                    <Button id={ingredient.IngredientId} style={{ backgroundColor: 'forestgreen' }} onClick={(e) => ToggleRemove(ingredient.IngredientId)}>Cancel</Button>
-                                </div> : null,
+                            actions: <RowActions rowEntity={ingredient} rowEntityId={ingredient.IngredientId}
+                                onEdit={() => setEditItem({ item: ingredient, allowDecimals: allowDecimals, dialogOpened: true })}
+                                onRemove={() => setRemoveItem({ item: ingredient, dialogOpened: true })} />,
                         }
                     }) ?? []}
                 />

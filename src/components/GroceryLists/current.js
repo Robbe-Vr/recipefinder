@@ -83,7 +83,7 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
     const addListToKitchen = async () => {
         var ingredientStrs = list.Value.split(' | ');
 
-        for (var ingredient of ingredientStrs) {
+        await Promise.all(ingredientStrs.map(async (ingredient) => {
             var splitStr = ingredient.split(', ');
             var ingredientId = splitStr[0];
             var amount = splitStr[1]
@@ -96,7 +96,7 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
                 
                 await Api.Kitchens.Create(saveIngredient);
             }
-        }
+        }));
 
         removeGroceryList();
 
