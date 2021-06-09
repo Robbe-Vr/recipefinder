@@ -135,7 +135,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                 <DialogContent>
                     <UserInputComponent onChange={(value) => onUnitsEdited(editItem.item.IngredientId, value)} name="Units" defaultValue={editItem.item.Units}
                         type="number" inputProps={{ min: editItem.allowDecimals ? 0.01 : 1.00, max: 1000.00, step: editItem.allowDecimals ? 0.01 : 1.00 }} />
-                    <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(editItem.item.IngredientId, value)} name="Unit Type" defaultValue={editItem.item.UnitType?.CountId} type="number"
+                    <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(editItem.item.IngredientId, value)} name="Unit Type" defaultValue={editItem.item.UnitType?.CountId}
                         options={editItem.item.Ingredient?.UnitTypes.map(unitType => { return { id: unitType.CountId, name: unitType.Name, value: unitType.CountId } }) ?? []} />
                     <Button id={editItem.item.IngredientId} style={{ backgroundColor: 'forestgreen', marginRight: '5px' }} onClick={async (e) => await onEdit(editItem.item.IngredientId)}>Save</Button>
                     <Button style={{ backgroundColor: 'gold' }} onClick={closeEditDialog}>Cancel</Button>
