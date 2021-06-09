@@ -117,7 +117,7 @@ function RequirementsInputComponent({ Api, defaultValues = [new RequirementsList
                                 <DialogContent>
                                     <SelectIngredientComponent
                                         Api={Api}
-                                        ingredients={ingredients.filter(i => values.filter(x => x.CountId === requirement.CountId).filter(x => x.Ingredient.CountId === i.CountId).length === 0)}
+                                        ingredients={ingredients.filter(i => values.filter(x => x.CountId === requirement.CountId).filter(x => x.Ingredient?.CountId === i.CountId).length === 0)}
                                         selectIngredient={(ingredient) => { selectIngredient(ingredient, index); }}
                                     />
                                 </DialogContent>
@@ -141,8 +141,8 @@ function RequirementsInputComponent({ Api, defaultValues = [new RequirementsList
                                     />
                                     <UserSelectInputComponent
                                         name="UnitTypes"
-                                        defaultValue={requirement.UnitType.CountId}
-                                        options={requirement.Ingredient?.UnitTypes.map(unitType => { return { name: unitType.Name, value: unitType.CountId }; })}
+                                        defaultValue={requirement.UnitType?.CountId ?? -1}
+                                        options={requirement.Ingredient?.UnitTypes.map(unitType => { return { name: unitType.Name, value: unitType.CountId }; }) ?? []}
                                         onChange={(value) => {
                                             updateUnitType(value, index);
                                         }}

@@ -32,6 +32,7 @@ import { AuthorizationCallback } from "./components/Onboarding/AuthorizationCall
 import CreateGroceryListPage from "./components/GroceryLists/create";
 import EditGroceryListPage from "./components/GroceryLists/edit";
 import DetailsGroceryListPage from "./components/GroceryLists/details";
+import CurrentGroceryListPage from "./components/GroceryLists/current";
 
 const useStyles = makeStyles((theme) => ({
     drawerHeader: {
@@ -99,7 +100,7 @@ function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, is
                         <GroceryListsHomePage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route exact path={"/grocerylists/current"}>
-                        <GroceryListsHomePage setTitle={setTitle} userId={userId} Api={Api} />
+                        <CurrentGroceryListPage setTitle={setTitle} userId={userId} Api={Api} />
                     </Route>
                     <Route path="/grocerylists/create">
                         <CreateGroceryListPage setTitle={setTitle} userId={userId} Api={Api} />

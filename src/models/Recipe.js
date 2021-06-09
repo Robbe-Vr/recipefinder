@@ -15,7 +15,7 @@ export default class Recipe {
         this.Categories = categories ?? [];
         this.RequirementsList = requirementsList ?? [];
         this.UserId = user?.Id ?? '';
-        this.User = user ?? new User();
+        this.User = user ?? null;
     };
 
     Categories = [new RecipeCategory()];

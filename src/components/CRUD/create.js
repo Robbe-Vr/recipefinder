@@ -32,6 +32,8 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
         setTitle && setTitle(DisplayName + " CRUD Create");
     });
 
+    const history = useHistory();
+
     const [item, setItem] = useState({});
 
     const [unitTypes, setUnitTypes] = useState([new UnitType()]);
@@ -109,6 +111,8 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
         else {
             Api[TableName].Create(item);
         }
+
+        history.push(`/${TableName}/index`);
     };
 
     const CRUDInfo = CRUDPagesInfo.Pages[TableName];

@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+
+import { useCookies } from "react-cookie";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, Button, Card } from "@material-ui/core";
 
-import { Ingredient, GroceryList, UnitType } from "../../models";
+import { Ingredient, GroceryList, UnitType, KitchenIngredient } from "../../models";
 import { Grid } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { useAccount } from "../../API";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -29,22 +32,30 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function DetailsGroceryListPage({ setTitle, Api }) {
+const cookieName = "recipefinder_grocerylist_cookie";
+
+export default function CurrentGroceryListPage({ setTitle, Api }) {
     useEffect(() => {
-        setTitle && setTitle("Details Grocery List");
+        setTitle && setTitle("Current Grocery List");
     });
 
-    const { id } = useParams();
+    const history = useHistory();
+
+    const { currentUser } = useAccount();
+
+    const [cookies, setCookie, removeCookie] = useCookies();
 
     const [list, setGroceryList] = useState(new GroceryList());
 
     useEffect(() => {
-        Api.GroceryLists.GetById(id).then((list) => {
-            if (list === "Error") { return; }
-        
-            setGroceryList(list);
-        });
-    }, [Api.GroceryLists, id]);
+        const cookie = cookies[cookieName];
+
+        if (cookie && cookie.length > 5) {
+
+            setGroceryList(new GroceryList(0, '', '', cookie, currentUser));
+        }
+
+    }, [cookies, currentUser]);
 
     const [ingredients, setIngredients] = useState([new Ingredient()]);
 
@@ -57,8 +68,7 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
     }, [Api.Ingredients]);
 
     const [unitTypes, setUnitTypes] = useState([new UnitType()]);
-    if (unitTypes.length === 1 && unitTypes[0].CountId === -1)
-    {
+    if (unitTypes.length === 1 && unitTypes[0].CountId === -1) {
         unitTypes?.pop();
     }
 
@@ -70,37 +80,82 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
         });
     }, [Api.UnitTypes]);
 
+    const addListToKitchen = async () => {
+        var ingredientStrs = list.Value.split(' | ');
+
+        for (var ingredient of ingredientStrs) {
+            var splitStr = ingredient.split(', ');
+            var ingredientId = splitStr[0];
+            var amount = splitStr[1]
+            var unitTypeId = splitStr[2];
+
+            var saveIngredient = new KitchenIngredient(0, ingredients.find(x => x.Id === ingredientId), parseFloat(amount), unitTypes.find(x => x.CountId === parseInt(unitTypeId)), currentUser);
+
+            if (saveIngredient.IngredientId && saveIngredient.UserId?.length > 0 &&
+                saveIngredient.Units && saveIngredient.UnitTypeId) {
+                
+                await Api.Kitchens.Create(saveIngredient);
+            }
+        }
+
+        removeGroceryList();
+
+        history.push('/kitchen/index');
+    };
+
+    const removeGroceryList = () => {
+        removeCookie(cookieName);
+
+        setGroceryList(new GroceryList());
+    };
+
     const classes = useStyles();
 
     return (
         <Grid className={classes.paper}>
-            <Typography className={classes.txt} variant="h2">
-                Details Grocery List: {list.Name}
-            </Typography>
-            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
-                <Grid className={classes.inputComponent}>
-                    <Typography>
-                        Name: {list.Name}
+            {list.CountId >= 0 ?
+                <>
+                    <Typography className={classes.txt} variant="h2">
+                        Current Grocery List: {list.Name}
                     </Typography>
+                    <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
+                        <Grid className={classes.inputComponent}>
+                            {
+                                list.Value.split(' | ').map(item => {
+                                    var content = item.trim().split(', ');
+                                    return (
+                                        <Card key={item} variant="outlined" style={{ margin: '2px', padding: '5px' }}>
+                                            {content[1]}{" "}
+                                            {unitTypes.find(u => u.CountId === parseInt(content[2]))?.Name}{" "}
+                                            {ingredients.find(i => i.Id === content[0])?.Name}
+                                        </Card>
+                                    );
+                                })
+                            }
+                        </Grid>
+                        <Grid>
+                            <Button variant="outlined" style={{ color: 'forestgreen' }} onClick={addListToKitchen}>
+                                Add Grocery List Content to Kitchen
+                            </Button>
+                            <Button variant="outlined" style={{ color: 'red' }} onClick={removeGroceryList}>
+                                Remove Grocery List
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <Link to="/grocerylists/index">
+                        <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Grocery Lists</Button>
+                    </Link>
+                </>
+                :
+                <Grid>
+                    <Typography variant="h3">
+                        No Grocery List chosen
+                    </Typography>
+                    <Grid>
+                        {"Select a Grocery List "}{<Link to="/grocerylists/index">here</Link>}{"."}
+                    </Grid>
                 </Grid>
-                <Grid className={classes.inputComponent}>
-                    {
-                        list.Value.split(' | ').map(item => {
-                            var content = item.trim().split(', ');
-                            return (
-                                <Card key={item} variant="outlined" style={{ margin: '2px', padding: '5px' }}>
-                                    {content[1]}{" "}
-                                    {unitTypes.find(u => u.CountId === parseInt(content[2]))?.Name}{" "}
-                                    {ingredients.find(i => i.Id === content[0])?.Name}
-                                </Card>
-                            );
-                        })
-                    }
-                </Grid>
-            </Grid>
-            <Link to="/grocerylists/index">
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Grocery Lists</Button>
-            </Link>
+            }
         </Grid>
     );
 };
