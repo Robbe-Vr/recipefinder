@@ -1,33 +1,42 @@
 ## RecipeFinder React
-
+<!-- blank line -->
 ### Introduction
 RecipeFinder is een mobiele javascript app met een C# API die je helpt met het bepalen wat je kan eten. Door aan te geven welke producten en ingrediënten er in je keuken liggen, zal de app recepten voorleggen zodat je minder lang hoeft te denken over wat je wilt eten en meteen kan beginnen met koken. Ik maak deze app op aanvraag van vrienden die deze app zouden willen gebruiken.
-
+<!-- blank line -->
 "RecipeFinder React" is the front end react web application from the RecipeFinder application. RecipeFinder is a web application wehich can help you choose what to eat. By telling hte app about the ingredients and products you have laying around in your kitchen, the app can provide recipes to cook so you don't need to think much longer about what to eat and start cooking immediately.
-
+<!-- blank line -->
+<!-- blank line -->
 The other part of the RecipeFinder application is the [RecipeFinderWebApi](https://git.fhict.nl/I437402/recipefinderwebapi).
-
+<!-- blank line -->
 <!-- blank line -->
 ## Documentation
-
-### Context
+<!-- blank line -->
+### Context Diagram
 A context diagram showing the different components in the app.
 The RecipeFinder app has a front-end application which can connect to an API for its persisting data, which the api again stores and retreives the data in a database.
-![Context Diagram](/documentation/images/context.png "Context Diagram"){: .shadow}
-
+![Context Diagram](/documentation/images/context.png "Context Diagram")
 <!-- blank line -->
-### Architecture
-Architecture diagram for the back-end of our application. Showing 
-![Architecture Diagram](/documentation/images/architecture.png "Architecture Diagram"){: .shadow}
-
 <!-- blank line -->
-### Database Design
-A diagram representing hwo we designed our database for persistance.
-![Database Design Diagram](/documentation/images/database-design.png "Database Design Diagram"){: .shadow}
+### Architecture Diagram
+A diagram showing the architecture used for the back-end of our application.
+![Architecture Diagram](/documentation/images/architecture.png "Architecture Diagram")
 
+This architecture diagram shows how an Ingredient entity is handled through the layers of the application.
+![Architecture Diagram Ingredient](/documentation/images/architecture-ingredient.png "Architecture Diagram Ingredient")
+<!-- blank line -->
+<!-- blank line -->
+### Database Design Diagram
+A diagram representing how we designed our database for persistance.
+![Database Design Diagram](/documentation/images/database-design.png "Database Design Diagram")
+<!-- blank line -->
+<!-- blank line -->
+### Class Diagram
+A diagram showing the class structure used in the Api back-end of our application.
+![Class Diagram](/documentation/images/class-diagram.png "Class Diagram")
+<!-- blank line -->
 <!-- blank line -->
 ## Testing
-
+<!-- blank line -->
 ### Front-End Cypress integration test testplan
 All planned cypress integration tests are listed below:
 <details>
@@ -38,12 +47,14 @@ All planned cypress integration tests are listed below:
     -	RecipeBook button redirects user to the recipebook page /recipebook/index
 
 </details>
+<!-- blank line -->
 <details>
     <summary markdown="span">Drawer Tests</summary>
 
     -	Each button in the drawer redirects to the corresponding page
 
 </details>
+<!-- blank line -->
 <details>
     <summary markdown="span">Kitchen Page Tests</summary>
 
@@ -62,6 +73,7 @@ All planned cypress integration tests are listed below:
     -	what to buy page create/add to grocerylist from missing item
 
 </details>
+<!-- blank line -->
 <details>
     <summary markdown="span">RecipeBook Page Tests</summary>
 
@@ -72,6 +84,7 @@ All planned cypress integration tests are listed below:
     -	filter results
 
 </details>
+<!-- blank line -->
 <details>
     <summary markdown="span">Custom RecipeBook Page Tests</summary>
 
@@ -85,6 +98,7 @@ All planned cypress integration tests are listed below:
     -	remove recipe ui shows up as warning when clicking remove button
 
 </details>
+<!-- blank line -->
 <details>
     <summary markdown="span">CRUD Pages Tests</summary>
 
@@ -96,6 +110,7 @@ All planned cypress integration tests are listed below:
     -	remove ui shows up as warning when clicking remove button
 
 </details>
+<!-- blank line -->
 <details>
     <summary markdown="span">Accounts Page Tests</summary>
 
@@ -106,7 +121,8 @@ All planned cypress integration tests are listed below:
     -	remove ui shows up as warning when removing/banning a user
 
 </details>
-
+<!-- blank line -->
+<!-- blank line -->
 ### Back-End Unit Test testplan
 Since our back-end is an api, we can test responses from the endpoint and the CRUD functionality before the ORM.
 We currently only have tests for the CRUD functionality
