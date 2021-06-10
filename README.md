@@ -3,10 +3,10 @@
 ### Introduction
 RecipeFinder is een mobiele javascript app met een C# API die je helpt met het bepalen wat je kan eten. Door aan te geven welke producten en ingrediënten er in je keuken liggen, zal de app recepten voorleggen zodat je minder lang hoeft te denken over wat je wilt eten en meteen kan beginnen met koken. Ik maak deze app op aanvraag van vrienden die deze app zouden willen gebruiken.
 <!-- blank line -->
-"RecipeFinder React" is the front end react web application from the RecipeFinder application. RecipeFinder is a web application wehich can help you choose what to eat. By telling hte app about the ingredients and products you have laying around in your kitchen, the app can provide recipes to cook so you don't need to think much longer about what to eat and start cooking immediately.
+"RecipeFinder WebApi" is the back-end web api from the RecipeFinder application build in ASP.NET Core in .NET 5.0. RecipeFinder is a web application wehich can help you choose what to eat. By telling hte app about the ingredients and products you have laying around in your kitchen, the app can provide recipes to cook so you don't need to think much longer about what to eat and start cooking immediately.
 <!-- blank line -->
 <!-- blank line -->
-The other part of the RecipeFinder application is the [RecipeFinderWebApi](https://git.fhict.nl/I437402/recipefinderwebapi).
+The other part of the RecipeFinder application is the [RecipeFinderWebApi](https://git.fhict.nl/I437402/recipefinderwebapi) back-end.
 <!-- blank line -->
 <!-- blank line -->
 ## Documentation
