@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
 import CRUDPagesInfo from "../../API/CRUDPagesInfo";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -27,17 +28,23 @@ export default function CRUDDetailsPage({ setTitle, Api, TableName, DisplayName 
         setTitle && setTitle(DisplayName + " CRUD Details");
     });
 
+    const { error } = useNotifications();
+
     const { id } = useParams();
 
     const [currentItem, setCurrentItem] = useState({});
 
     useEffect(() => {
         Api[TableName].GetById(id).then((obj) => {
-            if (obj === "Error") { return; }
+            if (obj instanceof String)  {
+                error("Failed to load " + TableName + "!");
+
+                return;
+            }
         
             setCurrentItem(obj);
         });
-    }, [Api, TableName, id]);
+    }, [Api, TableName, id, error]);
 
     const classes = useStyles();
 

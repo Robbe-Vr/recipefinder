@@ -25,6 +25,8 @@ import { Authenticate, useAccount, ApiProvider, useAPI } from "./API/index";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListAlt, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
+import { NotificationProvider } from "./components/Global/NotificationContext";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
@@ -79,13 +81,15 @@ export default function App() {
         <ApiProvider>
             <Authenticate>
                 <CookiesProvider>
-                    <Loading>
-                        <Router>
-                            <div className={classes.root}>
-                                <AppShell />
-                            </div>
-                        </Router>
-                    </Loading>
+                    <NotificationProvider>
+                        <Loading>
+                            <Router>
+                                <div className={classes.root}>
+                                    <AppShell />
+                                </div>
+                            </Router>
+                        </Loading>
+                    </NotificationProvider>
                 </CookiesProvider>
             </Authenticate>
         </ApiProvider>

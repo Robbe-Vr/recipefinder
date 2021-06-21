@@ -7,8 +7,11 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 
 import { Ingredient, UnitType } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 function GroceryListIngredientInputComponent({ Api, defaultValues = [], onChange }) {
+    const { error } =  useNotifications();
+
     const [values, setValues] = useState(defaultValues);
 
     if (!values && defaultValues) {
@@ -23,11 +26,15 @@ function GroceryListIngredientInputComponent({ Api, defaultValues = [], onChange
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients === "Error") { return; }
+            if (ingredients instanceof String) {
+                error("Failed to load ingredients!");
+
+                return;
+            }
         
             setIngredients(ingredients);
         });
-    }, [Api.Ingredients]);
+    }, [Api.Ingredients, error]);
 
     const [unitTypes, setUnitTypes] = useState([new UnitType()]);
     if (unitTypes.length === 1 && unitTypes[0].CountId === -1)
@@ -37,11 +44,15 @@ function GroceryListIngredientInputComponent({ Api, defaultValues = [], onChange
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((unitTypes) => {
-            if (unitTypes === "Error") { return; }
+            if (unitTypes instanceof String) {
+                error("Failed to load unit types!");
+                
+                return;
+            }
         
             setUnitTypes(unitTypes);
         });
-    }, [Api.UnitTypes]);
+    }, [Api.UnitTypes, error]);
     
     const removeGroceryListIngredient = (index) => {
         setValues(values => { var vals = [...values]; vals.splice(index, 1); return vals; });

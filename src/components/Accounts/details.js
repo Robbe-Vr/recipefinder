@@ -11,6 +11,8 @@ import { EntityList } from "../Global/EntityList";
 
 import { User, UserAction } from "../../models";
 
+import { useNotifications } from "../Global/NotificationContext";
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         width: "100%",
@@ -29,27 +31,37 @@ export default function AccountDetailsPage({ setTitle, Api }) {
         setTitle && setTitle("Account Details");
     });
 
+    const { error } = useNotifications();
+
     const { userId } = useParams();
 
     const [userDetails, setUserDetails] = useState(new User());
 
     useEffect(() => {
         Api.Users.GetById(userId).then((user) => {
-            if (user === "Error") { return; }
+            if (user instanceof String) {
+                error("Failed to load user!");
+
+                return;
+            }
         
             setUserDetails(user);
         });
-    }, [Api.Users, userId]);
+    }, [Api.Users, userId, error]);
 
     const [userActions, setUserActions] = useState([new UserAction()]);
 
     useEffect(() => {
         Api.Users.GetActionsByUserId(userId).then((userActions) => {
-            if (userActions === "Error") { return; }
+            if (userActions instanceof String) {
+                error("Failed to load user actions!");
+
+                return;
+            }
         
             setUserActions(userActions);
         });
-    }, [Api.Users, userId]);
+    }, [Api.Users, userId, error]);
 
     const classes = useStyles();
 

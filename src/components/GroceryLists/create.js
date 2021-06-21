@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
 import { GroceryListIngredientInputComponent } from "./GroceryListIngredientInputComponent";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -36,6 +37,8 @@ export default function CreateGroceryListPage({ setTitle, Api }) {
         setTitle && setTitle("Create Grocery List");
     });
 
+    const { success } = useNotifications();
+
     const history = useHistory();
 
     const [list, setGroceryList] = useState(new GroceryList());
@@ -50,9 +53,11 @@ export default function CreateGroceryListPage({ setTitle, Api }) {
     }
 
     const onCreate = () => {
-        Api.GroceryLists.Create(list);
+        Api.GroceryLists.Create(list).then((res) => {
+            success("Grocery list created succesfully!");
 
-        history.push('/grocerylists/index');
+            history.push('/grocerylists/index');
+        });;
     };
 
     const onIngredientSelected = (ingredients) => {

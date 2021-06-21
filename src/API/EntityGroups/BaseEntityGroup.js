@@ -1,9 +1,13 @@
+import { toast } from "react-toastify";
 const axios = require('axios').default;
 
 const protocol = window.location.protocol + "//",
      serverIp = window.location.hostname === "localhost" ? "localhost" : 
                 window.location.hostname === "192.168.2.101" ? "192.169.2.101" :
-                window.location.hostname.indexOf("sywapps.com") > -1 ? "recipefinderapi.sywapps.com" : (() => { throw new Error("Unknown hostname hosting the application! Not connecting to Api."); })(),
+                window.location.hostname.indexOf("sywapps.com") > -1 ? "recipefinderapi.sywapps.com" : (() => {
+                    console.error("Unknown hostname hosting the application! Unable to connect to Api.");
+                    toast("Unknown hostname hosting the application! Unable to connect to Api.");
+                })(),
     port = 5001, apiPage = "/api",
     api_url = protocol + serverIp + ":" + port + apiPage;
 
@@ -37,7 +41,7 @@ function HandlerError(error) {
         console.log(`Axios request execution fail: ${error.message}`, error);
     }
 
-    return "Error";
+    return error.response?.data ?? "Unknown Error";
 };
 
 function getAccessToken() {

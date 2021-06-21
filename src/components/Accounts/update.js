@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, Button } from "@material-ui/core";
@@ -8,6 +8,7 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
 
 import { Role, User } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -31,6 +32,10 @@ export default function EditAccountPage({ setTitle, Api }) {
         setTitle && setTitle("Edit Account");
     });
 
+    const history = useHistory();
+
+    const { error, success } = useNotifications();
+
     const { userId } = useParams();
 
     const [currentUser, setCurrentUser] = useState(new User());
@@ -40,20 +45,28 @@ export default function EditAccountPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Users.GetById(userId).then((user) => {
-            if (user === "Error") { return; }
+            if (user instanceof String) {
+                error("Failed to load user!");
+
+                return;
+            }
         
             setCurrentUser(user);
             setUpdateUser(user);
         });
-    }, [Api.Users, userId]);
+    }, [Api.Users, userId, error]);
 
     useEffect(() => {
         Api.Roles.GetAll().then((roles) => {
-            if (roles === "Error") { return; }
+            if (roles instanceof String) {
+                error("Failed to load roles!");
+
+                return;
+            }
         
             setRoles(roles);
         });
-    }, [Api.Roles]);
+    }, [Api.Roles, error]);
 
     const classes = useStyles();
 
@@ -65,7 +78,11 @@ export default function EditAccountPage({ setTitle, Api }) {
     }
 
     const onEdit = () => {
-        Api.Users.Update(updateUser);
+        Api.Users.Update(updateUser).then((res) => {
+            success("User edited successfully!");
+
+            history.push('/accounts/index');
+        });
     };
 
     const minimumAge = 13;

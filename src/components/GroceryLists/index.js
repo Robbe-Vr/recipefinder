@@ -14,6 +14,7 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { EntityList } from "../Global/EntityList";
 
 import { GroceryList, Ingredient, UnitType } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -36,6 +37,8 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
         setTitle && setTitle("GroceryLists");
     });
 
+    const { error, warning } =  useNotifications();
+
     const [cookies, setCookie] = useCookies();
 
     const history = useHistory();
@@ -48,11 +51,15 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.GroceryLists.GetAllByUserId(userId).then((lists) => {
-            if (lists === "Error") { return; }
+            if (lists instanceof String) {
+                error("Failed to load grocery lists!");
+                
+                return;
+            }
         
             setGroceryLists(lists);
         });
-    }, [Api.GroceryLists, userId]);
+    }, [Api.GroceryLists, userId, error]);
 
     const [ingredients, setIngredients] = useState([new Ingredient()]);
     if (ingredients.length === 1 && ingredients[0].CountId === -1)
@@ -62,11 +69,15 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients === "Error") { return; }
+            if (ingredients instanceof String) {
+                error("Failed to load ingredients!");
+                
+                return;
+            }
         
             setIngredients(ingredients);
         });
-    }, [Api.Ingredients]);
+    }, [Api.Ingredients, error]);
 
     const [unitTypes, setUnitTypes] = useState([new UnitType()]);
     if (unitTypes.length === 1 && unitTypes[0].CountId === -1)
@@ -76,11 +87,15 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((types) => {
-            if (types === "Error") { return; }
+            if (types instanceof String) {
+                error("Failed to load unit types!");
+                
+                return;
+            }
         
             setUnitTypes(types);
         });
-    }, [Api.UnitTypes]);
+    }, [Api.UnitTypes, error]);
 
     const onDetails = (listId) => {
         history.push('/grocerylists/details/' + listId);
@@ -104,7 +119,9 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
     };
 
     const onRemove = (listId) => {
-        Api.GroceryLists.Delete(listId);
+        Api.GroceryLists.Delete(listId).then((res) => {
+            warning("Grocery lists has been removed!");
+        });;
     };
 
     const setAsCurrentGroceryList = (id) => {

@@ -13,6 +13,7 @@ import { PreparationStepsInputComponent } from "./preparationStepsInputComponent
 import { RequirementsInputComponent } from "./RequirementsInputComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CreateRecipePage({ setTitle, Api }) {
+    const { error, success } =  useNotifications();
+
     useEffect(() => {
         setTitle && setTitle("Create Custom Recipe");
     });
@@ -47,11 +50,15 @@ export default function CreateRecipePage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((categories) => {
-            if (categories === "Error") { return; }
+            if (categories instanceof String) {
+                error("Failed to load recipe categories!");
+
+                return;
+            }
         
             setCategories(categories);
         });
-    }, [Api.RecipeCategories]);
+    }, [Api.RecipeCategories, error]);
 
     const classes = useStyles();
 
@@ -62,7 +69,7 @@ export default function CreateRecipePage({ setTitle, Api }) {
         });
     }
 
-    const onEdit = () => {
+    const onCreate = () => {
         var correctedRecipe = { ...recipe };
 
         correctedRecipe.RequirementsList = {
@@ -70,9 +77,11 @@ export default function CreateRecipePage({ setTitle, Api }) {
             RecipeId: recipe.Id,
         };
 
-        Api.Recipes.Create(correctedRecipe);
+        Api.Recipes.Create(correctedRecipe).then((res) => {
+            success("Recipe created successfully!");
 
-        history.push('/recipebook/custom/index');
+            history.push('/recipebook/custom/index');
+        });
     };
 
     const [preparationStepsOpen, setPreparationStepsOpen] = useState(false);
@@ -155,7 +164,7 @@ export default function CreateRecipePage({ setTitle, Api }) {
                     />
                 </Grid>
                 <Grid className={classes.inputComponent}>
-                    <Button onClick={onEdit} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
+                    <Button onClick={onCreate} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
                 </Grid>
             </Grid>
             <Link to="/recipebook/custom/index">

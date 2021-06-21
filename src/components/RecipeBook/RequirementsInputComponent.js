@@ -7,8 +7,11 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 
 import { Ingredient, RequirementsListIngredient, UnitType } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 function RequirementsInputComponent({ Api, defaultValues = [new RequirementsListIngredient()], parentRecipe, onChange }) {
+    const { error } =  useNotifications();
+
     const [values, setValues] = useState(defaultValues);
 
     if (!values && defaultValues) {
@@ -23,11 +26,14 @@ function RequirementsInputComponent({ Api, defaultValues = [new RequirementsList
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients === "Error") { return; }
+            if (ingredients instanceof String) {
+                error("Failed to load ingredients!");
+                return;
+            }
         
             setIngredients(ingredients);
         });
-    }, [Api.Ingredients]);
+    }, [Api.Ingredients, error]);
 
     const [unitTypes, setUnitTypes] = useState([new UnitType()]);
     if (unitTypes.length === 1 && unitTypes[0].CountId === -1)
@@ -37,11 +43,14 @@ function RequirementsInputComponent({ Api, defaultValues = [new RequirementsList
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((unitTypes) => {
-            if (unitTypes === "Error") { return; }
+            if (unitTypes instanceof String) {
+                error("Failed to load unit types!");
+                return;
+            }
         
             setUnitTypes(unitTypes);
         });
-    }, [Api.UnitTypes]);
+    }, [Api.UnitTypes, error]);
     
     const removeRequirement = (index) => {
         setValues(values => { var vals = [...values]; vals.splice(index, 1); return vals; });

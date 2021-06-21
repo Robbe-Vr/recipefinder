@@ -9,6 +9,7 @@ import { faBan } from "@fortawesome/free-solid-svg-icons";
 
 import { EntityList } from "../Global/EntityList";
 import { RowActions } from "../Global/RowActions";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -28,6 +29,8 @@ export default function AccountsPage({ setTitle, Api }) {
     useEffect(() => {
         setTitle && setTitle("Accounts");
     });
+
+    const { error, warning } = useNotifications();
 
     const history = useHistory();
 
@@ -55,11 +58,15 @@ export default function AccountsPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Users.GetAll().then((users) => {
-            if (users === "Error") { return; }
+            if (users instanceof String) {
+                error("Failed to load users!");
+
+                return;
+            }
         
             setUsers(users);
         });
-    }, [Api.Users]);
+    }, [Api.Users, error]);
 
     const onDetails = (userId) => {
         history.push('/accounts/details/' + userId);
@@ -76,7 +83,9 @@ export default function AccountsPage({ setTitle, Api }) {
     const onRemove = (userId) => {
         const user = users.find(x => x.Id === userId);
 
-        Api.Users.Delete(userId, user);
+        Api.Users.Delete(userId, user).then((res) => {
+            warning("User has been removed!");
+        });;
     };
 
     return (

@@ -11,6 +11,7 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { GroceryListIngredientInputComponent } from "./GroceryListIngredientInputComponent";
 
 import { GroceryList } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EditGroceryListPage({ setTitle, Api }) {
+    const { error, success } =  useNotifications();
+
     useEffect(() => {
         setTitle && setTitle("Edit Grocery List");
     });
@@ -46,11 +49,14 @@ export default function EditGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.GroceryLists.GetById(id).then((list) => {
-            if (list === "Error") { return; }
+            if (list instanceof String) {
+                error("Failed to load grocery list!");
+                return;
+            }
         
             setGroceryList(list);
         });
-    }, [Api.GroceryLists, id]);
+    }, [Api.GroceryLists, id, error]);
 
     const classes = useStyles();
 
@@ -62,9 +68,11 @@ export default function EditGroceryListPage({ setTitle, Api }) {
     }
 
     const onEdit = () => {
-        Api.GroceryLists.Create(list);
+        Api.GroceryLists.Create(list).then((res) => {
+            success("Grocery lists edited successfully!");
 
-        history.push('/grocerylists/index');
+            history.push('/grocerylists/index');
+        });
     };
 
     const onIngredientSelected = (ingredients) => {

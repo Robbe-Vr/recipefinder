@@ -11,6 +11,7 @@ import { Grid } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
 import { useAccount } from "../../API";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -39,6 +40,8 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
         setTitle && setTitle("Current Grocery List");
     });
 
+    const { error, success, warning } = useNotifications();
+
     const history = useHistory();
 
     const { currentUser } = useAccount();
@@ -55,17 +58,21 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
             setGroceryList(new GroceryList(0, '', '', cookie, currentUser));
         }
 
-    }, [cookies, currentUser]);
+    }, [cookies, currentUser, error]);
 
     const [ingredients, setIngredients] = useState([new Ingredient()]);
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients === "Error") { return; }
+            if (ingredients instanceof String) {
+                error("Failed to load ingredients!");
+
+                return;
+            }
         
             setIngredients(ingredients);
         });
-    }, [Api.Ingredients]);
+    }, [Api.Ingredients, error]);
 
     const [unitTypes, setUnitTypes] = useState([new UnitType()]);
     if (unitTypes.length === 1 && unitTypes[0].CountId === -1) {
@@ -74,11 +81,15 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((unitTypes) => {
-            if (unitTypes === "Error") { return; }
+            if (unitTypes instanceof String) {
+                error("Failed to load unit types!");
+
+                return;
+            }
         
             setUnitTypes(unitTypes);
         });
-    }, [Api.UnitTypes]);
+    }, [Api.UnitTypes, error]);
 
     const addListToKitchen = async () => {
         var ingredientStrs = list.Value.split(' | ');
@@ -96,7 +107,9 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
                 
                 await Api.Kitchens.Create(saveIngredient);
             }
-        }));
+        })).then(() => {
+            success("Ingredients have been added to your kitchen!");
+        });
 
         removeGroceryList();
 
@@ -107,6 +120,8 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
         removeCookie(cookieName);
 
         setGroceryList(new GroceryList());
+
+        warning("Stopped saving your grocery list!");
     };
 
     const classes = useStyles();

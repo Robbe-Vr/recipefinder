@@ -15,6 +15,7 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
 
 import { Recipe, RecipeCategory, RequirementsListIngredient } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -31,6 +32,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 function WhatToBuyPage({ setTitle, userId, Api }) {
+    const { error } =  useNotifications();
+
     useEffect(() => {
         setTitle && setTitle("What to Buy");
     });
@@ -45,11 +48,15 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.Ingredients.GetWhatToBuy(userId, (listState === 1 ? 'recipes' : 'ingredients')).then((items) => {
-            if (items === "Error") { return; }
+            if (items instanceof String) {
+                error("Failed to load "+ (listState === 1 ? 'recipes' : 'ingredients') + "!");
+
+                return;
+            }
         
             setItems(items);
         });
-    }, [Api.Ingredients, userId, listState]);
+    }, [Api.Ingredients, userId, listState, error]);
 
     const [selectedItem, setSelectedItem] = useState({ item: {}, dialogOpened: false });
 
@@ -65,11 +72,15 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api[`${listState === 1 ? 'Recipe' : 'Ingredient'}Categories`].GetAll().then((categories) => {
-            if (categories === "Error") { return; }
+            if (categories === "Error") {
+                error("Failed to load "+ (listState === 1 ? 'recipe' : 'ingredient') + " categories!");
+
+                return;
+            }
         
             setCategories(categories);
         });
-    }, [Api, listState]);
+    }, [Api, listState, error]);
 
     const [filterOptions, setFilterOptions] = useState({ name: '', categories: [] });
 

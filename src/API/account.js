@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { useAPI } from "../API/api-context";
 import { User } from "../models";
 
+import { toast } from "react-toastify";
+
 const ACCOUNT_LS = "recipefinder_account";
 
 const AccountContext = React.createContext({});
@@ -73,11 +75,19 @@ export function Authenticate({ children }) {
                     localStorage.setItem(ACCOUNT_LS, JSON.stringify(acc));
                     setAccount(acc);
                     setCurrentUser(user);
+
+                    toast.success("Successfully logged in!", {
+                        draggable: true,
+                    });
                     
                     setLoaded(true);
                 })
                 .catch((error) => {
                     console.log(error);
+
+                    toast.error("Unable to retrieve user info!", {
+                        draggable: true,
+                    });
         
                     setLoaded(true);
                 });

@@ -14,6 +14,7 @@ import { EntityList } from "../Global/EntityList";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
 
 import { Recipe, RecipeCategory } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -30,6 +31,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListState = 1 }) {
+    const { error } =  useNotifications();
+
     useEffect(() => {
         setTitle && setTitle("RecipeBook");
     });
@@ -48,11 +51,14 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
         (recipeListState === 0 ? Api.Recipes.GetAllFromCook(userId) :
         recipeListState === 1 ? Api.Recipes.GetPreparableForUser(userId) :
         Api.Recipes.GetAll()).then((recipes) => {
-            if (recipes === "Error") { return; }
+            if (recipes instanceof String) {
+                error("Failed to load recipes!");
+                return;
+            }
         
             setRecipes(recipes);
         });
-    }, [Api.Recipes, userId, recipeListState]);
+    }, [Api.Recipes, userId, recipeListState, error]);
 
     const onDetails = (recipeId) => {
         history.push('/recipebook/details/' + recipeId);
@@ -89,11 +95,14 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
 
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((categories) => {
-            if (categories === "Error") { return; }
+            if (categories instanceof String) {
+                error("Failed to load recipe categories!");
+                return;
+            }
         
             setCategories(categories);
         });
-    }, [Api.RecipeCategories]);
+    }, [Api.RecipeCategories, error]);
 
     const [filterOptions, setFilterOptions] = useState({ name: '', categories: [] });
 

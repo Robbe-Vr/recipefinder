@@ -13,6 +13,7 @@ import { PreparationStepsInputComponent } from "./preparationStepsInputComponent
 import { RequirementsInputComponent } from "./RequirementsInputComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EditRecipePage({ setTitle, Api }) {
+    const { error, success } =  useNotifications();
+
     useEffect(() => {
         setTitle && setTitle("Edit Recipe");
     });
@@ -49,22 +52,28 @@ export default function EditRecipePage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Recipes.GetById(recipeId).then((recipe) => {
-            if (recipe === "Error") { return; }
+            if (recipe instanceof String) {
+                error("Failed to load recipe!");
+                return;
+            }
         
             setCurrentRecipe(recipe);
             setUpdateRecipe(recipe);
         });
-    }, [Api.Recipes, recipeId]);
+    }, [Api.Recipes, recipeId, error]);
 
     const [categories, setCategories] = useState([new RecipeCategory()]);
 
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((categories) => {
-            if (categories === "Error") { return; }
+            if (categories instanceof String) {
+                error("Failed to load recipe categories!");
+                return;
+            }
         
             setCategories(categories);
         });
-    }, [Api.RecipeCategories]);
+    }, [Api.RecipeCategories, error]);
 
     const classes = useStyles();
 
@@ -83,9 +92,11 @@ export default function EditRecipePage({ setTitle, Api }) {
             RecipeId: updateRecipe.Id,
         };
 
-        Api.Recipes.Update(recipeId, correctedRecipe);
+        Api.Recipes.Update(recipeId, correctedRecipe).then((res) => {
+            success("Recipe edited successfully!");
 
-        history.push('/recipebook/custom/index');
+            history.push('/recipebook/custom/index');
+        });
     };
 
     const [preparationStepsOpen, setPreparationStepsOpen] = useState(false);

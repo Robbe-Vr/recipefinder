@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { KitchenIngredient } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -31,6 +32,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 function KitchenHomePage({ setTitle, userId, Api }) {
+    const { error, warning, success } =  useNotifications();
+
     useEffect(() => {
         setTitle && setTitle("Kitchen");
     });
@@ -58,23 +61,28 @@ function KitchenHomePage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.Kitchens.GetKitchenByUserId(userId).then((kitchen) => {
-            if (kitchen === "Error") { return; }
+            if (kitchen instanceof String) {
+                error("Failed to load kitchen!");
+                return;
+            }
         
             setKitchen(kitchen);
         });
-    }, [Api.Kitchens, userId]);
+    }, [Api.Kitchens, userId, error]);
 
     const onEdit = async (id) => {
         if (!updates[id]) return;
 
-        await Api.Kitchens.Update(updates[id].CountId, updates[id]);
+        await Api.Kitchens.Update(updates[id].CountId, updates[id]).then((res) => {
+            var updatedKitchen = { ...kitchen };
+            let index = updatedKitchen.Ingredients.indexOf(updatedKitchen.Ingredients.find(x => x.CountId === updates[id].CountId));
+            updatedKitchen.Ingredients[index] = updates[id];
+            setKitchen(updatedKitchen);
 
-        var updatedKitchen = { ...kitchen };
-        let index = updatedKitchen.Ingredients.indexOf(updatedKitchen.Ingredients.find(x => x.CountId === updates[id].CountId));
-        updatedKitchen.Ingredients[index] = updates[id];
-        setKitchen(updatedKitchen);
+            success("Ingredient in your kitchen edited successfully!");
 
-        closeEditDialog();
+            closeEditDialog();
+        });;
     };
 
     const onUnitsEdited = (id, newUnits) => {
@@ -107,9 +115,11 @@ function KitchenHomePage({ setTitle, userId, Api }) {
 
         setKitchen({ ...kitchen, Ingredients: updatedKitchen });
 
-        Api.Kitchens.Delete(kitchen.UserId + "/" + ingredient.IngredientId, ingredient);
+        Api.Kitchens.Delete(kitchen.UserId + "/" + ingredient.IngredientId, ingredient).then((res) => {
+            warning("Ingredient has been removed from your kitchen!");
 
-        closeRemoveDialog();
+            closeRemoveDialog();
+        });
     };
 
     const closeEditDialog = () => {

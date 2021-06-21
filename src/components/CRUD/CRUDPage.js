@@ -13,6 +13,7 @@ import { RowActions } from "../Global/RowActions";
 import { EntityList } from "../Global/EntityList";
 
 import { Ingredient, IngredientCategory, Recipe, RecipeCategory, RequirementsListIngredient, UnitType, User } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -32,6 +33,8 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
     useEffect(() => {
         setTitle && setTitle("CRUD " + TableName);
     });
+
+    const { error, warning } =  useNotifications();
 
     const [entityGroup] = useState(Api[TableName]);
     
@@ -61,14 +64,20 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
     }, [removeItem.dialogOpened, entityListData.rows]);
 
     const onRemove = (id) => {
-        entityGroup.Delete(id);
+        entityGroup.Delete(id).then((res) => {
+            warning(DisplayName + " item has been removed!");
+        });;;
     };
 
     const classes = useStyles();
 
     useEffect(() => {
         entityGroup.GetAll().then((items) => {
-            if (items === "Error") { return; }
+            if (items instanceof String) {
+                error("Failed to load " + DisplayName + "!");
+
+                return;
+            }
         
             const columns = [];
             const rows = [];
@@ -154,7 +163,7 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
 
             setEntityListData({ columns: columns, rows: rows });
         });
-    }, [entityGroup, ToggleRemove, onEdit, onDetails]);
+    }, [entityGroup, ToggleRemove, onEdit, onDetails, error, DisplayName]);
 
     return (
         <Grid className={classes.form}>

@@ -8,6 +8,7 @@ import { Ingredient, GroceryList, UnitType } from "../../models";
 import { Grid } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -30,6 +31,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function DetailsGroceryListPage({ setTitle, Api }) {
+    const { error } =  useNotifications();
+
     useEffect(() => {
         setTitle && setTitle("Details Grocery List");
     });
@@ -40,21 +43,29 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.GroceryLists.GetById(id).then((list) => {
-            if (list === "Error") { return; }
+            if (list instanceof String) {
+                error("Failed to load grocery lists!");
+                
+                return;
+            }
         
             setGroceryList(list);
         });
-    }, [Api.GroceryLists, id]);
+    }, [Api.GroceryLists, id, error]);
 
     const [ingredients, setIngredients] = useState([new Ingredient()]);
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients === "Error") { return; }
+            if (ingredients instanceof String) {
+                error("Failed to load ingredients!");
+                
+                return;
+            }
         
             setIngredients(ingredients);
         });
-    }, [Api.Ingredients]);
+    }, [Api.Ingredients, error]);
 
     const [unitTypes, setUnitTypes] = useState([new UnitType()]);
     if (unitTypes.length === 1 && unitTypes[0].CountId === -1)
@@ -64,11 +75,15 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((unitTypes) => {
-            if (unitTypes === "Error") { return; }
+            if (unitTypes instanceof String) {
+                error("Failed to load unit types!");
+                
+                return;
+            }
         
             setUnitTypes(unitTypes);
         });
-    }, [Api.UnitTypes]);
+    }, [Api.UnitTypes, error]);
 
     const classes = useStyles();
 

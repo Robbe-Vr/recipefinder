@@ -9,6 +9,7 @@ import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
 import CRUDPagesInfo from "../../API/CRUDPagesInfo";
 import { Ingredient, IngredientCategory, RecipeCategory, UnitType } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -32,6 +33,8 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
         setTitle && setTitle(DisplayName + " CRUD Create");
     });
 
+    const { error, success } =  useNotifications();
+
     const history = useHistory();
 
     const [item, setItem] = useState({});
@@ -43,11 +46,15 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((items) => {
-            if (items === "Error") { return; }
+            if (items instanceof String) {
+                error("Failed to load unit types!");
+
+                return;
+            }
         
             setUnitTypes(items);
         });
-    }, [Api.UnitTypes]);
+    }, [Api.UnitTypes, error]);
 
     const [ingredients, setIngredients] = useState([new Ingredient()]);
     if (ingredients.length === 1 && ingredients[0].CountId === -1) {
@@ -56,11 +63,15 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((items) => {
-            if (items === "Error") { return; }
+            if (items instanceof String) {
+                error("Failed to load ingredients!");
+
+                return;
+            }
         
             setIngredients(items);
         });
-    }, [Api.Ingredients]);
+    }, [Api.Ingredients, error]);
 
     const [ingredientCategories, setIngredientCategories] = useState([new IngredientCategory()]);
     if (ingredientCategories.length === 1 && ingredientCategories[0].CountId === -1) {
@@ -69,11 +80,15 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
 
     useEffect(() => {
         Api.IngredientCategories.GetAll().then((items) => {
-            if (items === "Error") { return; }
+            if (items instanceof String) {
+                error("Failed to load ingredient categories!");
+
+                return;
+            }
         
             setIngredientCategories(items);
         });
-    }, [Api.IngredientCategories]);
+    }, [Api.IngredientCategories, error]);
 
     const [recipeCategories, setRecipeCategories] = useState([new RecipeCategory()]);
     if (recipeCategories.length === 1 && recipeCategories[0].CountId === -1) {
@@ -82,11 +97,15 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
 
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((items) => {
-            if (items === "Error") { return; }
+            if (items instanceof String) {
+                error("Failed to load recipe categories!");
+
+                return;
+            }
         
             setRecipeCategories(items);
         });
-    }, [Api.RecipeCategories]);
+    }, [Api.RecipeCategories, error]);
 
     const classes = useStyles();
 
@@ -106,13 +125,19 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
                 RecipeId: item.Id,
             };
 
-            Api[TableName].Create(correctedRecipe);
+            Api[TableName].Create(correctedRecipe).then((res) => {
+                success("Recipe created successfully!");
+
+                history.push(`/${TableName}/index`);
+            });;
         }
         else {
-            Api[TableName].Create(item);
-        }
+            Api[TableName].Create(item).then((res) => {
+                success(DisplayName + " item created successfully!");
 
-        history.push(`/${TableName}/index`);
+                history.push(`/${TableName}/index`);
+            });;
+        }
     };
 
     const CRUDInfo = CRUDPagesInfo.Pages[TableName];

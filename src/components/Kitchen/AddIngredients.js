@@ -12,6 +12,7 @@ import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 import { SelectIngredientComponent } from "../Global/SelectIngredientComponent";
 
 import { Ingredient } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     ingredientSelectContainer: {
@@ -26,6 +27,8 @@ function AddIngredients({ setTitle, userId, Api }) {
     useEffect(() => {
         setTitle && setTitle("Add Ingredients");
     });
+
+    const { error, success } =  useNotifications();
 
     const classes = useStyles();
 
@@ -46,11 +49,14 @@ function AddIngredients({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients === "Error") { return; }
+            if (ingredients instanceof String)  {
+                error("Failed to load ingredients!");
+                return;
+            }
         
             setIngredients(ingredients);
         });
-    }, [Api.Ingredients]);
+    }, [Api.Ingredients, error]);
 
     const selectIngredient = (ingredient) => {
         if (ingredient.CountId < 1) { return; }
@@ -67,7 +73,9 @@ function AddIngredients({ setTitle, userId, Api }) {
         if (saveIngredient.IngredientId && saveIngredient.UserId &&
             saveIngredient.Units && saveIngredient.UnitTypeId) {
             
-            Api.Kitchens.Create(saveIngredient);
+            Api.Kitchens.Create(saveIngredient).then((res) => {
+                success("Ingredient added to your kitchen!");
+            });
         }
     };
 

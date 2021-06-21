@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward, faList, faVideo } from "@fortawesome/free-solid-svg-icons";
 
 import { Recipe } from "../../models";
+import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -23,6 +24,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RecipeTutorialPage({ setTitle, Api }) {
+    const { error } =  useNotifications();
+
     useEffect(() => {
         setTitle && setTitle("Recipe Tutorial");
     });
@@ -33,11 +36,14 @@ export default function RecipeTutorialPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Recipes.GetById(recipeId).then((recipe) => {
-            if (recipe === "Error") { return; }
+            if (recipe instanceof String)  {
+                error("Failed to load recipe!");
+                return;
+            }
         
             setRecipe(recipe);
         });
-    }, [Api.Recipes, recipeId]);
+    }, [Api.Recipes, recipeId, error]);
 
     const [tutorialMode, setTutorialMode] = useState(0);
 
