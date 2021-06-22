@@ -59,7 +59,7 @@ export default function AccountsPage({ setTitle, Api }) {
     useEffect(() => {
         Api.Users.GetAll().then((users) => {
             if (users instanceof String) {
-                error("Failed to load users!");
+                error(users);
 
                 return;
             }

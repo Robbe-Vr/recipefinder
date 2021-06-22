@@ -34,7 +34,7 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
         setTitle && setTitle(DisplayName + " CRUD Edit");
     });
 
-    const { error, success } =  useNotifications();
+    const { error, warning, success } =  useNotifications();
 
     const history = useHistory();
 
@@ -47,7 +47,7 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
     useEffect(() => {
         Api[TableName].GetById(id).then((obj) => {
             if (obj instanceof String) {
-                error("Failed to load " + TableName + "!");
+                error(obj);
 
                 return;
             }
@@ -65,7 +65,7 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((items) => {
             if (items instanceof String) {
-                error("Failed to load unit types!");
+                error(items);
                 
                 return;
             }
@@ -82,7 +82,7 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
     useEffect(() => {
         Api.Ingredients.GetAll().then((items) => {
             if (items instanceof String) {
-                error("Failed to load ingredients!");
+                error(items);
                 
                 return;
             }
@@ -99,7 +99,7 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
     useEffect(() => {
         Api.IngredientCategories.GetAll().then((items) => {
             if (items instanceof String) {
-                error("Failed to load ingredient categories!");
+                error(items);
                 
                 return;
             }
@@ -116,7 +116,7 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((items) => {
             if (items instanceof String) {
-                error("Failed to load recipe categories!");
+                error(items);
                 
                 return;
             }
@@ -144,7 +144,10 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
             };
 
             Api[TableName].Update(id, correctedRecipe).then((res) => {
-                success("recipe edited successfully!");
+                if (res.data instanceof String) {
+                warning(res.data);
+            }
+            else success("recipe edited successfully!");
 
                 history.push(`/${TableName}/index`);
             });

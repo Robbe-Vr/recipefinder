@@ -65,9 +65,7 @@ export function NotificationProvider({ children }) {
         info: info,
         success: success,
     };
-
-    console.log("Loading API...");
-
+    
     return (
         <NotificationContext.Provider value={contextValue}>
             <ToastContainer />

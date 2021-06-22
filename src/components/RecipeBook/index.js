@@ -52,7 +52,7 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
         recipeListState === 1 ? Api.Recipes.GetPreparableForUser(userId) :
         Api.Recipes.GetAll()).then((recipes) => {
             if (recipes instanceof String) {
-                error("Failed to load recipes!");
+                error(recipes);
                 return;
             }
         
@@ -96,7 +96,7 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((categories) => {
             if (categories instanceof String) {
-                error("Failed to load recipe categories!");
+                error(categories);
                 return;
             }
         

@@ -62,7 +62,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
     useEffect(() => {
         Api.Kitchens.GetKitchenByUserId(userId).then((kitchen) => {
             if (kitchen instanceof String) {
-                error("Failed to load kitchen!");
+                error(kitchen);
                 return;
             }
         
@@ -79,7 +79,13 @@ function KitchenHomePage({ setTitle, userId, Api }) {
             updatedKitchen.Ingredients[index] = updates[id];
             setKitchen(updatedKitchen);
 
-            success("Ingredient in your kitchen edited successfully!");
+            if (res.data instanceof String) {
+                warning(res.data);
+            }
+            else if (res.data instanceof String) {
+                warning(res.data);
+            }
+            else success("Ingredient in your kitchen edited successfully!");
 
             closeEditDialog();
         });;
@@ -153,7 +159,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
             </Dialog>
 
             <Typography className={classes.txt} variant="h3">
-                {kitchen?.User.Name}'s Kitchen
+                {kitchen?.User?.Name}'s Kitchen
             </Typography>
 
             {!kitchen || kitchen.Ingredients.length < 1 ?

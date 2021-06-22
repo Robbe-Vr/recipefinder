@@ -65,7 +65,7 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
             if (ingredients instanceof String) {
-                error("Failed to load ingredients!");
+                error(ingredients);
 
                 return;
             }
@@ -82,7 +82,7 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
     useEffect(() => {
         Api.UnitTypes.GetAll().then((unitTypes) => {
             if (unitTypes instanceof String) {
-                error("Failed to load unit types!");
+                error(unitTypes);
 
                 return;
             }
@@ -107,8 +107,11 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
                 
                 await Api.Kitchens.Create(saveIngredient);
             }
-        })).then(() => {
-            success("Ingredients have been added to your kitchen!");
+        })).then((res) => {
+            if (res.data instanceof String) {
+                warning(res.data);
+            }
+            else success("Ingredients have been added to your kitchen!");
         });
 
         removeGroceryList();
@@ -121,7 +124,7 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
 
         setGroceryList(new GroceryList());
 
-        warning("Stopped saving your grocery list!");
+        warning("Stopped remembering your current grocery list!");
     };
 
     const classes = useStyles();

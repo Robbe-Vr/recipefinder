@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function CreateGroceryListPage({ setTitle, Api }) {
+export default function CreateGroceryListPage({ setTitle, Api, userId }) {
     useEffect(() => {
         setTitle && setTitle("Create Grocery List");
     });
 
-    const { success } = useNotifications();
+    const { warning, success } = useNotifications();
 
     const history = useHistory();
 
@@ -49,12 +49,16 @@ export default function CreateGroceryListPage({ setTitle, Api }) {
         setGroceryList({
             ...list,
             ...update,
+            UserId: userId,
         });
     }
 
     const onCreate = () => {
         Api.GroceryLists.Create(list).then((res) => {
-            success("Grocery list created succesfully!");
+            if (res.data instanceof String) {
+                warning(res.data);
+            }
+            else success("Grocery list created succesfully!");
 
             history.push('/grocerylists/index');
         });;

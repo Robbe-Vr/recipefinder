@@ -52,7 +52,7 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
     useEffect(() => {
         Api.GroceryLists.GetAllByUserId(userId).then((lists) => {
             if (lists instanceof String) {
-                error("Failed to load grocery lists!");
+                error(lists);
                 
                 return;
             }
@@ -70,7 +70,7 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
             if (ingredients instanceof String) {
-                error("Failed to load ingredients!");
+                error(ingredients);
                 
                 return;
             }
@@ -88,7 +88,7 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
     useEffect(() => {
         Api.UnitTypes.GetAll().then((types) => {
             if (types instanceof String) {
-                error("Failed to load unit types!");
+                error(types);
                 
                 return;
             }
@@ -120,7 +120,15 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
 
     const onRemove = (listId) => {
         Api.GroceryLists.Delete(listId).then((res) => {
+            var updatedList = [...groceryLists];
+
+            updatedList.splice(updatedList.indexOf(updatedList.find(x => x.Id === listId)), 1);
+
+            setGroceryLists(updatedList);
+
             warning("Grocery lists has been removed!");
+
+            setRemoveItem({ item: {}, dialogOpened: false });
         });;
     };
 
@@ -151,7 +159,7 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
                 <DialogTitle>Remove item {removeItem.item.Name}</DialogTitle>
                 <DialogContent>
                     Are you sure you want to remove this grocery list: {removeItem.item.Name} ?<br />
-                    <Button onClick={() => onRemove(removeItem.item.CountId)} style={{ backgroundColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faCross} style={{ marginRight: '5px' }}/> Remove</Button>
+                    <Button onClick={() => onRemove(removeItem.item.Id)} style={{ backgroundColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faCross} style={{ marginRight: '5px' }}/> Remove</Button>
                     <Button onClick={() => ToggleRemove(removeItem.item.CountId)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem' }}>Cancel</Button>
                 </DialogContent>
             </Dialog>

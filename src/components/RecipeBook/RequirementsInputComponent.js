@@ -27,7 +27,7 @@ function RequirementsInputComponent({ Api, defaultValues = [new RequirementsList
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
             if (ingredients instanceof String) {
-                error("Failed to load ingredients!");
+                error(ingredients);
                 return;
             }
         
@@ -44,7 +44,7 @@ function RequirementsInputComponent({ Api, defaultValues = [new RequirementsList
     useEffect(() => {
         Api.UnitTypes.GetAll().then((unitTypes) => {
             if (unitTypes instanceof String) {
-                error("Failed to load unit types!");
+                error(unitTypes);
                 return;
             }
         

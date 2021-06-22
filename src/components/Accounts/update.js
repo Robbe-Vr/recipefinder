@@ -34,7 +34,7 @@ export default function EditAccountPage({ setTitle, Api }) {
 
     const history = useHistory();
 
-    const { error, success } = useNotifications();
+    const { error, warning, success } = useNotifications();
 
     const { userId } = useParams();
 
@@ -46,7 +46,7 @@ export default function EditAccountPage({ setTitle, Api }) {
     useEffect(() => {
         Api.Users.GetById(userId).then((user) => {
             if (user instanceof String) {
-                error("Failed to load user!");
+                error(user);
 
                 return;
             }
@@ -59,7 +59,7 @@ export default function EditAccountPage({ setTitle, Api }) {
     useEffect(() => {
         Api.Roles.GetAll().then((roles) => {
             if (roles instanceof String) {
-                error("Failed to load roles!");
+                error(roles);
 
                 return;
             }
@@ -79,7 +79,10 @@ export default function EditAccountPage({ setTitle, Api }) {
 
     const onEdit = () => {
         Api.Users.Update(updateUser).then((res) => {
-            success("User edited successfully!");
+            if (res.data instanceof String) {
+                warning(res.data);
+            }
+            else success("User edited successfully!");
 
             history.push('/accounts/index');
         });

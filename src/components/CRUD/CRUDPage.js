@@ -74,7 +74,7 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
     useEffect(() => {
         entityGroup.GetAll().then((items) => {
             if (items instanceof String) {
-                error("Failed to load " + DisplayName + "!");
+                error(items);
 
                 return;
             }

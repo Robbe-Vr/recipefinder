@@ -40,7 +40,7 @@ export default function AccountDetailsPage({ setTitle, Api }) {
     useEffect(() => {
         Api.Users.GetById(userId).then((user) => {
             if (user instanceof String) {
-                error("Failed to load user!");
+                error(user);
 
                 return;
             }
@@ -54,7 +54,7 @@ export default function AccountDetailsPage({ setTitle, Api }) {
     useEffect(() => {
         Api.Users.GetActionsByUserId(userId).then((userActions) => {
             if (userActions instanceof String) {
-                error("Failed to load user actions!");
+                error(userActions);
 
                 return;
             }

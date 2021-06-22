@@ -33,7 +33,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
         setTitle && setTitle(DisplayName + " CRUD Create");
     });
 
-    const { error, success } =  useNotifications();
+    const { error, warning, success } =  useNotifications();
 
     const history = useHistory();
 
@@ -47,7 +47,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
     useEffect(() => {
         Api.UnitTypes.GetAll().then((items) => {
             if (items instanceof String) {
-                error("Failed to load unit types!");
+                error(items);
 
                 return;
             }
@@ -64,7 +64,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
     useEffect(() => {
         Api.Ingredients.GetAll().then((items) => {
             if (items instanceof String) {
-                error("Failed to load ingredients!");
+                error(items);
 
                 return;
             }
@@ -81,7 +81,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
     useEffect(() => {
         Api.IngredientCategories.GetAll().then((items) => {
             if (items instanceof String) {
-                error("Failed to load ingredient categories!");
+                error(items);
 
                 return;
             }
@@ -98,7 +98,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((items) => {
             if (items instanceof String) {
-                error("Failed to load recipe categories!");
+                error(items);
 
                 return;
             }
@@ -126,7 +126,10 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
             };
 
             Api[TableName].Create(correctedRecipe).then((res) => {
-                success("Recipe created successfully!");
+                if (res.data instanceof String) {
+                warning(res.data);
+            }
+            else success("Recipe created successfully!");
 
                 history.push(`/${TableName}/index`);
             });;

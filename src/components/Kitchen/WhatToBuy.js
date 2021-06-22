@@ -49,7 +49,7 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
     useEffect(() => {
         Api.Ingredients.GetWhatToBuy(userId, (listState === 1 ? 'recipes' : 'ingredients')).then((items) => {
             if (items instanceof String) {
-                error("Failed to load "+ (listState === 1 ? 'recipes' : 'ingredients') + "!");
+                error(items);
 
                 return;
             }
@@ -72,8 +72,8 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api[`${listState === 1 ? 'Recipe' : 'Ingredient'}Categories`].GetAll().then((categories) => {
-            if (categories === "Error") {
-                error("Failed to load "+ (listState === 1 ? 'recipe' : 'ingredient') + " categories!");
+            if (categories instanceof String) {
+                error(categories);
 
                 return;
             }
@@ -106,6 +106,8 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
     };
 
     const addIngredient = (toAddIngredient) => {
+        
+
         setSelectedIngredient(selectedIngredient => { selectedIngredient.dialogOpened = false; return selectedIngredient });
 
         closeIngredientDialog();

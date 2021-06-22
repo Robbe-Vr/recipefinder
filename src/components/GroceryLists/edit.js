@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EditGroceryListPage({ setTitle, Api }) {
-    const { error, success } =  useNotifications();
+    const { error, warning, success } =  useNotifications();
 
     useEffect(() => {
         setTitle && setTitle("Edit Grocery List");
@@ -50,7 +50,7 @@ export default function EditGroceryListPage({ setTitle, Api }) {
     useEffect(() => {
         Api.GroceryLists.GetById(id).then((list) => {
             if (list instanceof String) {
-                error("Failed to load grocery list!");
+                error(list);
                 return;
             }
         
@@ -69,7 +69,10 @@ export default function EditGroceryListPage({ setTitle, Api }) {
 
     const onEdit = () => {
         Api.GroceryLists.Create(list).then((res) => {
-            success("Grocery lists edited successfully!");
+            if (res.data instanceof String) {
+                warning(res.data);
+            }
+            else success("Grocery lists edited successfully!");
 
             history.push('/grocerylists/index');
         });

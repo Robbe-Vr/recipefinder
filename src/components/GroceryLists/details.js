@@ -44,7 +44,7 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
     useEffect(() => {
         Api.GroceryLists.GetById(id).then((list) => {
             if (list instanceof String) {
-                error("Failed to load grocery lists!");
+                error(list);
                 
                 return;
             }
@@ -58,7 +58,7 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
             if (ingredients instanceof String) {
-                error("Failed to load ingredients!");
+                error(ingredients);
                 
                 return;
             }
@@ -76,7 +76,7 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
     useEffect(() => {
         Api.UnitTypes.GetAll().then((unitTypes) => {
             if (unitTypes instanceof String) {
-                error("Failed to load unit types!");
+                error(unitTypes);
                 
                 return;
             }
