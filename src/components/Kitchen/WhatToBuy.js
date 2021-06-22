@@ -14,8 +14,9 @@ import { Card, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/cor
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
 
-import { Recipe, RecipeCategory, RequirementsListIngredient } from "../../models";
+import { Ingredient, Recipe, RecipeCategory, RequirementsListIngredient, UnitType } from "../../models";
 import { useNotifications } from "../Global/NotificationContext";
+import { useCookies } from "react-cookie";
 
 const useStyles = makeStyles(() => ({
     form: {
@@ -31,12 +32,16 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-function WhatToBuyPage({ setTitle, userId, Api }) {
-    const { error } =  useNotifications();
+const cookieName = "recipefinder_grocerylist_cookie";
 
+function WhatToBuyPage({ setTitle, userId, Api }) {
     useEffect(() => {
         setTitle && setTitle("What to Buy");
     });
+
+    const { error, warning, success } =  useNotifications();
+
+    const [cookies, setCookie, removeCookie] = useCookies();
 
     const [listState, setListState] = useState(1);
     
@@ -106,7 +111,45 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
     };
 
     const addIngredient = (toAddIngredient) => {
-        
+        const cookie = cookies[cookieName];
+
+        var ingredients = [];
+
+        if (cookie) {
+            cookie.split(' | ').map(item => {
+                var content = item.trim().split(', ');
+
+                let units = parseInt(content[1]);
+
+                return ingredients.push(
+                    new RequirementsListIngredient(0,
+                        new Ingredient(0, content[0]),
+                        units,
+                        new UnitType(parseInt(content[2]))
+                    )
+                );
+            });
+
+            var duplicate = ingredients.find(x => x.IngredientId === toAddIngredient.IngredientId);
+
+            if (duplicate) {
+                var item = ingredients[ingredients.indexOf(duplicate)];
+                item.Units += toAddIngredient.UnitTypeId === item.UnitTypeId ? toAddIngredient.Units : 0;
+            } else {
+                ingredients.push(toAddIngredient);
+            }
+        }
+        else {
+            warning("Created a temporary grocery list!");
+
+            ingredients.push(toAddIngredient);
+        }
+
+        var value = ingredients.map(i => `${i.IngredientId}, ${i.Units}, ${i.UnitTypeId}`).join(' | ');
+
+        setCookie(cookieName, value);
+
+        success(`Added ${toAddIngredient.Units} ${toAddIngredient.UnitType.Name} of ${toAddIngredient.Ingredient.Name} to the grocery list!`);
 
         setSelectedIngredient(selectedIngredient => { selectedIngredient.dialogOpened = false; return selectedIngredient });
 

@@ -9,6 +9,7 @@ import { faBackward, faList, faVideo } from "@fortawesome/free-solid-svg-icons";
 
 import { Recipe } from "../../models";
 import { useNotifications } from "../Global/NotificationContext";
+import { Thumbnail } from "../Global/Thumbnail";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -55,12 +56,30 @@ export default function RecipeTutorialPage({ setTitle, Api }) {
                 {recipe.Name} Tutorial
             </Typography>
             <Grid container direction="row" style={{ borderBottom: 'solid 1px', paddingbottom: '15px' }}>
-                <Button variant="outlined" onClick={() => setTutorialMode(0)}><FontAwesomeIcon icon={faList} style={{ marginRight: '5px' }} />Preparation Steps</Button>
-                {recipe.VideoTutorialLink ? <Button onClick={() => setTutorialMode(1)}><FontAwesomeIcon icon={faVideo} style={{ marginRight: '5px' }} />Video Tutorial</Button> : <></>}
+                <Button variant="outlined" style={{ backgroundColor: tutorialMode === 0 ? 'lightgrey' : 'white' }} onClick={() => setTutorialMode(0)}><FontAwesomeIcon icon={faList} style={{ marginRight: '5px' }} />Requirements</Button>
+                <Button variant="outlined" style={{ backgroundColor: tutorialMode === 1 ? 'lightgrey' : 'white' }} onClick={() => setTutorialMode(1)}><FontAwesomeIcon icon={faList} style={{ marginRight: '5px' }} />Preparation Steps</Button>
+                {recipe.VideoTutorialLink ? <Button variant="outlined" style={{ backgroundColor: tutorialMode === 2 ? 'lightgrey' : 'white' }} onClick={() => setTutorialMode(2)}><FontAwesomeIcon icon={faVideo} style={{ marginRight: '5px' }} />Video Tutorial</Button> : <></>}
             </Grid>
             <Grid container direction="row" style={{ paddingTop: '15px', paddingLeft: '10px' }}>
                 {
                     tutorialMode === 0 ?
+                        <Grid container direction="row">
+                            <Table>
+                                <TableBody>
+                                    {
+                                        recipe.RequirementsList.map((requirement, index) => {
+                                            return (
+                                                <TableRow>
+                                                    <TableCell><Thumbnail source={requirement.Ingredient.ImageLocation} size={50} /></TableCell>
+                                                    <TableCell>{`${requirement.Units} ${requirement.UnitType.Name} of ${requirement.Ingredient.Name}`}</TableCell>
+                                                </TableRow>
+                                            );
+                                        })
+                                    }
+                                </TableBody>
+                            </Table>
+                        </Grid>
+                    : tutorialMode === 1 ?
                         <Grid container direction="row">
                             <Table>
                                 <TableBody>
@@ -77,10 +96,11 @@ export default function RecipeTutorialPage({ setTitle, Api }) {
                                 </TableBody>
                             </Table>
                         </Grid>
-                        :
+                    : tutorialMode === 2 ?
                         <Grid container style={{ justifyContent: 'center', alignContent: 'center' }}>
                             <iframe title={`Tutorial for ${recipe.Name}`} src={recipe.VideoTutorialLink} style={{ width: '90%', height: '90%' }}/>
                         </Grid>
+                    : <></>
                 }
             </Grid>
             <Link to="/recipebook/index">
