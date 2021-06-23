@@ -162,7 +162,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                 {kitchen?.User?.Name}'s Kitchen
             </Typography>
 
-            {!kitchen || kitchen.Ingredients.length < 1 ?
+            {!kitchen || kitchen.Ingredients?.length < 1 ?
                 "No ingredients in your kitchen." :
                 <EntityList
                     columns={[
