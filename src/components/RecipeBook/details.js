@@ -38,7 +38,7 @@ export default function RecipeDetailsPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Recipes.GetById(recipeId).then((recipe) => {
-            if (recipe instanceof String) {
+            if (typeof recipe === "string") {
                 error(recipe);
                 return;
             }

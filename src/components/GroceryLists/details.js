@@ -43,7 +43,7 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.GroceryLists.GetById(id).then((list) => {
-            if (list instanceof String) {
+            if (typeof list === "string") {
                 error(list);
                 
                 return;
@@ -57,7 +57,7 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients instanceof String) {
+            if (typeof ingredients === "string") {
                 error(ingredients);
                 
                 return;
@@ -75,7 +75,7 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((unitTypes) => {
-            if (unitTypes instanceof String) {
+            if (typeof unitTypes === "string") {
                 error(unitTypes);
                 
                 return;

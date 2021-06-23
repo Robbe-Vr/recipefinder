@@ -46,7 +46,7 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
 
     const { currentUser } = useAccount();
 
-    const [cookies, setCookie, removeCookie] = useCookies();
+    const [cookies, /*setCookie*/, removeCookie] = useCookies();
 
     const [list, setGroceryList] = useState(new GroceryList());
 
@@ -64,7 +64,7 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients instanceof String) {
+            if (typeof ingredients === "string") {
                 error(ingredients);
 
                 return;
@@ -81,7 +81,7 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((unitTypes) => {
-            if (unitTypes instanceof String) {
+            if (typeof unitTypes === "string") {
                 error(unitTypes);
 
                 return;
@@ -108,7 +108,7 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
                 await Api.Kitchens.Create(saveIngredient);
             }
         })).then((res) => {
-            if (res.data instanceof String) {
+            if (typeof res.data === "string") {
                 warning(res.data);
             }
             else success("Ingredients have been added to your kitchen!");

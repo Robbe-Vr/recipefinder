@@ -18,7 +18,7 @@ function SelectIngredientComponent({ Api, ingredients, selectIngredient }) {
 
     useEffect(() => {
         Api.IngredientCategories.GetAll().then((categories) => {
-            if (categories instanceof String) { return; }
+            if (typeof categories === "string") { return; }
         
             setCategories(categories);
         });

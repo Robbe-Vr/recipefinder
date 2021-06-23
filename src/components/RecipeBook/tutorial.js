@@ -37,7 +37,7 @@ export default function RecipeTutorialPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Recipes.GetById(recipeId).then((recipe) => {
-            if (recipe instanceof String)  {
+            if (typeof recipe === "string")  {
                 error("Failed to load recipe!");
                 return;
             }

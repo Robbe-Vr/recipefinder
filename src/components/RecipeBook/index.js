@@ -51,7 +51,7 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
         (recipeListState === 0 ? Api.Recipes.GetAllFromCook(userId) :
         recipeListState === 1 ? Api.Recipes.GetPreparableForUser(userId) :
         Api.Recipes.GetAll()).then((recipes) => {
-            if (recipes instanceof String) {
+            if (typeof recipes === "string") {
                 error(recipes);
                 return;
             }
@@ -95,7 +95,7 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
 
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((categories) => {
-            if (categories instanceof String) {
+            if (typeof categories === "string") {
                 error(categories);
                 return;
             }

@@ -39,7 +39,7 @@ export default function AccountDetailsPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Users.GetById(userId).then((user) => {
-            if (user instanceof String) {
+            if (typeof user === "string") {
                 error(user);
 
                 return;
@@ -53,7 +53,7 @@ export default function AccountDetailsPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Users.GetActionsByUserId(userId).then((userActions) => {
-            if (userActions instanceof String) {
+            if (typeof userActions === "string") {
                 error(userActions);
 
                 return;

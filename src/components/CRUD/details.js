@@ -36,7 +36,7 @@ export default function CRUDDetailsPage({ setTitle, Api, TableName, DisplayName 
 
     useEffect(() => {
         Api[TableName].GetById(id).then((obj) => {
-            if (obj instanceof String)  {
+            if (typeof obj === "string")  {
                 error("Failed to load " + TableName + "!");
 
                 return;

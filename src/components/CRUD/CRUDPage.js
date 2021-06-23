@@ -73,7 +73,7 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
 
     useEffect(() => {
         entityGroup.GetAll().then((items) => {
-            if (items instanceof String) {
+            if (typeof items === "string") {
                 error(items);
 
                 return;

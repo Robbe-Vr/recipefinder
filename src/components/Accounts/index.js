@@ -58,7 +58,7 @@ export default function AccountsPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Users.GetAll().then((users) => {
-            if (users instanceof String) {
+            if (typeof users === "string") {
                 error(users);
 
                 return;
@@ -84,8 +84,16 @@ export default function AccountsPage({ setTitle, Api }) {
         const user = users.find(x => x.Id === userId);
 
         Api.Users.Delete(userId, user).then((res) => {
-            warning("User has been removed!");
-        });;
+            if (typeof res === "string") {
+                error(res);
+            } else if (typeof res.data === "string") {
+                error(res.data);
+            } else if (typeof res.data?.Message === "string") {
+                error(res.data.Message);
+            } else {
+                warning("User has been removed!");
+            }
+        });
     };
 
     return (

@@ -39,7 +39,7 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
 
     const { error, warning } =  useNotifications();
 
-    const [cookies, setCookie] = useCookies();
+    const [/*cookies*/, setCookie, /*removeCookie*/] = useCookies();
 
     const history = useHistory();
 
@@ -51,7 +51,7 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.GroceryLists.GetAllByUserId(userId).then((lists) => {
-            if (lists instanceof String) {
+            if (typeof lists === "string") {
                 error(lists);
                 
                 return;
@@ -69,7 +69,7 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients instanceof String) {
+            if (typeof ingredients === "string") {
                 error(ingredients);
                 
                 return;
@@ -87,7 +87,7 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((types) => {
-            if (types instanceof String) {
+            if (typeof types === "string") {
                 error(types);
                 
                 return;
@@ -120,15 +120,23 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
 
     const onRemove = (listId) => {
         Api.GroceryLists.Delete(listId).then((res) => {
-            var updatedList = [...groceryLists];
+            if (typeof res === "string") {
+                error(res);
+            } else if (typeof res.data === "string") {
+                error(res.data);
+            } else if (typeof res.data?.Message === "string") {
+                error(res.data.Message);
+            } else {
+                var updatedList = [...groceryLists];
 
-            updatedList.splice(updatedList.indexOf(updatedList.find(x => x.Id === listId)), 1);
+                updatedList.splice(updatedList.indexOf(updatedList.find(x => x.Id === listId)), 1);
 
-            setGroceryLists(updatedList);
+                setGroceryLists(updatedList);
 
-            warning("Grocery lists has been removed!");
+                warning("Grocery lists has been removed!");
 
-            setRemoveItem({ item: {}, dialogOpened: false });
+                setRemoveItem({ item: {}, dialogOpened: false });
+            }
         });;
     };
 

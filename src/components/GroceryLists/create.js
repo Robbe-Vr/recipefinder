@@ -37,7 +37,7 @@ export default function CreateGroceryListPage({ setTitle, Api, userId }) {
         setTitle && setTitle("Create Grocery List");
     });
 
-    const { warning, success } = useNotifications();
+    const { error, success } = useNotifications();
 
     const history = useHistory();
 
@@ -55,13 +55,19 @@ export default function CreateGroceryListPage({ setTitle, Api, userId }) {
 
     const onCreate = () => {
         Api.GroceryLists.Create(list).then((res) => {
-            if (res.data instanceof String) {
-                warning(res.data);
-            }
-            else success("Grocery list created succesfully!");
+            if (typeof res === "string") {
+                error(res);
+            } else if (typeof res.data === "string") {
+                error(res.data);
+            } else if (typeof res.data?.Message === "string") {
+                error(res.data.Message);
+            } else {
+                
+                success("Grocery list created succesfully!");
 
-            history.push('/grocerylists/index');
-        });;
+                history.push('/grocerylists/index');
+            }
+        });
     };
 
     const onIngredientSelected = (ingredients) => {

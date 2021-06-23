@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EditGroceryListPage({ setTitle, Api }) {
-    const { error, warning, success } =  useNotifications();
+    const { error, success } =  useNotifications();
 
     useEffect(() => {
         setTitle && setTitle("Edit Grocery List");
@@ -49,7 +49,7 @@ export default function EditGroceryListPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.GroceryLists.GetById(id).then((list) => {
-            if (list instanceof String) {
+            if (typeof list === "string") {
                 error(list);
                 return;
             }
@@ -69,12 +69,18 @@ export default function EditGroceryListPage({ setTitle, Api }) {
 
     const onEdit = () => {
         Api.GroceryLists.Create(list).then((res) => {
-            if (res.data instanceof String) {
-                warning(res.data);
-            }
-            else success("Grocery lists edited successfully!");
+            if (typeof res === "string") {
+                error(res);
+            } else if (typeof res.data === "string") {
+                error(res.data);
+            } else if (typeof res.data?.Message === "string") {
+                error(res.data.Message);
+            } else {
+                
+                success("Grocery lists edited successfully!");
 
-            history.push('/grocerylists/index');
+                history.push('/grocerylists/index');
+            }
         });
     };
 

@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EditRecipePage({ setTitle, Api }) {
-    const { error, warning, success } =  useNotifications();
+    const { error, success } =  useNotifications();
 
     useEffect(() => {
         setTitle && setTitle("Edit Recipe");
@@ -52,7 +52,7 @@ export default function EditRecipePage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Recipes.GetById(recipeId).then((recipe) => {
-            if (recipe instanceof String) {
+            if (typeof recipe === "string") {
                 error(recipe);
                 return;
             }
@@ -66,7 +66,7 @@ export default function EditRecipePage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((categories) => {
-            if (categories instanceof String) {
+            if (typeof categories === "string") {
                 error(categories);
                 return;
             }
@@ -93,12 +93,18 @@ export default function EditRecipePage({ setTitle, Api }) {
         };
 
         Api.Recipes.Update(recipeId, correctedRecipe).then((res) => {
-            if (res.data instanceof String) {
-                warning(res.data);
-            }
-            else success("Recipe edited successfully!");
+            if (typeof res === "string") {
+                error(res);
+            } else if (typeof res.data === "string") {
+                error(res.data);
+            } else if (typeof res.data?.Message === "string") {
+                error(res.data.Message);
+            } else {
+                
+                success("Recipe edited successfully!");
 
-            history.push('/recipebook/custom/index');
+                history.push('/recipebook/custom/index');
+            }
         });
     };
 

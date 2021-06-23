@@ -33,7 +33,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
         setTitle && setTitle(DisplayName + " CRUD Create");
     });
 
-    const { error, warning, success } =  useNotifications();
+    const { error, success } =  useNotifications();
 
     const history = useHistory();
 
@@ -46,7 +46,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
 
     useEffect(() => {
         Api.UnitTypes.GetAll().then((items) => {
-            if (items instanceof String) {
+            if (typeof items === "string") {
                 error(items);
 
                 return;
@@ -63,7 +63,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((items) => {
-            if (items instanceof String) {
+            if (typeof items === "string") {
                 error(items);
 
                 return;
@@ -80,7 +80,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
 
     useEffect(() => {
         Api.IngredientCategories.GetAll().then((items) => {
-            if (items instanceof String) {
+            if (typeof items === "string") {
                 error(items);
 
                 return;
@@ -97,7 +97,7 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
 
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((items) => {
-            if (items instanceof String) {
+            if (typeof items === "string") {
                 error(items);
 
                 return;
@@ -126,20 +126,35 @@ export default function CRUDCreatePage({ setTitle, Api, TableName, DisplayName }
             };
 
             Api[TableName].Create(correctedRecipe).then((res) => {
-                if (res.data instanceof String) {
-                warning(res.data);
-            }
-            else success("Recipe created successfully!");
+                if (typeof res === "string") {
+                    error(res);
+                } else if (typeof res.data === "string") {
+                    error(res.data);
+                } else if (typeof res.data?.Message === "string") {
+                    error(res.data.Message);
+                } else {
+                    
+                    success("Recipe created successfully!");
 
-                history.push(`/${TableName}/index`);
-            });;
+                    history.push(`/${TableName}/index`);
+                }
+            });
         }
         else {
             Api[TableName].Create(item).then((res) => {
-                success(DisplayName + " item created successfully!");
+                if (typeof res === "string") {
+                    error(res);
+                } else if (typeof res.data === "string") {
+                    error(res.data);
+                } else if (typeof res.data?.Message === "string") {
+                    error(res.data.Message);
+                } else {
+                    
+                    success(DisplayName + " item created successfully!");
 
-                history.push(`/${TableName}/index`);
-            });;
+                    history.push(`/${TableName}/index`);
+                }
+            });
         }
     };
 

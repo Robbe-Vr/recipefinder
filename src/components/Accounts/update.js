@@ -34,7 +34,7 @@ export default function EditAccountPage({ setTitle, Api }) {
 
     const history = useHistory();
 
-    const { error, warning, success } = useNotifications();
+    const { error, success } = useNotifications();
 
     const { userId } = useParams();
 
@@ -45,7 +45,7 @@ export default function EditAccountPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Users.GetById(userId).then((user) => {
-            if (user instanceof String) {
+            if (typeof user === "string") {
                 error(user);
 
                 return;
@@ -58,7 +58,7 @@ export default function EditAccountPage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.Roles.GetAll().then((roles) => {
-            if (roles instanceof String) {
+            if (typeof roles === "string") {
                 error(roles);
 
                 return;
@@ -79,12 +79,18 @@ export default function EditAccountPage({ setTitle, Api }) {
 
     const onEdit = () => {
         Api.Users.Update(updateUser).then((res) => {
-            if (res.data instanceof String) {
-                warning(res.data);
-            }
-            else success("User edited successfully!");
+            if (typeof res === "string") {
+                error(res);
+            } else if (typeof res.data === "string") {
+                error(res.data);
+            } else if (typeof res.data?.Message === "string") {
+                error(res.data.Message);
+            } else {
+                
+                success("User edited successfully!");
 
-            history.push('/accounts/index');
+                history.push('/accounts/index');
+            }
         });
     };
 
@@ -118,7 +124,7 @@ export default function EditAccountPage({ setTitle, Api }) {
                     defaultValue={defaultDate}
                     name="Date Of Birth"
                     type="date"
-                    inputProps={{ min: defaultMinimumAgeDate }}
+                    inputProps={{ max: defaultMinimumAgeDate }}
                     onChange={(value) => onUserEdited({ DateOfBirth: new Date(Date.parse(value)) })}
                 />
                 <UserInputComponent

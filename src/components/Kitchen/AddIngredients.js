@@ -28,7 +28,7 @@ function AddIngredients({ setTitle, userId, Api }) {
         setTitle && setTitle("Add Ingredients");
     });
 
-    const { error, warning, success } =  useNotifications();
+    const { error, success } =  useNotifications();
 
     const classes = useStyles();
 
@@ -49,7 +49,7 @@ function AddIngredients({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.Ingredients.GetAll().then((ingredients) => {
-            if (ingredients instanceof String)  {
+            if (typeof ingredients === "string")  {
                 error(ingredients);
                 return;
             }
@@ -74,10 +74,17 @@ function AddIngredients({ setTitle, userId, Api }) {
             saveIngredient.Units && saveIngredient.UnitTypeId) {
             
             Api.Kitchens.Create(saveIngredient).then((res) => {
-                if (res instanceof String) {
-                    warning(res);
+                if (typeof res === "string") {
+                    error(res);
+                } else if (typeof res.data === "string") {
+                    error(res.data);
+                } else if (typeof res.data?.Message === "string") {
+                    error(res.data.Message);
+                } else {
+                    success("Ingredient added to your kitchen!");
+
+                    setSelectedIngredient({});
                 }
-                else success("Ingredient added to your kitchen!");
             });
         }
     };

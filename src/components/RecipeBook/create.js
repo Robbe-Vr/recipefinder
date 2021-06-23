@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CreateRecipePage({ setTitle, Api }) {
-    const { error, warning, success } =  useNotifications();
+    const { error, success } =  useNotifications();
 
     useEffect(() => {
         setTitle && setTitle("Create Custom Recipe");
@@ -50,7 +50,7 @@ export default function CreateRecipePage({ setTitle, Api }) {
 
     useEffect(() => {
         Api.RecipeCategories.GetAll().then((categories) => {
-            if (categories instanceof String) {
+            if (typeof categories === "string") {
                 error(categories);
 
                 return;
@@ -78,12 +78,18 @@ export default function CreateRecipePage({ setTitle, Api }) {
         };
 
         Api.Recipes.Create(correctedRecipe).then((res) => {
-            if (res.data instanceof String) {
-                warning(res.data);
-            }
-            else success("Recipe created successfully!");
+            if (typeof res === "string") {
+                error(res);
+            } else if (typeof res.data === "string") {
+                error(res.data);
+            } else if (typeof res.data?.Message === "string") {
+                error(res.data.Message);
+            } else {
+                
+                success("Recipe created successfully!");
 
-            history.push('/recipebook/custom/index');
+                history.push('/recipebook/custom/index');
+            }
         });
     };
 

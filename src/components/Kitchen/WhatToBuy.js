@@ -41,7 +41,7 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
 
     const { error, warning, success } =  useNotifications();
 
-    const [cookies, setCookie, removeCookie] = useCookies();
+    const [cookies, setCookie, /*removeCookie*/] = useCookies();
 
     const [listState, setListState] = useState(1);
     
@@ -53,7 +53,7 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.Ingredients.GetWhatToBuy(userId, (listState === 1 ? 'recipes' : 'ingredients')).then((items) => {
-            if (items instanceof String) {
+            if (typeof items === "string") {
                 error(items);
 
                 return;
@@ -77,7 +77,7 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api[`${listState === 1 ? 'Recipe' : 'Ingredient'}Categories`].GetAll().then((categories) => {
-            if (categories instanceof String) {
+            if (typeof categories === "string") {
                 error(categories);
 
                 return;

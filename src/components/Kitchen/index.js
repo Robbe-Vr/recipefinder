@@ -61,7 +61,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
 
     useEffect(() => {
         Api.Kitchens.GetKitchenByUserId(userId).then((kitchen) => {
-            if (kitchen instanceof String) {
+            if (typeof kitchen === "string") {
                 error(kitchen);
                 return;
             }
@@ -79,10 +79,10 @@ function KitchenHomePage({ setTitle, userId, Api }) {
             updatedKitchen.Ingredients[index] = updates[id];
             setKitchen(updatedKitchen);
 
-            if (res.data instanceof String) {
+            if (typeof res.data === "string") {
                 warning(res.data);
             }
-            else if (res.data instanceof String) {
+            else if (typeof res.data === "string") {
                 warning(res.data);
             }
             else success("Ingredient in your kitchen edited successfully!");
