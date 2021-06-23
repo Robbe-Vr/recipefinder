@@ -43,7 +43,7 @@ function KitchenHomePage({ setTitle, userId, Api }) {
         User: '',
         Ingredients: [new KitchenIngredient()],
     });
-    if (kitchen?.Ingredients.length === 1 && kitchen.Ingredients[0].Units === 0.00)
+    if (kitchen?.Ingredients?.length === 1 && kitchen.Ingredients[0].Units === 0.00)
     {
         kitchen.Ingredients.pop();
     }
