@@ -33,16 +33,16 @@ describe("Recipebook Page Test", () => {
 
     it("change to show all recipes", () => {
         cy.get('h3').should('have.text', 'Preparable Recipe Book');
-        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').eq(0).find("td").eq(1).should("have.text", "Pancakes");
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').find("td").eq(1).should("have.text", "Pancakes");
 
         cy.get('main').contains('Recipes You Can Prepare').click();
 
         cy.get('h3').should('have.text', 'Full Recipe Book');
-        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').eq(0).find("td").eq(1).should("have.text", "Pancakes");
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').find("td").eq(1).should("have.text", "Pancakes");
     });
 
     it("view details for recipe", () => {
-        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').eq(0).find("td").last().find('button').eq(0).click();
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').find("td").last().find('button').eq(0).click();
 
         cy.location("pathname").should("include", "/recipebook/details");
 
@@ -50,7 +50,7 @@ describe("Recipebook Page Test", () => {
     });
 
     it("view tutorial for recipe", () => {
-        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').eq(0).find("td").last().find('button').eq(0).click();
+        cy.get('tr.MuiTableRow-root.MuiTableRow-hover').find("td").last().find('button').eq(0).click();
 
         cy.location("pathname").should("include", "/recipebook/details");
 

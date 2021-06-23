@@ -18,6 +18,23 @@
     "LockoutEnabled": false,
     "LockoutEnd": null,
     "AccessFailedCount": 0,
-    "Roles": null,
+    "Roles": [
+        {
+            "CountId": 1,
+            "Name": "Default"
+        },
+        {
+            "CountId": 2,
+            "Name": "Cook"
+        },
+        {
+            "CountId": 3,
+            "Name": "Creator"
+        },
+        {
+            "CountId": 4,
+            "Name": "Admin"
+        }
+    ],
     "Deleted": false
 }
