@@ -135,34 +135,38 @@ function GroceryListIngredientInputComponent({ Api, defaultValues = [], onChange
                                     />
                                 </DialogContent>
                             </Dialog>
-                            <Grid container direction="row" style={{ marginBottom: '15px' }}>
+                            <Grid container direction="row" style={{ marginBottom: '5px' }}>
                                 Ingredient {index + 1}:
                             </Grid>
-                            <Grid container direction="row" style={{ marginBottom: '15px' }}>
-                                <Grid container direction="row" style={{ marginBottom: '15px' }}>
+                            <Grid container direction="row" style={{ marginBottom: '5px' }}>
+                                <Grid container direction="row" style={{ marginBottom: '10px' }}>
                                     <Button variant="outlined" onClick={() => { openIngredientSelect(index); }}>{groceryListIngredient.IngredientId ? ingredients.find(x => x.Id === groceryListIngredient.IngredientId)?.Name : "Choose Ingredient"}</Button>
                                 </Grid>
-                                <Grid container direction="row" style={{ marginBottom: '15px' }}>
-                                    <UserInputComponent
-                                        name="Amount"
-                                        defaultValue={groceryListIngredient.Units}
-                                        inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }}
-                                        type="number"
-                                        onChange={(value) => {
-                                            updateValue(value, index, "Units");
-                                        }}
-                                    />
-                                    <UserSelectInputComponent
-                                        name="UnitTypes"
-                                        defaultValue={groceryListIngredient.UnitTypeId}
-                                        options={ingredients.find(x => x.Id === groceryListIngredient.IngredientId)?.UnitTypes.map(unitType => { return { name: unitType.Name, value: unitType.CountId }; }) ?? []}
-                                        onChange={(value) => {
-                                            updateUnitType(value, index);
-                                        }}
-                                    />
+                                <Grid container direction="row" style={{ marginBottom: '5px' }}>
+                                    <Grid style={{ width: '40%' }}>
+                                        <UserInputComponent
+                                            name="Amount"
+                                            defaultValue={groceryListIngredient.Units}
+                                            inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }}
+                                            type="number"
+                                            onChange={(value) => {
+                                                updateValue(value, index, "Units");
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid style={{ width: '40%', marginLeft: '5px' }}>
+                                        <UserSelectInputComponent
+                                            name="UnitTypes"
+                                            defaultValue={groceryListIngredient.UnitTypeId}
+                                            options={ingredients.find(x => x.Id === groceryListIngredient.IngredientId)?.UnitTypes.map(unitType => { return { name: unitType.Name, value: unitType.CountId }; }) ?? []}
+                                            onChange={(value) => {
+                                                updateUnitType(value, index);
+                                            }}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid container direction="row" style={{ marginBottom: '20px' }}>
-                                    <Button variant="outlined" style={{ color: 'red', marginLeft: '10px' }}
+                                <Grid container direction="row" style={{ marginBottom: '5px' }}>
+                                    <Button variant="outlined" style={{ color: 'red', borderColor: 'red' }}
                                         onClick={() => { removeGroceryListIngredient(index); }}>Remove Ingredient</Button>
                                 </Grid>
                             </Grid>
@@ -171,7 +175,7 @@ function GroceryListIngredientInputComponent({ Api, defaultValues = [], onChange
                 })
             }
             <Grid container direction="row" style={{ marginBottom: '20px' }}>
-                <Button variant="outlined" style={{ color: 'forestgreen' }}
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}
                     onClick={() => { addGroceryListIngredient(); }}>Add Ingredient</Button>
             </Grid>
         </Grid>

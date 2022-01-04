@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Button, Card, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Typography, Button, Card, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
@@ -97,19 +97,19 @@ export default function AccountsPage({ setTitle, Api }) {
     };
 
     return (
-        <div className={classes.paper}>
-            <Dialog disableBackdropClick disableEscapeKeyDown open={removeUser.dialogOpened} onClose={() => setRemoveUser(removeUser => { removeUser.dialogOpened = false; return removeUser })}>
+        <Grid className={classes.paper}>
+            <Dialog open={removeUser.dialogOpened} onClose={() => ToggleRemove(removeUser.user.Id)}>
                 <DialogTitle>Remove user {removeUser.user?.Name}</DialogTitle>
                 <DialogContent>
                     Are you sure you want to remove user: {removeUser.user?.Name}<br />
-                    <Button onClick={() => onRemove(removeUser.user.Id)} style={{ backgroundColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faBan} style={{ marginRight: '5px' }}/> Ban</Button>
-                    <Button onClick={() => ToggleRemove(removeUser.user.Id)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem' }}>Cancel</Button>
+                    <Button variant="outlined" onClick={() => onRemove(removeUser.user.Id)} style={{ color: 'red', borderColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faBan} style={{ marginRight: '5px' }}/>Ban</Button>
+                    <Button variant="outlined" onClick={() => ToggleRemove(removeUser.user.Id)} style={{ color: 'forestgreen', borderColor: 'forestgreen', marginTop: '1rem' }}><FontAwesomeIcon icon={faBan} style={{ marginRight: '5px' }}/>Cancel</Button>
                 </DialogContent>
             </Dialog>
             <Typography className={classes.txt} variant="h2">
                 Accounts
             </Typography>
-            <div className={classes.form}>
+            <Grid className={classes.form}>
                 <EntityList
                     columns={[
                         { id: 'name', label:'Name', minWidth: 50 },
@@ -123,11 +123,12 @@ export default function AccountsPage({ setTitle, Api }) {
                             name: user.Name,
                             email: user.Email,
                             roles: user.Roles.map(role => { return <Card key={role.Id} style={{ margin: '2px', padding: '3px' }}>{role.Name}</Card>; }),
-                            actions: <RowActions rowEntityId={user.Id} rowEntity={user} onDetails={onDetails} onEdit={onEdit} onRemove={ToggleRemove} />
+                            actions: <RowActions rowEntityId={user.Id} rowEntity={user} onDetails={onDetails} onEdit={onEdit} onRemove={ToggleRemove} />,
+                            onClick: (id) => { onDetails(id); },
                         }
                     })}
                 />
-            </div>
-        </div>
+            </Grid>
+        </Grid>
     );
 };

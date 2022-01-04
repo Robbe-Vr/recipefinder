@@ -12,21 +12,21 @@ import { RequirementsInputComponent } from "../components/RecipeBook/Requirement
 
 function CreateIngredientEditPage(item, notEditableProps, ApiTables, onItemEdited) {
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserInputComponent
                     name="Name"
                     defaultValue={item?.Name}
                     onChange={(value) => { onItemEdited({ Name: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <ImageInputComponent
                     defaultValue={item?.ImageLocation}
                     onChange={(value) => { onItemEdited({ ImageLocation: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserMultiSelectInputComponent
                     name="UnitTypes"
                     defaultValues={item?.UnitTypes.map(unitType => unitType.CountId)}
@@ -34,7 +34,7 @@ function CreateIngredientEditPage(item, notEditableProps, ApiTables, onItemEdite
                     onChange={(value) => { onItemEdited({ UnitTypes: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserInputComponent
                     name="Weight /Unit (Kg)"
                     defaultValue={item?.AverageWeightInKgPerUnit}
@@ -47,7 +47,7 @@ function CreateIngredientEditPage(item, notEditableProps, ApiTables, onItemEdite
                     onChange={(value) => { onItemEdited({ AverageWeightInKgPerUnit: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserInputComponent
                     name="Volume /Unit (L)"
                     defaultValue={item?.AverageVolumeInLiterPerUnit}
@@ -60,7 +60,7 @@ function CreateIngredientEditPage(item, notEditableProps, ApiTables, onItemEdite
                     onChange={(value) => { onItemEdited({ AverageVolumeInLiterPerUnit: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserMultiSelectInputComponent
                     name="Categories"
                     defaultValues={item?.Categories.map(cat => cat.CountId)}
@@ -74,8 +74,8 @@ function CreateIngredientEditPage(item, notEditableProps, ApiTables, onItemEdite
 
 function CreateIngredientCategoryEditPage(item, notEditableProps, ApiTables, onItemEdited) {
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%'  }}>
                 <UserInputComponent
                     name="Name"
                     defaultValue={item?.Name}
@@ -88,15 +88,15 @@ function CreateIngredientCategoryEditPage(item, notEditableProps, ApiTables, onI
 
 function CreateUnitTypeEditPage(item, notEditableProps, ApiTables, onItemEdited) {
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%'  }}>
                 <UserInputComponent
                     name="Name"
                     defaultValue={item?.Name}
                     onChange={(value) => { onItemEdited({ Name: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%'  }}>
                 <UserSelectInputComponent
                     name="AllowDecimals"
                     defaultValue={item?.AllowDecimals}
@@ -111,7 +111,7 @@ function CreateUnitTypeEditPage(item, notEditableProps, ApiTables, onItemEdited)
 function CreateRecipeEditPage(item, notEditableProps, ApiTables, onItemEdited, Api, { preparationStepsOpen, setPreparationStepsOpen, requirementsListOpen, setRequirementsListOpen, preparationStepsCount = 0, requirementsCount = 0 }) {
     
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
             <Dialog keepMounted open={preparationStepsOpen ?? false} onClose={() => setPreparationStepsOpen(false)}>
                 <DialogTitle>Preparation Steps</DialogTitle>
                 <DialogContent>
@@ -133,44 +133,44 @@ function CreateRecipeEditPage(item, notEditableProps, ApiTables, onItemEdited, A
                     />
                 </DialogContent>
             </Dialog>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserInputComponent
                     name="Name"
                     defaultValue={item?.Name}
                     onChange={(value) => { onItemEdited({ Name: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserInputComponent
                     name="Description"
                     defaultValue={item?.Description}
                     onChange={(value) => { onItemEdited({ Description: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <ImageInputComponent
                     defaultValue={item?.ImageLocation}
                     onChange={(value) => { onItemEdited({ ImageLocation: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserInputComponent
                     name="Tutorial Video"
                     defaultValue={item?.VideoTutorialLink}
                     onChange={(value) => { onItemEdited({ VideoTutorialLink: value }); }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <Button variant="outlined" onClick={() => setPreparationStepsOpen(true)}>
                     {preparationStepsCount} Steps
                 </Button>
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <Button variant="outlined" onClick={() => setRequirementsListOpen(true)}>
                     {requirementsCount} Requirements
                 </Button>
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserSelectInputComponent
                     Name={"Public?"}
                     defaultValue={item?.IsPublic}
@@ -181,7 +181,7 @@ function CreateRecipeEditPage(item, notEditableProps, ApiTables, onItemEdited, A
                     onChange={(value) => { onItemEdited({ IsPublic: value }) }}
                 />
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserMultiSelectInputComponent
                     name="Categories"
                     defaultValues={item?.Categories.map(cat => cat.CountId)}
@@ -195,8 +195,8 @@ function CreateRecipeEditPage(item, notEditableProps, ApiTables, onItemEdited, A
 
 function CreateRecipeCategoryEditPage(item, notEditableProps, ApiTables, onItemEdited) {
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 <UserInputComponent
                     name="Name"
                     defaultValue={item?.Name}
@@ -233,11 +233,11 @@ function CreateEditPage(item, tableName, notEditableProps, ApiTables, onItemEdit
 
 function CreateIngredientDetailsPage(item) {
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Name: {item?.Name}
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Image:
                 {
                     item?.ImageLocation ?
@@ -245,20 +245,20 @@ function CreateIngredientDetailsPage(item) {
                         : "Not set"
                 }
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
-                UnitTypes:
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
+                UnitTypes:<br />
                 {
                     item?.UnitTypes.map(unitType => <Card key={unitType.CountId} style={{ margin: '2px', padding: '3px' }}>{unitType.Name}</Card>)
                 }
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Average Weight per Unit: {item?.AverageWeightInKgPerUnit} Kg / Unit
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Average Volume per Unit: {item?.AverageVolumeInLiterPerUnit} L / Unit
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
-                Categories:
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
+                Categories:<br />
                 {
                     item?.Categories.map(cat => <Card key={cat.CountId} style={{ margin: '2px', padding: '3px' }}>{cat.Name}</Card>)
                 }
@@ -269,8 +269,8 @@ function CreateIngredientDetailsPage(item) {
 
 function CreateIngredientCategoryDetailsPage(item) {
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Name: {item?.Name}
             </Grid>
         </Grid>
@@ -279,11 +279,11 @@ function CreateIngredientCategoryDetailsPage(item) {
 
 function CreateUnitTypeDetailsPage(item) {
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Name: {item?.Name}
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Allow Decimals: {item?.AllowDecimals ? "True" : "False"}
             </Grid>
         </Grid>
@@ -293,14 +293,14 @@ function CreateUnitTypeDetailsPage(item) {
 function CreateRecipeDetailsPage(item) {
     
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Name: {item?.Name}
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Description: {item?.Description}
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Image:
                 {
                     item?.ImageLocation ?
@@ -308,10 +308,10 @@ function CreateRecipeDetailsPage(item) {
                         : "Not set"
                 }
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Tutorial Video: {item?.VideoTutorialLink ? <a href={item?.VideoTutorialLink}>Click here to watch</a> : "Not set"}
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Preparation Steps:
                 {
                     item?.PreparationSteps ?
@@ -323,11 +323,11 @@ function CreateRecipeDetailsPage(item) {
                     : "Not set"
                 }
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
-                Requirements:
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
+                Requirements:<br />
                 {
                     item?.RequirementsList ?
-                        item.RequirementsList.map((requirement, index) =>
+                        item.RequirementsList.map((requirement) =>
                             <Card key={requirement.CountId} style={{ margin: '2px', padding: '3px' }}>
                                 {requirement.Ingredient.Name} - {requirement.Units} {requirement.UnitType.Name}
                             </Card>
@@ -335,13 +335,13 @@ function CreateRecipeDetailsPage(item) {
                         : "Not set"
                 }
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Public: {item?.IsPublic ? "Public" : "Private"}
             </Grid>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
-                Categories:
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
+                Categories:<br />
                 {
-                    item?.Categories.map(cat => <Card key={cat.CountId} style={{ margin: '2px', padding: '3px' }}>{cat.Name}</Card>)
+                    item?.Categories.map(cat => <><Card key={cat.CountId} style={{ margin: '2px', padding: '3px' }}>{cat.Name}</Card><br /></>)
                 }
             </Grid>
         </Grid>
@@ -350,8 +350,8 @@ function CreateRecipeDetailsPage(item) {
 
 function CreateRecipeCategoryDetailsPage(item) {
     return (
-        <Grid container direction="row" style={{ padding: '15px', justifyContent: 'center' }}>
-            <Grid container direction="row" style={{ marginTop: '15px', justifyContent: 'center'  }}>
+        <Grid container direction="row" style={{ padding: '15px', width: '100%' }}>
+            <Grid container direction="row" style={{ marginTop: '15px', width: '100%' }}>
                 Name: {item?.Name}
             </Grid>
         </Grid>

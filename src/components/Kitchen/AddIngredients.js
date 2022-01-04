@@ -11,7 +11,7 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 import { SelectIngredientComponent } from "../Global/SelectIngredientComponent";
 
-import { Ingredient } from "../../models";
+import { Ingredient, KitchenIngredient } from "../../models";
 import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,17 +32,11 @@ function AddIngredients({ setTitle, userId, Api }) {
 
     const classes = useStyles();
 
-    const [unitTypeChanges, setUnitTypeChanges] = useState(0);
     const [selectedIngredient, setSelectedIngredient] = useState({});
-    const [saveIngredient, setSaveIngredient] = useState({
-        UserId: userId,
-        IngredientId: '',
-        Units: 0.0,
-        UnitTypeId: 1,
-    });
+    const [saveIngredient, setSaveIngredient] = useState(new KitchenIngredient());
 
     const [ingredients, setIngredients] = useState([new Ingredient()]);
-    if (ingredients.length === 1 && ingredients[0].CountId === -1 && unitTypeChanges)
+    if (ingredients.length === 1 && ingredients[0].CountId === -1)
     {
         ingredients?.pop();
     }
@@ -66,30 +60,48 @@ function AddIngredients({ setTitle, userId, Api }) {
         saveIngredient.IngredientId = ingredient.Id;
         saveIngredient.UnitTypeId = ingredient.UnitTypes[0].CountId;
         saveIngredient.Units = 1.00;
+        saveIngredient.UserId = userId;
         setSaveIngredient(saveIngredient);
     };
 
-    const SaveIngredient = () => {
-        if (saveIngredient.IngredientId && saveIngredient.UserId &&
-            saveIngredient.Units && saveIngredient.UnitTypeId) {
-            
-            Api.Kitchens.Create(saveIngredient).then((res) => {
-                if (typeof res === "string") {
-                    error(res);
-                } else if (typeof res.data === "string") {
-                    error(res.data);
-                } else if (typeof res.data?.Message === "string") {
-                    error(res.data.Message);
-                } else {
-                    success("Ingredient added to your kitchen!");
-
-                    setSelectedIngredient({});
-                }
-            });
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        for (var errorMsg in errors) {
+            error(errorMsg);
         }
+    }, [errors, error]);
+
+    const SaveIngredient = () => {
+        var validation = saveIngredient.Validate();
+
+        if (Array.isArray(validation)) {
+            validation.forEach((validationError) => {
+                error(validationError.message);
+            });
+
+            setErrors(validation);
+
+            return;
+        }
+
+        Api.Kitchens.Create(saveIngredient).then((res) => {
+            if (typeof res === "string") {
+                error(res);
+            } else if (typeof res.data === "string") {
+                error(res.data);
+            } else if (typeof res.data?.Message === "string") {
+                error(res.data.Message);
+            } else {
+                success("Ingredient added to your kitchen!");
+
+                setSelectedIngredient({});
+            }
+        });
     };
 
     const allowDecimals = ingredients.find(x => x.Id === selectedIngredient.Id)?.UnitTypes.find(x => x.CountId === saveIngredient.UnitTypeId)?.AllowDecimals;
+
+    const [selectedUnitType, setSelectedUnitType] = useState(0);
 
     return (
         <Grid
@@ -107,7 +119,7 @@ function AddIngredients({ setTitle, userId, Api }) {
                 >
                     {selectedIngredient && selectedIngredient.Id ?
                         <>
-                            <Grid container direction="row" style={{ marginTop: '10%' }}>
+                            <Grid container direction="row" style={{ marginTop: '10%', width: '75%' }}>
                                 <Grid container direction="row">
                                     <Grid>
                                         <Thumbnail source={selectedIngredient.ImageLocation} size={50} />
@@ -117,17 +129,17 @@ function AddIngredients({ setTitle, userId, Api }) {
                                     </Grid>
                                 </Grid>
                                 <Grid container direction="row">
-                                    <Grid>
+                                    <Grid item style={{ display: 'inline-block', width: '30%' }}>
                                         <UserInputComponent type="number" name="Amount" defaultValue={1.0} inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }}
                                             onChange={(value) => { saveIngredient.Units = parseFloat(value); setSaveIngredient(saveIngredient); }} />
                                     </Grid>
-                                    <Grid style={{ marginLeft: '5px' }}>
-                                        <UserSelectInputComponent name="Unit Type" options={selectedIngredient.UnitTypes.map(unitType => { return { value: unitType.CountId, name: unitType.Name }; })}
-                                            onChange={(value) => { saveIngredient.UnitTypeId = parseInt(value); setSaveIngredient(saveIngredient); setUnitTypeChanges(unitTypeChanges => unitTypeChanges + 1); }} />
+                                    <Grid item style={{ display: 'inline-block', width: '40%', marginLeft: '5px' }}>
+                                        <UserSelectInputComponent name="Unit Type" options={selectedIngredient.UnitTypes.map(unitType => { return { value: unitType.CountId, name: unitType.Name }; })} defaultValue={selectedUnitType}
+                                            onChange={(value) => { saveIngredient.UnitTypeId = parseInt(value); setSaveIngredient(saveIngredient); setSelectedUnitType(saveIngredient.UnitTypeId); }} />
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Button onClick={SaveIngredient} variant="outlined" style={{ marginTop: "20px", color: 'green' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> Add Ingredient</Button>
+                            <Button onClick={SaveIngredient} variant="outlined" style={{ marginTop: "20px", color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} />Add Ingredient</Button>
                         </>
                         :
                         <Typography variant="h5">Select an ingredient on the right. <FontAwesomeIcon icon={faArrowRight}/></Typography>
@@ -148,8 +160,8 @@ function AddIngredients({ setTitle, userId, Api }) {
                     />
                 </Grid>
             </Grid>
-            <Link to="/kitchen/index">
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Kitchen</Button>
+            <Link to="/kitchen/index" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} />Back to Kitchen</Button>
             </Link>
         </Grid>
     );

@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 import { PreparationStepsInputComponent } from "./preparationStepsInputComponent";
 import { RequirementsInputComponent } from "./RequirementsInputComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -84,7 +84,26 @@ export default function EditRecipePage({ setTitle, Api }) {
         });
     }
 
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        for (var errorMsg in errors) {
+            error(errorMsg);
+        }
+    }, [errors, error]);
+
     const onEdit = () => {
+        var validation = updateRecipe.Validate();
+
+        if (Array.isArray(validation)) {
+            validation.forEach((validationError) => {
+                error(validationError.message);
+            });
+
+            setErrors(validation);
+
+            return;
+        }
+
         var correctedRecipe = { ...updateRecipe };
 
         correctedRecipe.RequirementsList = {
@@ -137,7 +156,7 @@ export default function EditRecipePage({ setTitle, Api }) {
             <Typography className={classes.txt} variant="h2">
                 Edit Recipe:<br />{currentRecipe.Name}
             </Typography>
-            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
+            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px', width: '80%' }}>
                 <Grid className={classes.inputComponent}>
                     <UserInputComponent
                         defaultValue={currentRecipe.Name}
@@ -167,12 +186,12 @@ export default function EditRecipePage({ setTitle, Api }) {
                     />
                 </Grid>
                 <Grid className={classes.inputComponent}>
-                    <Button variant="outlined" onClick={() => setPreparationStepsOpen(true)}>
+                    <Button style={{ width: '100%' }} variant="outlined" onClick={() => setPreparationStepsOpen(true)}>
                         {updateRecipe.PreparationSteps.split('{NEXT}').length} Steps
                     </Button>
                 </Grid>
                 <Grid className={classes.inputComponent}>
-                    <Button variant="outlined" onClick={() => setRequirementsListOpen(true)}>
+                    <Button style={{ width: '100%' }} variant="outlined" onClick={() => setRequirementsListOpen(true)}>
                         {updateRecipe.RequirementsList.length} Requirements
                     </Button>
                 </Grid>
@@ -195,12 +214,12 @@ export default function EditRecipePage({ setTitle, Api }) {
                         onChange={(values) => onRecipeEdited({ Categories: values })}
                     />
                 </Grid>
-                <Grid className={classes.inputComponent}>
-                    <Button onClick={onEdit} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
+                <Grid className={classes.inputComponent} style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button variant="outlined" onClick={onEdit} style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faSave} style={{ marginRight: '5px' }} />Save</Button>
                 </Grid>
             </Grid>
-            <Link to="/recipebook/custom/index">
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Recipes</Button>
+            <Link to="/recipebook/custom/index" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} />Back to Recipes</Button>
             </Link>
         </Grid>
     );

@@ -62,22 +62,27 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function MainContent({ setTitle, drawerOpen, isRegistered, name, userId, Api, isAdmin, isCreator, isCook }) {
+function MainContent({ renderMobile, setTitle, drawerOpen, isRegistered, name, userId, Api, isAdmin, isCreator, isCook }) {
     const classes = useStyles();
 
     return (
         <main
-            className={clsx(classes.content, {
+            className={renderMobile ? "" :
+                clsx(classes.content, {
                 [classes.contentShift]: drawerOpen
-            })}
+                })
+            }
         >
-            <div className={classes.drawerHeader} />
+            {renderMobile ? <></> : <div className={classes.drawerHeader} />}
             <div
                 style={{
-                    width: "70%",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    overflowY: "auto",
+                    width: renderMobile ? "95%" : "70%",
+                    marginTop: renderMobile ? "100px" : "auto",
+                    marginBottom: renderMobile ? "100px" : "auto",
+                    paddingBottom: renderMobile ? "150px" : "auto",
+                    marginLeft: renderMobile ? "15px" : "auto",
+                    marginRight: renderMobile ? "15px" : "auto",
+                    overflow: "auto",
                 }}
             >
                 <Switch>

@@ -1,5 +1,5 @@
 import { 
-    protocol, serverIp, port, apiPage, api_url,
+    protocol, serverIp, apiPage, api_url,
     AccessTokenHeaderName,
 } from "./BaseEntityGroup";
 import { CustomEntityGroup } from "./CustomEntityGroup";
@@ -15,7 +15,7 @@ import { RecipeCategoryEntityGroup } from "./RecipeCategoryEntityGroup";
 import { GroceryListEntityGroup } from "./GroceryListEntityGroup";
 
 export {
-    protocol, serverIp, port, apiPage, api_url,
+    protocol, serverIp, apiPage, api_url,
     AccessTokenHeaderName,
 
     CustomEntityGroup,

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./app.css";
 import { Loading } from "./components/Loading";
 
 import { BrowserRouter as Router, Link } from "react-router-dom";
 
-import { CookiesProvider } from "react-cookie";
+import { CookiesProvider, useCookies } from "react-cookie";
 
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -26,6 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListAlt, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
 import { NotificationProvider } from "./components/Global/NotificationContext";
+import { MobileAppDrawer } from "./components/Drawer/MobileAppDrawer";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,9 +44,6 @@ const useStyles = makeStyles((theme) => ({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
-    },
-    logoutButton: {
-        
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -96,6 +94,8 @@ export default function App() {
     );
 };
 
+const cookieName = "recipefinder_grocerylist_cookie";
+
 function AppShell() {
     const { id, name, registered, loaded, roles, logOut } = useAccount();
     const [title, setTitle] = useState("");
@@ -105,12 +105,49 @@ function AppShell() {
 
     const { Api } = useAPI();
 
+    const [cookies] = useCookies();
+
+    const [grocerylistItems, setGrocerylistItems] = useState(0);
+
+    useEffect(() => {
+        const cookie = cookies[cookieName];
+
+        if (cookie && cookie.length > 5) {
+            setGrocerylistItems(
+                cookie.split(' | ')?.length ?? 0
+            );
+        }
+        else {
+            setGrocerylistItems(0);
+        }
+    }, [cookies]);
+
+    const breakpoint = 800;
+    const [renderMobile, setRenderMobile] = useState(window.innerWidth < breakpoint);
+    useEffect(() => {
+        function onSize() {
+            var mobileScreenSize = window.innerWidth < breakpoint;
+
+            console.log(`Resize: Screen width of ${window.innerWidth}px and height of ${window.innerHeight}px, thus rendering ${mobileScreenSize ? "mobile" : "default"} layout.`);
+
+            setRenderMobile(mobileScreenSize);
+        };
+
+        window.addEventListener('resize', () => onSize());
+        window.addEventListener('loaded', () => onSize());
+
+        return () => {
+            window.removeEventListener('resize', () => onSize());
+            window.removeEventListener('loaded', () => onSize());
+        };
+    }, []);
+
     if (!loaded) {
         return <></>;
     }
 
     if (!registered) {
-        return <Onboarding setTitle={setTitle} Api={Api} />;
+        return <Onboarding setTitle={setTitle} Api={Api} renderMobile={renderMobile} />;
     }
 
     return (
@@ -119,7 +156,7 @@ function AppShell() {
             <AppBar
                 position="fixed"
                 className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
+                    [classes.appBarShift]: renderMobile && open,
                 })}
             >
                 <Toolbar>
@@ -139,9 +176,9 @@ function AppShell() {
                         <Typography variant="subtitle2" noWrap className={classes.title}>
                             Welcome {name}
                         </Typography>
-                        <Link to="/grocerylists/current" style={{ textDecoration: 'none' }}>
+                        <Link to={`/grocerylists/${grocerylistItems > 0 ? "current" : "index"}`} style={{ textDecoration: 'none' }}>
                             <Button>
-                                <FontAwesomeIcon icon={faListAlt} style={{ marginRight: '5px' }}/> Grocerylist
+                                <FontAwesomeIcon icon={faListAlt} style={{ marginRight: '5px' }}/>{grocerylistItems > 0 ? `${grocerylistItems} item(s)` : "Grocerylist"}
                             </Button>
                         </Link>
                         <Button
@@ -153,19 +190,32 @@ function AppShell() {
                     </Grid>
                 </Toolbar>
             </AppBar>
-            <AppDrawer
-                open={open}
-                onOpen={setOpen}
-                setTitle={setTitle}
-                isRegistered={registered}
-                isAdmin={roles.filter(r => r.Name === 'Admin')[0] !== undefined}
-                isCreator={roles.filter(r => r.Name === 'Creator')[0] !== undefined}
-                isCook={roles.filter(r => r.Name === 'Cook')[0] !== undefined}
-            />
+            {renderMobile ?
+                <MobileAppDrawer
+                    open={open}
+                    onOpen={setOpen}
+                    setTitle={setTitle}
+                    isRegistered={registered}
+                    isAdmin={roles.filter(r => r.Name === 'Admin')[0] !== undefined}
+                    isCreator={roles.filter(r => r.Name === 'Creator')[0] !== undefined}
+                    isCook={roles.filter(r => r.Name === 'Cook')[0] !== undefined}
+                />
+                :
+                <AppDrawer
+                    open={open}
+                    onOpen={setOpen}
+                    setTitle={setTitle}
+                    isRegistered={registered}
+                    isAdmin={roles.filter(r => r.Name === 'Admin')[0] !== undefined}
+                    isCreator={roles.filter(r => r.Name === 'Creator')[0] !== undefined}
+                    isCook={roles.filter(r => r.Name === 'Cook')[0] !== undefined}
+                />
+            }
             <MainContent setTitle={setTitle} drawerOpen={open} isRegistered={registered} name={name} userId={id ?? "unknown"} Api={Api}
                 isAdmin={roles.filter(r => r.Name === 'Admin')[0] !== undefined}
                 isCreator={roles.filter(r => r.Name === 'Creator')[0] !== undefined}
                 isCook={roles.filter(r => r.Name === 'Cook')[0] !== undefined}
+                renderMobile={renderMobile}
             />
         </>
     );

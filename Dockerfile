@@ -7,4 +7,7 @@ RUN npm install
 
 COPY . .
 
-ENTRYPOINT [ "npm", "run", "start-http" ]
+RUN npm install -g serve
+RUN npm run build
+
+ENTRYPOINT [ "serve", "-s", "build", "-p", "3000" ]

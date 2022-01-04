@@ -11,7 +11,7 @@ import {
     RecipeCategoryEntityGroup,
     GroceryListEntityGroup,
     
-    protocol, serverIp, port, api_url,
+    protocol, serverIp, api_url,
     AccessTokenHeaderName,
 } from "./EntityGroups";
 
@@ -20,9 +20,9 @@ export default class Api {
         const authReturnUrlPath = '/returnAuthorization';
 
         const authPage = "/api/authorize/login",
-            params = `?ReturnUrl=${window.location.protocol}//${window.location.hostname}:${window.location.port}${authReturnUrlPath}`;
+            params = `?ReturnUrl=${window.location.protocol}//${window.location.hostname}${window.location.port && (window.location.port !== 80 || window.location.port !== 443) ? ":" + window.location.port : ''}${authReturnUrlPath}`;
 
-        this.AuthorizationPage = protocol + serverIp + ":" + port + authPage + params;
+        this.AuthorizationPage = protocol + serverIp + authPage + params;
 
         this.AuthReturnUrlPath = authReturnUrlPath;
 

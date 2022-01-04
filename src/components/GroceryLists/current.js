@@ -91,8 +91,17 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
         });
     }, [Api.UnitTypes, error]);
 
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        for (var errorMsg in errors) {
+            error(errorMsg);
+        }
+    }, [errors, error]);
+
     const addListToKitchen = async () => {
         var ingredientStrs = list.Value.split(' | ');
+
+        var newErrors = [];
 
         await Promise.all(ingredientStrs.map(async (ingredient) => {
             var splitStr = ingredient.split(', ');
@@ -102,21 +111,35 @@ export default function CurrentGroceryListPage({ setTitle, Api }) {
 
             var saveIngredient = new KitchenIngredient(0, ingredients.find(x => x.Id === ingredientId), parseFloat(amount), unitTypes.find(x => x.CountId === parseInt(unitTypeId)), currentUser);
 
-            if (saveIngredient.IngredientId && saveIngredient.UserId?.length > 0 &&
-                saveIngredient.Units && saveIngredient.UnitTypeId) {
-                
-                await Api.Kitchens.Create(saveIngredient);
+            var validation = saveIngredient.Validate();
+
+            if (Array.isArray(validation) && validation.length > 0) {
+                validation.forEach((validationError) => {
+                    error(validationError.message);
+                });
+
+                newErrors.push(validation);
+
+                return;
             }
+
+            await Api.Kitchens.Create(saveIngredient);
         })).then((res) => {
             if (typeof res.data === "string") {
                 warning(res.data);
             }
-            else success("Ingredients have been added to your kitchen!");
+            else {
+                success("Ingredients have been added to your kitchen!");
+
+                removeGroceryList();
+
+                history.push('/kitchen/index');
+            }
         });
 
-        removeGroceryList();
-
-        history.push('/kitchen/index');
+        if (newErrors.length > 0) {
+            setErrors(newErrors);
+        }
     };
 
     const removeGroceryList = () => {

@@ -24,9 +24,9 @@ function RowActions({ rowEntityId, rowEntity, onDetails, onEdit, onRemove })
                 justify="center"
                 alignItems="center"
             >
-                {onDetails ? <Button id={rowEntityId} onClick={(e) => onDetails(rowEntityId)} style={{ color: 'skyblue' }}><FontAwesomeIcon icon={faEye} /></Button> : ''}
-                {onEdit ? <Button id={rowEntityId} onClick={(e) => onEdit(rowEntityId)} style={{ color: 'gold' }}><FontAwesomeIcon icon={faPen} /></Button> : ''}
-                {onRemove ? <Button id={rowEntityId} onClick={(e) => onRemove(rowEntityId)} style={{ color: 'red' }}><FontAwesomeIcon icon={faTrash} /></Button> : ''}
+                {onDetails ? <Button id={rowEntityId} name="optionsButton" onClick={(e) => onDetails(rowEntityId)} style={{ color: 'skyblue' }}><FontAwesomeIcon name="optionsButton" icon={faEye} /></Button> : ''}
+                {onEdit ? <Button id={rowEntityId} name="optionsButton" onClick={(e) => onEdit(rowEntityId)} style={{ color: 'gold' }}><FontAwesomeIcon name="optionsButton" icon={faPen} /></Button> : ''}
+                {onRemove ? <Button id={rowEntityId} name="optionsButton" onClick={(e) => onRemove(rowEntityId)} style={{ color: 'red' }}><FontAwesomeIcon name="optionsButton" icon={faTrash} /></Button> : ''}
             </Grid>
         </Grid>
     );

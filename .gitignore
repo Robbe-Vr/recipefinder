@@ -4,3 +4,6 @@ build
 
 cypress/videos
 cypress/screenshots
+
+.expo
+recipefinderreact

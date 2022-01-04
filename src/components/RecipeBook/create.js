@@ -69,7 +69,26 @@ export default function CreateRecipePage({ setTitle, Api }) {
         });
     }
 
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        for (var errorMsg in errors) {
+            error(errorMsg);
+        }
+    }, [errors, error]);
+
     const onCreate = () => {
+        var validation = recipe.Validate();
+
+        if (Array.isArray(validation)) {
+            validation.forEach((validationError) => {
+                error(validationError.message);
+            });
+
+            setErrors(validation);
+
+            return;
+        }
+
         var correctedRecipe = { ...recipe };
 
         correctedRecipe.RequirementsList = {

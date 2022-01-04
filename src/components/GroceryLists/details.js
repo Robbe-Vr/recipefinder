@@ -90,7 +90,8 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
     return (
         <Grid className={classes.paper}>
             <Typography className={classes.txt} variant="h2">
-                Details Grocery List: {list.Name}
+                Details Grocery List:<br />
+                {list.Name}
             </Typography>
             <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
                 <Grid className={classes.inputComponent}>
@@ -113,8 +114,8 @@ export default function DetailsGroceryListPage({ setTitle, Api }) {
                     }
                 </Grid>
             </Grid>
-            <Link to="/grocerylists/index">
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Grocery Lists</Button>
+            <Link to="/grocerylists/index" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} />Back to Grocery Lists</Button>
             </Link>
         </Grid>
     );

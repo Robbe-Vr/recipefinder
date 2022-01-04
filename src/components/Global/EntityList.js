@@ -27,7 +27,7 @@ function EntityList({ rows, columns }) {
     return (
         <div>
             <TableContainer className={classes.tableContainer}>
-            <Table stickyHeader aria-label="sticky table">
+            <Table>
                 <TableHead>
                     <TableRow>
                     {columns.map((column) => (
@@ -44,7 +44,18 @@ function EntityList({ rows, columns }) {
                 <TableBody>
                 {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     return (
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id} onClick={row.onClick ? () => row.onClick(row.id) : () => {}}>
+                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id}
+                            onClick={row.onClick ? (e) => {
+                                if (e.target.name === 'optionsButton' || e.target.parentElement.name === 'optionsButton' ||
+                                    e.target.attributes?.name?.value === 'optionsButton' ||
+                                    e.target.parentElement?.attributes?.name?.value === 'optionsButton')
+                                { e.stopPropagation(); return; }
+                                
+                                row.onClick(row.id);
+                            }
+                            : () => {}
+                            }
+                        >
                         {columns.map((column) => {
                             const value = row[column.id];
                             return (

@@ -53,7 +53,21 @@ export default function CreateGroceryListPage({ setTitle, Api, userId }) {
         });
     }
 
+    const [errors, setErrors] = useState([]);
+
     const onCreate = () => {
+        var validation = list.Validate();
+
+        if (Array.isArray(validation)) {
+            validation.forEach((validationError) => {
+                error(validationError.message);
+            });
+
+            setErrors(validation);
+
+            return;
+        }
+
         Api.GroceryLists.Create(list).then((res) => {
             if (typeof res === "string") {
                 error(res);
@@ -96,12 +110,13 @@ export default function CreateGroceryListPage({ setTitle, Api, userId }) {
             <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
                 <Grid className={classes.inputComponent}>
                     <UserInputComponent
+                        isError={errors.filter(x => x.prop === "Name").length > 0}
                         name="Name"
                         onChange={(value) => onRecipeEdited({ Name: value })}
                     />
                 </Grid>
                 <Grid className={classes.inputComponent}>
-                    <Button variant="outlined" onClick={() => setValuesEditorOpen(true)}>
+                    <Button variant="outlined" style={{ color: errors.filter(x => x.prop === "Name").length > 0 ? 'red': '' }} onClick={() => setValuesEditorOpen(true)}>
                         {list.Value.split(' | ').length} Ingredients
                     </Button>
                 </Grid>

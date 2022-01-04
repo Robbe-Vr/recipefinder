@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button, Grid, Typography } from "@material-ui/core";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faPen } from "@fortawesome/free-solid-svg-icons";
 
 import CRUDPagesInfo from "../../API/CRUDPagesInfo";
 import { useNotifications } from "../Global/NotificationContext";
@@ -55,19 +55,19 @@ export default function CRUDDetailsPage({ setTitle, Api, TableName, DisplayName 
             <Typography className={classes.txt} variant="h2">
                 {DisplayName} CRUD Details:<br />{currentItem.Name}
             </Typography>
-            <Grid container direction="row" style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px', justifyContent: 'center' }}>
+            <Grid container direction="row" style={{ borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
                 {
                     CRUDInfo.getDetailsPage(currentItem.CountId && currentItem.CountId > 0 ? currentItem : null)
                 }
-                <Link to={`/${TableName}/edit/${id}`}>
-                    <Button style={{ backgroundColor: 'yellow' }}>Edit</Button>
-                </Link>
+                <Grid style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                    <Link to={`/${TableName}/edit/${id}`} style={{ textDecoration: 'none' }}>
+                        <Button variant="outlined" style={{ color: 'gold', borderColor: 'gold', marginBottom: '10px' }}><FontAwesomeIcon icon={faPen} style={{ marginRight: '5px' }} />Edit</Button>
+                    </Link>
+                </Grid>
             </Grid>
-            <Grid container direction="row" style={{ justifyContent: 'center' }}>
-                <Link to={`/${TableName}/index`}>
-                    <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to {DisplayName}</Button>
-                </Link>
-            </Grid>
+            <Link to={`/${TableName}/index`} style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} />Back to {DisplayName}</Button>
+            </Link>
         </Grid>
     );
 };

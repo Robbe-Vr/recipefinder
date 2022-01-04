@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function UserMultiSelectInputComponent({ name, variant = "outlined", defaultValues = [], options, onChange }) {
+function UserMultiSelectInputComponent({ name, variant = "outlined", defaultValues = [], options, onChange, isError = false }) {
     const [values, setValues] = useState(defaultValues);
 
     if ((!values || values.length < 1) && (defaultValues && defaultValues.length > 0)) {
@@ -24,9 +24,10 @@ function UserMultiSelectInputComponent({ name, variant = "outlined", defaultValu
     };
 
     return (
-        <Grid>
+        <Grid style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
             <InputLabel id={name}/>
             <Select
+                style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignContent: 'center', color: isError ? 'red' : '' }}
                 multiple={true}
                 className={classes.inputBox}
                 variant={variant}

@@ -217,6 +217,7 @@ export function Authenticate({ children }) {
         accessToken: account?.AccessToken,
         id: account?.Id,
         name: account?.Name,
+        countId: currentUser?.CountId,
         currentUser: currentUser?.CountId > 0 ? currentUser : null,
         logIn,
         logOut,

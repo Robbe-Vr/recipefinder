@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Dialog, DialogContent, DialogTitle, Grid, Button, Typography, Card } from "@material-ui/core";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCross, faPlus, faSync } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSync, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { Thumbnail } from "../Global/Thumbnail";
 import { RowActions } from "../Global/RowActions";
@@ -124,12 +124,12 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
             container
             direction="row"
         >
-            <Dialog open={removeItem.dialogOpened} onClose={() => setRemoveItem(removeItem => { removeItem.dialogOpened = false; return removeItem })}>
+            <Dialog open={removeItem.dialogOpened} onClose={() => ToggleRemove(removeItem.item.CountId)}>
                 <DialogTitle>Remove item {removeItem.item.Name}</DialogTitle>
                 <DialogContent>
                     Are you sure you want to remove this recipe: {removeItem.item.Name} ?<br />
-                    <Button onClick={() => onRemove(removeItem.item.CountId)} style={{ backgroundColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faCross} style={{ marginRight: '5px' }}/> Remove</Button>
-                    <Button onClick={() => ToggleRemove(removeItem.item.CountId)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem' }}>Cancel</Button>
+                    <Button variant="outlined" onClick={() => onRemove(removeItem.item.CountId)} style={{ color: 'red', borderColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faTrash} style={{ marginRight: '5px' }}/>Remove</Button>
+                    <Button variant="outlined" onClick={() => ToggleRemove(removeItem.item.CountId)} style={{ color: 'forestgreen', borderColor: 'forestgreen', marginTop: '1rem' }}><FontAwesomeIcon icon={faTimes} style={{ marginRight: '5px' }}/>Cancel</Button>
                 </DialogContent>
             </Dialog>
             <Grid item xs={7}>
@@ -140,8 +140,8 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
                 {
                     isCook && recipeListState === 0 ?
                         <Grid>
-                            <Link to={"/recipebook/custom/create"}>
-                                <Button variant="outlined" style={{ marginTop: "20px", color: 'green' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> Add Custom Recipe</Button>
+                            <Link to="/recipebook/custom/create" style={{ textDecoration: 'none' }}>
+                                <Button variant="outlined" style={{ marginTop: "20px", color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} />Add Custom Recipe</Button>
                             </Link>
                         </Grid>
                         : <></>
@@ -160,7 +160,7 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
                                 columns.push({ id: 'public', label: 'Public', minWidth: 50 });
                             }
 
-                            columns.push({ id: 'actions', label: 'Actions', minWidth: 200 });
+                            columns.push({ id: 'actions', label: '', minWidth: 200 });
 
                             return columns;
                         })()}
@@ -172,6 +172,7 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
                                 category: recipe.Categories.map(category => <Card key={category.CountId} variant="outlined" style={{ margin: '2px', padding: '5px' }}>{category.Name}</Card>),
                                 actions: isCook && recipeListState === 0 ? <RowActions rowEntity={recipe} rowEntityId={recipe.Id} onDetails={onDetails} onEdit={onEdit} onRemove={() => ToggleRemove(recipe.CountId)} />
                                     : <RowActions rowEntity={recipe} rowEntityId={recipe.Id} onDetails={onDetails} />,
+                                onClick: (id) => { onDetails(id); },
                             };
 
                             if (isCook && recipeListState === 0) {
@@ -189,21 +190,21 @@ function RecipeBookHomePage({ setTitle, isCook, userId, Api, defaultRecipeListSt
                     <Grid container direction="row" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>Showing:</Grid>
                     <Grid container direction="row" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
                         <Button variant="outlined" onClick={() => setRecipeListState(recipeListState => recipeListState + 1 > 2 ? (isCook ? 0 : 1) : recipeListState + 1)}
-                            style={{ width: '80%', backgroundColor: recipeListState === 0 ? "orange" : recipeListState === 1 ? "#ffbb00" : "green" }}>
+                            style={{ width: '100%', color: recipeListState === 0 ? "orange" : recipeListState === 1 ? "#ffbb00" : "green", borderColor: recipeListState === 0 ? "orange" : recipeListState === 1 ? "#ffbb00" : "green" }}>
                             {recipeListState === 0 ? "Your Custom Recipes" : recipeListState === 1 ? "Recipes You Can Prepare" : "All Recipes"}
                             <FontAwesomeIcon icon={faSync} style={{ marginLeft: '5px' }} />
                         </Button>
                     </Grid>
                 </Grid>
 
-                <Grid style={{ padding: '3px', display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+                <Grid style={{ padding: '3px', display: 'flex', alignContent: 'center', justifyContent: 'center', width: '100%' }}>
                     <UserInputComponent
                         defaultValue={filterOptions.name}
                         name="search by name"
                         onChange={(value) => setFilterOptions(filterOptions => { return { ...filterOptions, ...{ name: value } }; })}
                     />
                 </Grid>
-                <Grid container style={{ padding: '3px', display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+                <Grid container style={{ padding: '3px', display: 'flex', alignContent: 'center', justifyContent: 'center', width: '100%' }}>
                     <Grid container direction="row" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>Categories:</Grid>
                     <Grid container direction="row" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
                         <UserMultiSelectInputComponent

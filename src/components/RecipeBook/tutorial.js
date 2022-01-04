@@ -63,9 +63,9 @@ export default function RecipeTutorialPage({ setTitle, Api }) {
             <Grid container direction="row" style={{ paddingTop: '15px', paddingLeft: '10px' }}>
                 {
                     tutorialMode === 0 ?
-                        <Grid container direction="row">
-                            <Table>
-                                <TableBody>
+                        <Grid container direction="row" style={{ overflowY: 'auto', height: '80%' }}>
+                            <Table style={{ height: '100%' }}>
+                                <TableBody style={{ height: '100%' }}>
                                     {
                                         recipe.RequirementsList.map((requirement, index) => {
                                             return (
@@ -80,9 +80,9 @@ export default function RecipeTutorialPage({ setTitle, Api }) {
                             </Table>
                         </Grid>
                     : tutorialMode === 1 ?
-                        <Grid container direction="row">
-                            <Table>
-                                <TableBody>
+                        <Grid container direction="row" style={{ overflowY: 'auto', height: '80%' }}>
+                            <Table style={{ height: '100%' }}>
+                                <TableBody style={{ height: '100%' }}>
                                     {
                                         recipe.PreparationSteps.split('{NEXT}').map((step, index) => {
                                             return (
@@ -103,8 +103,8 @@ export default function RecipeTutorialPage({ setTitle, Api }) {
                     : <></>
                 }
             </Grid>
-            <Link to="/recipebook/index">
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Recipes</Button>
+            <Link to="/recipebook/index" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen', marginTop: '10px' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Recipes</Button>
             </Link>
         </div>
     );

@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Card, Dialog, DialogContent, DialogTitle, Grid, Button, Typography } from "@material-ui/core";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCross, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { Thumbnail } from "../Global/Thumbnail";
 import { RowActions } from "../Global/RowActions";
@@ -135,7 +135,7 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
                         else if (key === "ImageLocation") {
                             value = <>
                                         <Thumbnail source={item[key]} size={50}/>
-                                        <a href={item[key]}>to location</a>
+                                        <a href={item[key]}>image url</a>
                                     </>
                         }
                         else if (key === "VideoTutorialLink") {
@@ -150,12 +150,17 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
                         else if (key === "PreparationSteps") {
                             value = <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: 100 }}>{item[key].split('{NEXT}')[0]}...</div>
                         }
+                        else if ((key === "AverageWeightInKgPerUnit" || key === "AverageVolumeInLiterPerUnit") && parseFloat(item[key]) <= 0.01) {
+                            value = "Unavailable";
+                        }
                         else value = item[key];
 
                         obj[key] = value;
                     });
 
+                    obj.id = item.Id ?? item.CountId;
                     obj.actions = <RowActions rowEntity={item} rowEntityId={item.Id ?? item.CountId} onDetails={onDetails} onEdit={onEdit} onRemove={ToggleRemove} />
+                    obj.onClick = (id) => { onDetails(id); };
 
                     rows.push(obj);
                 });
@@ -171,8 +176,8 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
                 <DialogTitle>Remove item {removeItem.item.Name}</DialogTitle>
                 <DialogContent>
                     Are you sure you want to remove this item: {removeItem.item.Name} ?<br />
-                    <Button onClick={() => onRemove(removeItem.item.Id ?? removeItem.item.CountId)} style={{ backgroundColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faCross} style={{ marginRight: '5px' }}/> Remove</Button>
-                    <Button onClick={() => ToggleRemove(removeItem.item.Id ?? removeItem.item.CountId)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem' }}>Cancel</Button>
+                    <Button onClick={() => onRemove(removeItem.item.Id ?? removeItem.item.CountId)} style={{ backgroundColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faTrash} style={{ marginRight: '5px' }} />Remove</Button>
+                    <Button onClick={() => ToggleRemove(removeItem.item.Id ?? removeItem.item.CountId)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem' }}><FontAwesomeIcon icon={faTimes} style={{ marginRight: '5px' }} />Cancel</Button>
                 </DialogContent>
             </Dialog>
             <Typography className={classes.txt} variant="h3">
@@ -186,8 +191,8 @@ function CRUDPage({ setTitle, Api, TableName, DisplayName }) {
                     rows={[...entityListData.rows]}
                 />
             }
-            <Link to={`/${TableName}/create`}>
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> Add {DisplayName}</Button>
+            <Link to={`/${TableName}/create`} style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} />Add {DisplayName}</Button>
             </Link>
         </Grid>
     );

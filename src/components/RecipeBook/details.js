@@ -74,15 +74,15 @@ export default function RecipeDetailsPage({ setTitle, Api }) {
                 <Typography>
                     Requirements:
                 </Typography>
-                    {recipeDetails.RequirementsList.map((requirement, index) =>
+                    {recipeDetails.RequirementsList.map((requirement) =>
                         <Card key={requirement.CountId} style={{ margin: '2px', padding: '3px' }}>
                             {requirement.Ingredient.Name} - {requirement.Units} {requirement.UnitType.Name}
                         </Card>
                     )}
                 <Button variant="outlined" onClick={onTutorial} style={{ marginTop: '15px' }}>View Tutorial</Button>
             </Grid>
-            <Link to="/recipebook/index">
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Recipes</Button>
+            <Link to="/recipebook/index" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} />Back to Recipes</Button>
             </Link>
         </Grid>
     );

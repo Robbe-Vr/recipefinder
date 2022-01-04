@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button, Grid } from "@material-ui/core";
 
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserMultiSelectInputComponent } from "../Global/UserMultiSelectInputComponent";
 
 import { Role, User } from "../../models";
 import { useNotifications } from "../Global/NotificationContext";
+import { faBackward, faSave } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -77,7 +79,26 @@ export default function EditAccountPage({ setTitle, Api }) {
         });
     }
 
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        for (var errorMsg in errors) {
+            error(errorMsg);
+        }
+    }, [errors, error]);
+
     const onEdit = () => {
+        var validation = updateUser.Validate();
+
+        if (Array.isArray(validation)) {
+            validation.forEach((validationError) => {
+                error(validationError.message);
+            });
+
+            setErrors(validation);
+
+            return;
+        }
+
         Api.Users.Update(updateUser).then((res) => {
             if (typeof res === "string") {
                 error(res);
@@ -104,42 +125,58 @@ export default function EditAccountPage({ setTitle, Api }) {
          : defaultMinimumAgeDate;
 
     return (
-        <div className={classes.paper}>
+        <Grid className={classes.paper}>
             <Typography className={classes.txt} variant="h2">
-                Edit {currentUser.Name}
+                Edit Account:<br />
+                {currentUser.Name}
             </Typography>
-            <div>
-                <UserInputComponent
-                    
-                    defaultValue={currentUser.Name}
-                    name="Name"
-                    onChange={(value) => onUserEdited({ Name: value })}
-                />
-                <UserInputComponent
-                    defaultValue={currentUser.Email}
-                    name="Email"
-                    onChange={(value) => onUserEdited({ Email: value })}
-                />
-                <UserInputComponent
-                    defaultValue={defaultDate}
-                    name="Date Of Birth"
-                    type="date"
-                    inputProps={{ max: defaultMinimumAgeDate }}
-                    onChange={(value) => onUserEdited({ DateOfBirth: new Date(Date.parse(value)) })}
-                />
-                <UserInputComponent
-                    defaultValue={currentUser.PhoneNumber}
-                    name="Phone"
-                    onChange={(value) => onUserEdited({ PhoneNumber: value })}
-                />
-                <UserMultiSelectInputComponent
-                    defaultValues={currentUser.Roles.map(role => role.Id)}
-                    name="Roles"
-                    options={roles.map(role => { return { name: role.Name, value: role.Id }; })}
-                    onChange={(values) => onUserEdited({ Roles: values })}
-                />
-                <Button onClick={onEdit} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
-            </div>
-        </div>
+            <Grid style={{ width: '80%', borderBottom: 'solid 1px', paddingBottom: '10px' }}>
+                <Grid style={{ width: '100%', marginBottom: '5px' }}>
+                    <UserInputComponent
+                        
+                        defaultValue={currentUser.Name}
+                        name="Name"
+                        onChange={(value) => onUserEdited({ Name: value })}
+                    />
+                </Grid>
+                <Grid style={{ width: '100%', marginBottom: '5px' }}>
+                    <UserInputComponent
+                        defaultValue={currentUser.Email}
+                        name="Email"
+                        onChange={(value) => onUserEdited({ Email: value })}
+                    />
+                </Grid>
+                <Grid style={{ width: '100%', marginBottom: '5px' }}>
+                    <UserInputComponent
+                        defaultValue={defaultDate}
+                        name="Date Of Birth"
+                        type="date"
+                        inputProps={{ max: defaultMinimumAgeDate }}
+                        onChange={(value) => onUserEdited({ DateOfBirth: new Date(Date.parse(value)) })}
+                    />
+                </Grid>
+                <Grid style={{ width: '100%', marginBottom: '5px' }}>
+                    <UserInputComponent
+                        defaultValue={currentUser.PhoneNumber}
+                        name="Phone"
+                        onChange={(value) => onUserEdited({ PhoneNumber: value })}
+                    />
+                </Grid>
+                <Grid style={{ width: '100%', marginBottom: '5px' }}>
+                    <UserMultiSelectInputComponent
+                        defaultValues={currentUser.Roles.map(role => role.Id)}
+                        name="Roles"
+                        options={roles.map(role => { return { name: role.Name, value: role.Id }; })}
+                        onChange={(values) => onUserEdited({ Roles: values })}
+                    />
+                </Grid>
+                <Grid style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button variant="outlined" onClick={onEdit} style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faSave} style={{ marginRight: '5px' }} />Save</Button>
+                </Grid>
+            </Grid>
+            <Link to="/accounts/index" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen', marginTop: '10px' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} />Back to Accounts</Button>
+            </Link>
+        </Grid>
     );
 };

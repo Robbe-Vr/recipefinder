@@ -33,7 +33,7 @@ function HomePage({ setTitle, name, userId }) {
 
     return (
         <div className={classes.form} style={{ height: window.innerHeight * 0.6 }}>
-            <Typography className={classes.txt} variant="h1">
+            <Typography className={classes.txt} variant="h3">
                 Hello {name}!
             </Typography>
             <Link to="/kitchen/index" style={{ width: '100%', height: '50%', margin: '.5rem', textDecoration: 'none' }}>

@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Dialog, DialogContent, DialogTitle, Grid, Button, Typography, Card } from "@material-ui/core";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCross, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { RowActions } from "../Global/RowActions";
 import { UserInputComponent } from "../Global/UserInputComponent";
@@ -163,12 +163,12 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
             container
             direction="row"
         >
-            <Dialog open={removeItem.dialogOpened} onClose={() => setRemoveItem(removeItem => { removeItem.dialogOpened = false; return removeItem })}>
+            <Dialog open={removeItem.dialogOpened} onClose={() => ToggleRemove(removeItem.item.CountId)}>
                 <DialogTitle>Remove item {removeItem.item.Name}</DialogTitle>
                 <DialogContent>
                     Are you sure you want to remove this grocery list: {removeItem.item.Name} ?<br />
-                    <Button onClick={() => onRemove(removeItem.item.Id)} style={{ backgroundColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faCross} style={{ marginRight: '5px' }}/> Remove</Button>
-                    <Button onClick={() => ToggleRemove(removeItem.item.CountId)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem' }}>Cancel</Button>
+                    <Button variant="outlined" onClick={() => onRemove(removeItem.item.Id)} style={{ color: 'red', borderColor: 'red', marginRight: '1rem', marginTop: '1rem' }}><FontAwesomeIcon icon={faTrash} style={{ marginRight: '5px' }}/>Remove</Button>
+                    <Button variant="outlined" onClick={() => ToggleRemove(removeItem.item.CountId)} style={{ color: 'forestgreen', borderColor: 'forestgreen', marginTop: '1rem' }}><FontAwesomeIcon icon={faTimes} style={{ marginRight: '5px' }}/>Cancel</Button>
                 </DialogContent>
             </Dialog>
             <Grid item xs={7}>
@@ -177,8 +177,8 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
                 </Typography>
 
                 <Grid>
-                    <Link to={"/grocerylists/create"}>
-                        <Button variant="outlined" style={{ marginTop: "20px", color: 'green' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> Add Grocery List</Button>
+                    <Link to="/grocerylists/create" style={{ textDecoration: 'none' }}>
+                        <Button variant="outlined" style={{ marginTop: "20px", color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} />Add Grocery List</Button>
                     </Link>
                 </Grid>
 
@@ -211,12 +211,13 @@ function GroceryListsHomePage({ setTitle, userId, Api }) {
                                 }),
                                 setcurrent:
                                 <Grid>
-                                    <Button variant="outlined" style={{ marginTop: "20px", color: 'green' }}
+                                    <Button name="optionsButton" variant="outlined" style={{ marginTop: "20px", color: 'green', borderColor: 'forestgreen' }}
                                         onClick={() => setAsCurrentGroceryList(list.CountId)}>
                                         Set as current grocerylist
                                     </Button>
                                 </Grid>,
                                 actions: <RowActions rowEntity={list} rowEntityId={list.Id} onDetails={onDetails} onEdit={onEdit} onRemove={() => ToggleRemove(list.CountId)} />,
+                                onClick: (id) => { onDetails(id); },
                             };
 
                             return row;

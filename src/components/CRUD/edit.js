@@ -5,11 +5,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Button } from "@material-ui/core";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faSave } from "@fortawesome/free-solid-svg-icons";
 
 import CRUDPagesInfo from "../../API/CRUDPagesInfo";
 
-import { Ingredient, IngredientCategory, RecipeCategory, UnitType } from "../../models";
+import { Ingredient, IngredientCategory, Recipe, RecipeCategory, UnitType } from "../../models";
 import { useNotifications } from "../Global/NotificationContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -40,9 +40,19 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
 
     const { id } = useParams();
 
-    const [currentItem, setCurrentItem] = useState({});
+    const [currentItem, setCurrentItem] = useState(TableName === "Recipes" ? new Recipe() :
+                                                   TableName === "Ingredients" ? new Ingredient() :
+                                                   TableName === "UnitTypes" ? new UnitType() :
+                                                   TableName === "RecipeCategories" ? new RecipeCategory() :
+                                                   TableName === "IngredientCategory" ? new IngredientCategory() :
+                                                   null);
 
-    const [updateItem, setUpdateItem] = useState({});
+    const [updateItem, setUpdateItem] = useState(TableName === "Recipes" ? new Recipe() :
+                                                 TableName === "Ingredients" ? new Ingredient() :
+                                                 TableName === "UnitTypes" ? new UnitType() :
+                                                 TableName === "RecipeCategories" ? new RecipeCategory() :
+                                                 TableName === "IngredientCategory" ? new IngredientCategory() :
+                                                 null);
 
     useEffect(() => {
         Api[TableName].GetById(id).then((obj) => {
@@ -134,7 +144,26 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
         });
     }
 
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        for (var errorMsg in errors) {
+            error(errorMsg);
+        }
+    }, [errors, error]);
+
     const onEdit = () => {
+        var validation = updateItem.Validate();
+
+        if (Array.isArray(validation)) {
+            validation.forEach((validationError) => {
+                error(validationError.message);
+            });
+
+            setErrors(validation);
+
+            return;
+        }
+
         if (TableName === "Recipes") {
             var correctedRecipe = { ...updateItem };
 
@@ -186,22 +215,23 @@ export default function CRUDEditPage({ setTitle, Api, TableName, DisplayName }) 
     return (
         <Grid container direction="row" className={classes.paper}>
             <Typography className={classes.txt} variant="h2">
-                {DisplayName} CRUD Edit:<br />{currentItem.Name}
+                {DisplayName} CRUD Edit:<br />
+                {currentItem.Name}
             </Typography>
-            <Grid container direction="row" style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px', justifyContent: 'center' }}>
+            <Grid container direction="row" style={{ borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
                 {
                     CRUDInfo.getEditPage(currentItem.CountId && currentItem.CountId > 0 ? currentItem : null, { unitTypes, ingredients, ingredientCategories, recipeCategories },
                         onItemEdited, Api, { preparationStepsOpen, setPreparationStepsOpen, requirementsListOpen, setRequirementsListOpen,
                                              preparationStepsCount: updateItem?.PreparationSteps?.split('{NEXT}').length ?? currentItem?.PreparationSteps?.split('{NEXT}').length,
                                              requirementsCount: updateItem?.RequirementsList?.length ?? currentItem?.RequirementsList?.length })
                 }
-                <Button onClick={onEdit} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
+                <Grid style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                    <Button variant="outlined" onClick={onEdit} style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faSave} style={{ marginRight: '5px' }} />Save</Button>
+                </Grid>
             </Grid>
-            <Grid container direction="row" style={{ justifyContent: 'center' }}>
-                <Link to={`/${TableName}/index`}>
-                    <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to {DisplayName}</Button>
-                </Link>
-            </Grid>
+            <Link to={`/${TableName}/index`} style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} />Back to {DisplayName}</Button>
+            </Link>
         </Grid>
     );
 };

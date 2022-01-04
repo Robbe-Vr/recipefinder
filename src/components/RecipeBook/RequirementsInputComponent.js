@@ -131,34 +131,38 @@ function RequirementsInputComponent({ Api, defaultValues = [new RequirementsList
                                     />
                                 </DialogContent>
                             </Dialog>
-                            <Grid container direction="row" style={{ marginBottom: '15px' }}>
+                            <Grid container direction="row" style={{ marginBottom: '5px' }}>
                                 Requirement {index + 1}:
                             </Grid>
-                            <Grid container direction="row" style={{ marginBottom: '15px' }}>
-                                <Grid container direction="row" style={{ marginBottom: '15px' }}>
+                            <Grid container direction="row" style={{ marginBottom: '5px' }}>
+                                <Grid container direction="row" style={{ marginBottom: '10px' }}>
                                     <Button variant="outlined" onClick={() => { openIngredientSelect(index); }}>{requirement.Ingredient?.Name.length > 0 ? requirement.Ingredient.Name : "Choose Ingredient"}</Button>
                                 </Grid>
-                                <Grid container direction="row" style={{ marginBottom: '15px' }}>
-                                    <UserInputComponent
-                                        name="Amount"
-                                        defaultValue={requirement.Units}
-                                        inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }}
-                                        type="number"
-                                        onChange={(value) => {
-                                            updateValue(value, index, "Units");
-                                        }}
-                                    />
-                                    <UserSelectInputComponent
-                                        name="UnitTypes"
-                                        defaultValue={requirement.UnitType?.CountId ?? -1}
-                                        options={requirement.Ingredient?.UnitTypes.map(unitType => { return { name: unitType.Name, value: unitType.CountId }; }) ?? []}
-                                        onChange={(value) => {
-                                            updateUnitType(value, index);
-                                        }}
-                                    />
+                                <Grid container direction="row" style={{ width: '100%', marginBottom: '5px' }}>
+                                    <Grid style={{ width: '40%' }}>
+                                        <UserInputComponent
+                                            name="Amount"
+                                            defaultValue={requirement.Units}
+                                            inputProps={{ min: allowDecimals ? 0.01 : 1.00, max: 1000.00, step: allowDecimals ? 0.01 : 1.00 }}
+                                            type="number"
+                                            onChange={(value) => {
+                                                updateValue(value, index, "Units");
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid style={{ width: '50%', marginLeft: '5px' }}>
+                                        <UserSelectInputComponent
+                                            name="UnitTypes"
+                                            defaultValue={requirement.UnitType?.CountId ?? -1}
+                                            options={requirement.Ingredient?.UnitTypes.map(unitType => { return { name: unitType.Name, value: unitType.CountId }; }) ?? []}
+                                            onChange={(value) => {
+                                                updateUnitType(value, index);
+                                            }}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid container direction="row" style={{ marginBottom: '20px' }}>
-                                    <Button variant="outlined" style={{ color: 'red', marginLeft: '10px' }}
+                                <Grid container direction="row">
+                                    <Button variant="outlined" style={{ color: 'red', borderColor: 'red' }}
                                         onClick={() => { removeRequirement(index); }}>Remove Requirement</Button>
                                 </Grid>
                             </Grid>
@@ -167,7 +171,7 @@ function RequirementsInputComponent({ Api, defaultValues = [new RequirementsList
                 })
             }
             <Grid container direction="row" style={{ marginBottom: '20px' }}>
-                <Button variant="outlined" style={{ color: 'forestgreen' }}
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}
                     onClick={() => { addRequirement(); }}>Add Requirement</Button>
             </Grid>
         </Grid>

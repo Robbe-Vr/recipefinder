@@ -12,7 +12,7 @@ import { UserInputComponent } from "../Global/UserInputComponent";
 import { UserSelectInputComponent } from "../Global/UserSelectInputComponent";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSave, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { KitchenIngredient } from "../../models";
 import { useNotifications } from "../Global/NotificationContext";
@@ -141,20 +141,26 @@ function KitchenHomePage({ setTitle, userId, Api }) {
             <Dialog open={removeItem.dialogOpened} onClose={closeRemoveDialog}>
                 <DialogTitle>Remove {removeItem.item.Ingredient?.Name}</DialogTitle>
                 <DialogContent>
-                    Are you sure you want to remove this ingredient?
-                    <Button id={removeItem.item.IngredientId} style={{ backgroundColor: 'red', marginRight: '5px' }} onClick={async (e) => await onRemove(removeItem.item.IngredientId)}>Remove</Button>
-                    <Button style={{ backgroundColor: 'forestgreen' }} onClick={closeRemoveDialog}>Cancel</Button>
+                    Are you sure you want to remove this ingredient?<br />
+                    <Button variant="outlined" id={removeItem.item.IngredientId} style={{ color: 'red', borderColor: 'red', marginRight: '5px' }} onClick={async (e) => await onRemove(removeItem.item.IngredientId)}><FontAwesomeIcon icon={faTrash} style={{ marginRight: '5px' }} />Remove</Button>
+                    <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }} onClick={closeRemoveDialog}><FontAwesomeIcon icon={faTimes} style={{ marginRight: '5px' }} />Cancel</Button>
                 </DialogContent>
             </Dialog>
             <Dialog open={editItem.dialogOpened} onClose={closeEditDialog}>
                 <DialogTitle>Edit {editItem.item.Ingredient?.Name}</DialogTitle>
                 <DialogContent>
-                    <UserInputComponent onChange={(value) => onUnitsEdited(editItem.item.IngredientId, value)} name="Units" defaultValue={editItem.item.Units}
-                        type="number" inputProps={{ min: editItem.allowDecimals ? 0.01 : 1.00, max: 1000.00, step: editItem.allowDecimals ? 0.01 : 1.00 }} />
-                    <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(editItem.item.IngredientId, value)} name="Unit Type" defaultValue={editItem.item.UnitType?.CountId}
-                        options={editItem.item.Ingredient?.UnitTypes.map(unitType => { return { id: unitType.CountId, name: unitType.Name, value: unitType.CountId } }) ?? []} />
-                    <Button id={editItem.item.IngredientId} style={{ backgroundColor: 'forestgreen', marginRight: '5px' }} onClick={async (e) => await onEdit(editItem.item.IngredientId)}>Save</Button>
-                    <Button style={{ backgroundColor: 'gold' }} onClick={closeEditDialog}>Cancel</Button>
+                    <Grid style={{ marginBottom: '5px' }}>
+                        <UserInputComponent onChange={(value) => onUnitsEdited(editItem.item.IngredientId, value)} name="Units" defaultValue={editItem.item.Units}
+                            type="number" inputProps={{ min: editItem.allowDecimals ? 0.01 : 1.00, max: 1000.00, step: editItem.allowDecimals ? 0.01 : 1.00 }}
+                        />
+                    </Grid>
+                    <Grid style={{ marginBottom: '5px' }}>
+                        <UserSelectInputComponent onChange={(value) => onUnitTypeEdited(editItem.item.IngredientId, value)} name="Unit Type" defaultValue={editItem.item.UnitType?.CountId}
+                            options={editItem.item.Ingredient?.UnitTypes.map(unitType => { return { id: unitType.CountId, name: unitType.Name, value: unitType.CountId } }) ?? []}
+                        />
+                    </Grid>
+                    <Button variant="outlined" id={editItem.item.IngredientId} style={{ color: 'forestgreen', borderColor: 'forestgreen', marginRight: '5px' }} onClick={async (e) => await onEdit(editItem.item.IngredientId)}><FontAwesomeIcon icon={faSave} style={{ marginRight: '5px' }} />Save</Button>
+                    <Button variant="outlined" style={{ color: 'gold', borderColor: 'gold' }} onClick={closeEditDialog}><FontAwesomeIcon icon={faTimes} style={{ marginRight: '5px' }} />Cancel</Button>
                 </DialogContent>
             </Dialog>
 
@@ -184,18 +190,19 @@ function KitchenHomePage({ setTitle, userId, Api }) {
                             actions: <RowActions rowEntity={ingredient} rowEntityId={ingredient.IngredientId}
                                 onEdit={() => setEditItem({ item: ingredient, allowDecimals: allowDecimals, dialogOpened: true })}
                                 onRemove={() => setRemoveItem({ item: ingredient, dialogOpened: true })} />,
+                            onClick: (id) => { setEditItem({ item: ingredient, allowDecimals: allowDecimals, dialogOpened: true }); },
                         }
                     }) ?? []}
                 />
             }
             <Grid style={{ marginRight: '5px', marginBottom: '20px' }}>
-                <Link to="/kitchen/add">
-                    <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} /> Add Ingredients</Button>
+                <Link to="/kitchen/add" style={{ textDecoration: 'none' }}>
+                    <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> Add Ingredients</Button>
                 </Link>
             </Grid>
             <Grid style={{ marginRight: '5px' }}>
-                <Link to="/kitchen/whattobuy">
-                    <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} /> What to Buy</Button>
+                <Link to="/kitchen/whattobuy" style={{ textDecoration: 'none' }}>
+                    <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} /> What to Buy</Button>
                 </Link>
             </Grid>
         </Grid>

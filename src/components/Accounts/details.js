@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Card, Typography } from "@material-ui/core";
+import { Button, Card, Grid, Typography } from "@material-ui/core";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faCross } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faCheckCircle, faCross } from "@fortawesome/free-solid-svg-icons";
 
 import { EntityList } from "../Global/EntityList";
 
@@ -69,13 +69,14 @@ export default function AccountDetailsPage({ setTitle, Api }) {
     const cd = userDetails.CreationDate;
 
     return (
-        <div className={classes.paper}>
+        <Grid className={classes.paper}>
             <Typography className={classes.txt} variant="h2">
-                {userDetails.Name} Details
+                Account Details:<br />
+                {userDetails.Name}
             </Typography>
             {
                 userDetails.CountId > 0 ?
-                <div>
+                <Grid>
                     <Typography>
                         Name: {userDetails.Name}
                     </Typography>
@@ -128,9 +129,12 @@ export default function AccountDetailsPage({ setTitle, Api }) {
                             No actions have been logged for this user.
                         </Typography>
                     }
-                </div>
+                </Grid>
                 : <></>
             }
-        </div>
+            <Link to="/accounts/index" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen', marginTop: '10px' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} />Back to Grocery Lists</Button>
+            </Link>
+        </Grid>
     );
 };

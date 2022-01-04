@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Typography, Button, Dialog, DialogContent, DialogTitle, Grid } from "@material-ui/core";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faSave } from "@fortawesome/free-solid-svg-icons";
 
 import { UserInputComponent } from "../Global/UserInputComponent";
 import { GroceryListIngredientInputComponent } from "./GroceryListIngredientInputComponent";
@@ -67,7 +67,26 @@ export default function EditGroceryListPage({ setTitle, Api }) {
         });
     }
 
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        for (var errorMsg in errors) {
+            error(errorMsg);
+        }
+    }, [errors, error]);
+
     const onEdit = () => {
+        var validation = list.Validate();
+
+        if (Array.isArray(validation)) {
+            validation.forEach((validationError) => {
+                error(validationError.message);
+            });
+
+            setErrors(validation);
+
+            return;
+        }
+
         Api.GroceryLists.Create(list).then((res) => {
             if (typeof res === "string") {
                 error(res);
@@ -113,9 +132,10 @@ export default function EditGroceryListPage({ setTitle, Api }) {
                 </DialogContent>
             </Dialog>
             <Typography className={classes.txt} variant="h2">
-                Edit Grocery List: {list.Name}
+                Edit Grocery List:<br />
+                {list.Name}
             </Typography>
-            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px' }}>
+            <Grid style={{  borderBottom: 'solid 1px', marginBottom: '10px', padding: '5px', width: '80%' }}>
                 <Grid className={classes.inputComponent}>
                     <UserInputComponent
                         name="Name"
@@ -124,16 +144,16 @@ export default function EditGroceryListPage({ setTitle, Api }) {
                     />
                 </Grid>
                 <Grid className={classes.inputComponent}>
-                    <Button variant="outlined" onClick={() => setValuesEditorOpen(true)}>
+                    <Button variant="outlined" onClick={() => setValuesEditorOpen(true)} style={{ width: '100%' }}>
                         {list.Value.split(' | ').length} Ingredients
                     </Button>
                 </Grid>
-                <Grid className={classes.inputComponent}>
-                    <Button onClick={onEdit} style={{ backgroundColor: 'forestgreen' }}>Save</Button>
+                <Grid className={classes.inputComponent} style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button variant="outlined" onClick={onEdit} style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faSave} style={{ marginRight: '5px' }} />Save</Button>
                 </Grid>
             </Grid>
-            <Link to="/grocerylists/index">
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Grocery Lists</Button>
+            <Link to="/grocerylists/index" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} />Back to Grocery Lists</Button>
             </Link>
         </Grid>
     );

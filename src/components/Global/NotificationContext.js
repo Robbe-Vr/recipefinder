@@ -47,6 +47,8 @@ export function NotificationProvider({ children }) {
     };
 
     const success = (message, options) => {
+        
+
         toast.success(message, {
             position: "top-right",
             autoClose: 5000,

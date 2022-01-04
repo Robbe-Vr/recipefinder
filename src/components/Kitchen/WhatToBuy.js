@@ -103,9 +103,49 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
     };
 
     const addIngredients = (toAddIngredients) => {
-        toAddIngredients.forEach(ingredient => {
-            addIngredient(ingredient);
+        const cookie = cookies[cookieName];
+
+        var ingredients = [];
+
+        if (cookie) {
+            cookie.split(' | ').map(item => {
+                var content = item.trim().split(', ');
+
+                let units = parseInt(content[1]);
+
+                return ingredients.push(
+                    new RequirementsListIngredient(0,
+                        new Ingredient(0, content[0]),
+                        units,
+                        new UnitType(parseInt(content[2]))
+                    )
+                );
+            });
+        }
+        else {
+            warning("Created a temporary grocery list!");
+        }
+
+        toAddIngredients.forEach(toAddIngredient => {
+            if (cookie) {
+                var duplicate = ingredients.find(x => x.IngredientId === toAddIngredient.IngredientId);
+
+                if (duplicate) {
+                    var item = ingredients[ingredients.indexOf(duplicate)];
+                    item.Units += toAddIngredient.UnitTypeId === item.UnitTypeId ? toAddIngredient.Units : 0;
+                } else {
+                    ingredients.push(toAddIngredient);
+                }
+            } else {
+                ingredients.push(toAddIngredient);
+            }
+
+            success(`Added ${toAddIngredient.Units} ${toAddIngredient.UnitType.Name} of ${toAddIngredient.Ingredient.Name} to the grocery list!`);
         });
+
+        var value = ingredients.map(i => `${i.IngredientId}, ${i.Units}, ${i.UnitTypeId}`).join(' | ');
+
+        setCookie(cookieName, value);
 
         closeItemDialog();
     };
@@ -192,10 +232,10 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
                             })}
                         />
                     </Grid>
-                    <Button onClick={() => addIngredients(selectedItem.item.RequirementsList)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem', marginRight: '20px' }}>
+                    <Button variant="outlined" onClick={() => addIngredients(selectedItem.item.RequirementsList)} style={{ color: 'forestgreen', borderColor: 'forestgreen', marginTop: '1rem', marginRight: '20px' }}>
                         <FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} />Add All
                     </Button>
-                    <Button onClick={closeItemDialog} style={{ backgroundColor: 'red', marginTop: '1rem' }}>Cancel</Button>
+                    <Button variant="outlined" onClick={closeItemDialog} style={{ color: 'red', borderColor: 'red', marginTop: '1rem' }}>Cancel</Button>
                 </DialogContent>
             </Dialog>
             <Dialog open={selectedIngredient.dialogOpened} onClose={closeIngredientDialog}>
@@ -211,10 +251,10 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
                             Missing Amount: {selectedIngredient.item.Units} {selectedIngredient.item.UnitType?.Name}
                         </Grid>
                     </Grid>
-                    <Button onClick={() => addIngredient(selectedIngredient.item)} style={{ backgroundColor: 'forestgreen', marginTop: '1rem', marginRight: '20px' }}>
+                    <Button variant="outlined" onClick={() => addIngredient(selectedIngredient.item)} style={{ color: 'forestgreen', borderColor: 'forestgreen', marginTop: '1rem', marginRight: '20px' }}>
                         <FontAwesomeIcon icon={faPlus} style={{ marginRight: '5px' }} />Add
                     </Button>
-                    <Button onClick={closeIngredientDialog} style={{ backgroundColor: 'red', marginTop: '1rem' }}>Cancel</Button>
+                    <Button variant="outlined" onClick={closeIngredientDialog} style={{ color: 'red', borderColor: 'red', marginTop: '1rem' }}>Cancel</Button>
                 </DialogContent>
             </Dialog>
             <Grid item xs={7}>
@@ -251,29 +291,29 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
                     />
                 }
             </Grid>
-            <Grid item xs={4} style={{ borderLeft: 'solid 1px', marginLeft: '5px', padding: '5px', overflow: 'auto' }}>
+            <Grid item xs={4} style={{ borderLeft: 'solid 1px', marginLeft: '5px', padding: '5px', overflow: 'auto', justifyContent: 'center' }}>
                 <Grid container direction="row" style={{ marginBottom: '8px', display: 'flex', alignContent: 'center' }}><Typography variant="h5">Filters</Typography></Grid>
                 <Grid container style={{ padding: '3px', display: 'flex', alignContent: 'center', justifyContent: 'center', marginBottom: '2px' }}>
                     <Grid container direction="row" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>Showing:</Grid>
                     <Grid container direction="row" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
                         <Button variant="outlined" onClick={() => setListState(recipeListState => recipeListState === 1 ? 0 : 1)}
-                            style={{ width: '80%', backgroundColor: listState === 1 ? "#ffbb00" : "green" }}>
+                            style={{ width: '100%', color: listState === 1 ? "#ffbb00" : "forestgreen", borderColor: listState === 1 ? "#ffbb00" : "forestgreen" }}>
                             {listState === 1 ? "Recipes" : "Ingredients"}
                             <FontAwesomeIcon icon={faSync} style={{ marginLeft: '5px' }} />
                         </Button>
                     </Grid>
                 </Grid>
 
-                <Grid style={{ padding: '3px', display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+                <Grid style={{ padding: '3px', display: 'flex', alignContent: 'center', justifyContent: 'center', width: '100%' }}>
                     <UserInputComponent
                         defaultValue={filterOptions.name}
                         name="search by name"
                         onChange={(value) => setFilterOptions(filterOptions => { return { ...filterOptions, ...{ name: value } }; })}
                     />
                 </Grid>
-                <Grid container style={{ padding: '3px', display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+                <Grid container style={{ padding: '3px', display: 'flex', alignContent: 'center', justifyContent: 'center', width: '100%' }}>
                     <Grid container direction="row" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>Categories:</Grid>
-                    <Grid container direction="row" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
+                    <Grid container direction="row" style={{ display: 'flex', alignContent: 'center', justifyContent: 'center', width: '100%' }}>
                         <UserMultiSelectInputComponent
                             name="select categories"
                             defaultValue={filterOptions.categories}
@@ -283,8 +323,8 @@ function WhatToBuyPage({ setTitle, userId, Api }) {
                     </Grid>
                 </Grid>
             </Grid>
-            <Link to="/kitchen/index">
-                <Button variant="outlined" style={{ color: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Kitchen</Button>
+            <Link to="/kitchen/index" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" style={{ color: 'forestgreen', borderColor: 'forestgreen' }}><FontAwesomeIcon icon={faBackward} style={{ marginRight: '5px' }} /> Back to Kitchen</Button>
             </Link>
         </Grid>
     );

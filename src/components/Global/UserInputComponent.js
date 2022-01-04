@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function UserInputComponent({ name, variant = "outlined", type = 'text', inputProps, defaultValue, onChange, isAsync = false }) {
+function UserInputComponent({ name, variant = "outlined", type = 'text', inputProps, defaultValue, onChange, isAsync = false, isError = false }) {
     const [value, setValue] = useState(defaultValue);
 
     if (!value && defaultValue) {
@@ -31,8 +31,9 @@ function UserInputComponent({ name, variant = "outlined", type = 'text', inputPr
     }
 
     return (
-        <Grid>
+        <Grid style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
             <TextField
+                style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignContent: 'center', color: isError ? 'red': '' }}
                 className={classes.inputBox}
                 variant={variant}
                 id={name}
